@@ -8,6 +8,13 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-26
+### Added
+- Semantic versioning process: `CHANGELOG.md`, and a GitHub Actions workflow
+  (`tag-release.yml`) that tags and publishes a GitHub Release automatically
+  whenever `package.json`'s version is bumped on `main`. This entry is the
+  first release it produces end-to-end.
+
 ## [0.1.0] - 2026-08-26
 ### Added
 - Initial ORBIT MVP: People, Skills, Discover and Ask Orbit pages, a deterministic
