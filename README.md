@@ -9,8 +9,10 @@ can help with a given topic. The Core HR system stays the system of record;
 ORBIT is the system of intelligence layered on top of it.
 
 This repository is the MVP: a installable, offline-capable PWA with a
-deterministic (non-LLM) search and ranking engine, a realistic 60-person demo
-organization ("Northstar"), and a CSV import path for bringing in real data.
+deterministic (non-LLM) search and ranking engine, a real multi-tenant
+Supabase backend (Postgres + Auth + Row Level Security), a realistic
+60-person shared demo organization ("Northstar"), and a CSV import path for
+bringing in real data.
 
 ## What's in scope (and what isn't)
 
@@ -32,18 +34,25 @@ pages/            route-level screens (People, Skills, Ask, Discover, ...)
   → hooks/        thin React bindings over state + services
   → services/      business logic: SearchService, AskService, DiscoverService,
                     ImportService — pure functions over an OrganizationDataset
-  → repositories/  OrbitRepository — the only place that touches the data layer,
-                    every method requires and validates an organizationId
-  → data/          seed generator + localStorage persistence
+  → repositories/  SupabaseRepository + mappers — the only place that talks to
+                    Supabase; every query is scoped to an organizationId
+  → data/          deterministic demo-data generator (used to seed Supabase)
 ```
 
-State is a single Zustand store (`src/state/orbitStore.ts`) holding the
-active `OrganizationDataset` and mirroring it to `localStorage`, so a demo or
-an imported organization survives a refresh. There is no backend in this
-MVP — everything runs client-side, which is why the repository layer is
-strict about `organizationId` scoping: it's the seam a real multi-tenant
-backend would enforce, kept in place here so the same rules already hold
-when one is added.
+State lives in two small Zustand stores:
+- `src/state/authStore.ts` — the Supabase Auth session (sign up / log in / sign out).
+- `src/state/orbitStore.ts` — the active `OrganizationDataset`, fetched from
+  Supabase (either the shared demo org or the signed-in user's own org).
+
+There is a real backend: **Supabase** (hosted Postgres + Auth + PostgREST).
+`organizationId` scoping is enforced twice — once defensively in the old
+in-app repository pattern this MVP started with, and now authoritatively by
+**Postgres Row Level Security** (`supabase/migrations/0002_rls.sql`): every
+table's policies resolve through an `is_org_member()` / `is_org_readable()`
+check, so cross-organization access is refused by the database itself, not
+just by application code. The one exception is the shared demo organization
+(`is_demo = true`), which is readable by anyone — including signed-out
+visitors — but never writable by anyone but ORBIT's own seed script.
 
 ### Design system
 
@@ -61,14 +70,46 @@ primitives (`Button`, `Card`, `Badge`, `Tag`, `Input`, `Avatar`, `Skeleton`,
 npm install
 ```
 
+## Backend setup (Supabase)
+
+ORBIT needs a Supabase project to talk to. One-time setup:
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In the Supabase SQL editor, paste and run the four files in
+   `supabase/migrations/` **in order** (`0001_schema.sql`, `0002_rls.sql`,
+   `0003_functions.sql`, `0004_seed_demo.sql`). They can be pasted as one
+   combined script — each file is idempotent-ordered and comments explain
+   what it does.
+3. Copy your project's **Project URL** and **anon public key**
+   (Project Settings → Data API) into a local `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   # then fill in VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+   ```
+4. For the deployed site, add the same two values as GitHub repo secrets
+   named `SUPABASE_URL` and `SUPABASE_ANON_KEY` (Settings → Secrets and
+   variables → Actions) — `.github/workflows/deploy-pages.yml` reads them
+   at build time.
+
+The anon key is meant to be public (Row Level Security is what actually
+protects the data), so it's safe to embed in the built frontend either way.
+
+If `supabase/migrations/0004_seed_demo.sql` ever needs regenerating (e.g.
+after changing the demo dataset generator), run:
+```bash
+npx tsx scripts/generate-demo-seed-sql.ts > supabase/migrations/0004_seed_demo.sql
+```
+
 ## Run
 
 ```bash
 npm run dev
 ```
 
-Open the printed URL, then click **Explore demo** to load the Northstar
-demo organization — the fastest way to see the product working.
+Open the printed URL, then click **Explore demo** to load the shared
+Northstar demo organization — no account needed, the fastest way to see the
+product working. Use **Create account** to sign up with email + password and
+set up your own organization instead.
 
 ## Build
 
@@ -88,9 +129,15 @@ Coverage focuses on the parts that must never lie: `SearchService` ranking
 (including a regression test that a department like "Sales" never
 false-matches a skill like "Salesforce"), `AskService` intent detection for
 the exact example queries in the product brief, `ImportService` CSV parsing
-and validation, `DiscoverService` determinism, and `OrbitRepository`
-cross-organization isolation. A small App-level smoke test covers routing
-(welcome redirect, home render, 404).
+and validation, `DiscoverService` determinism, the DB-row ↔ app-type
+mappers, and `orbitStore`'s async flows (demo load, org creation, import)
+against a fully mocked Supabase client (`src/test/fakeSupabase.ts`) — this
+sandbox has no network access to a real Supabase instance, so these tests
+never touch the network, by design, not by accident. A small App-level
+smoke test covers routing (welcome redirect, home render, 404). Row Level
+Security itself can only really be verified against a live Postgres
+instance — do that manually via the Supabase SQL editor if you change
+`0002_rls.sql`.
 
 ## PWA
 
@@ -102,7 +149,10 @@ prompt to verify.
 
 ## Data model
 
-Defined in `src/types/index.ts`:
+App-level types live in `src/types/index.ts`; the matching Postgres schema
+is `supabase/migrations/0001_schema.sql` (kept in sync by hand — see
+`src/types/database.ts` and `src/repositories/mappers.ts` for the
+snake_case ↔ camelCase translation layer).
 
 `Organization → Person, Skill, Team, Source` as top-level entities, with
 `PersonSkill` and `PersonTeam` as join records (skill level, years of
@@ -110,7 +160,11 @@ experience, and a `source` of `self-reported | inferred | verified` — this
 is what lets the UI distinguish a fact from an inference instead of
 presenting everything as equally certain). `Connection` records
 collaboration strength between two people, tagged `peer | reports-to |
-collaborates-with`.
+collaborates-with`. A `memberships` table links Supabase Auth users to the
+organization(s) they belong to — the root of multi-tenancy, and the one
+table RLS never lets a client write to directly (only the
+`create_organization()` Postgres function can, atomically, so no user can
+grant themselves access to someone else's org).
 
 ## Seed data
 
@@ -121,16 +175,22 @@ manager relationships, and cross-functional connections between related
 teams (Sales ↔ Customer Success, Product ↔ Engineering, Engineering ↔ IT,
 Finance ↔ People, and so on). Running it twice produces byte-identical
 output — see `SearchService.test.ts`'s determinism assertions.
+`scripts/generate-demo-seed-sql.ts` turns that same dataset into the SQL
+insert statements in `supabase/migrations/0004_seed_demo.sql`, which is
+what actually populates the shared demo organization in Supabase (fixed id
+`00000000-0000-0000-0000-000000000001`, marked `is_demo = true`).
 
 ## Import
 
 Settings → Import (also offered during onboarding) accepts a CSV with
 columns `firstName,lastName,email,jobTitle,department,location,country,skills`
 (semicolon-separated skills). `ImportService` parses it, validates required
-fields and email format, previews the parsed rows, and on confirmation
-creates new `Person`/`PersonSkill` records — reusing existing skills by name
-and creating new ones only when necessary. No OAuth in this MVP; CSV is the
-only import path.
+fields and email format, and previews the parsed rows entirely client-side;
+on confirmation it writes new `Person`/`PersonSkill` rows straight to
+Supabase — reusing existing skills by name and creating new ones only when
+necessary. Import is disabled while viewing the shared demo organization
+(it's read-only by RLS) — a signed-in user with their own organization is
+required. No OAuth in this MVP; CSV is the only import path.
 
 ## Search & Ask engine
 
@@ -158,6 +218,8 @@ Deliberately not built yet, but the seams are already in place for:
   the intent-detection and explanation steps without changing the rest of
   the app.
 - **Vector search** as a drop-in alternative to `SearchService`'s fuzzy
-  matcher, behind the same `searchPeople` / `searchSkills` signatures.
-- **A real knowledge graph / organization graph**, multi-tenant backend, and
-  an AI Agent API for other systems to query "who knows what" programmatically.
+  matcher, behind the same `searchPeople` / `searchSkills` signatures —
+  Postgres + `pgvector` on the same Supabase project is a natural next step.
+- **A real knowledge graph / organization graph** and an AI Agent API for
+  other systems to query "who knows what" programmatically, on top of the
+  multi-tenant Postgres schema that already exists.

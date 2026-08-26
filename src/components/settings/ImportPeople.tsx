@@ -14,6 +14,7 @@ type Step = 'upload' | 'preview' | 'success'
 
 export function ImportPeople() {
   const dataset = useDataset()
+  const isDemo = useOrbitStore((s) => s.isDemo)
   const importPeople = useOrbitStore((s) => s.importPeople)
   const { push } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -22,6 +23,7 @@ export function ImportPeople() {
   const [csvText, setCsvText] = useState('')
   const [preview, setPreview] = useState<ImportPreview | null>(null)
   const [importedCount, setImportedCount] = useState(0)
+  const [importing, setImporting] = useState(false)
 
   async function handleFile(file: File) {
     const text = await file.text()
@@ -31,17 +33,40 @@ export function ImportPeople() {
     setStep('preview')
   }
 
-  function handleImport() {
+  async function handleImport() {
     if (!dataset || !preview) return
+    setImporting(true)
     const payload = buildImportPayload(dataset, preview.rows)
-    importPeople(payload.people, payload.personSkills, payload.personTeams, payload.newSkills)
-    setImportedCount(payload.people.length)
-    setStep('success')
-    push({
-      kind: 'success',
-      title: 'Import complete',
-      description: `${payload.people.length} ${payload.people.length === 1 ? 'person' : 'people'} added to ${dataset.organization.name}.`,
-    })
+    try {
+      await importPeople(payload.people, payload.personSkills, payload.personTeams, payload.newSkills)
+      setImportedCount(payload.people.length)
+      setStep('success')
+      push({
+        kind: 'success',
+        title: 'Import complete',
+        description: `${payload.people.length} ${payload.people.length === 1 ? 'person' : 'people'} added to ${dataset.organization.name}.`,
+      })
+    } catch (err) {
+      push({
+        kind: 'error',
+        title: 'Import failed',
+        description: err instanceof Error ? err.message : 'Please try again.',
+      })
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  if (isDemo) {
+    return (
+      <Card className="flex flex-col items-center gap-3 p-8 text-center">
+        <Upload className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />
+        <h3 className="text-base font-semibold text-ink">You're viewing the shared demo</h3>
+        <p className="max-w-sm text-sm text-graphite">
+          The demo organization is read-only. Create your own organization to import real people.
+        </p>
+      </Card>
+    )
   }
 
   function reset() {
@@ -117,8 +142,13 @@ export function ImportPeople() {
           <Button variant="outline" size="sm" onClick={reset}>
             Cancel
           </Button>
-          <Button variant="accent" size="sm" onClick={handleImport} disabled={hasBlockingError || preview.validRowCount === 0}>
-            Import {preview.validRowCount} {preview.validRowCount === 1 ? 'person' : 'people'}
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={handleImport}
+            disabled={hasBlockingError || preview.validRowCount === 0 || importing}
+          >
+            {importing ? 'Importing…' : `Import ${preview.validRowCount} ${preview.validRowCount === 1 ? 'person' : 'people'}`}
           </Button>
         </div>
       </Card>

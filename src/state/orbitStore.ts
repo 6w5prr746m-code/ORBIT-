@@ -1,126 +1,85 @@
 import { create } from 'zustand'
-import type { Organization, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, Source } from '@/types'
-import { seedDemoData } from '@/data/seed/generate'
-import { OrbitRepository } from '@/repositories/OrbitRepository'
+import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
+import {
+  createOrganization as createOrganizationRemote,
+  fetchDemoDataset,
+  fetchMyOrganizationId,
+  fetchOrganizationDataset,
+  insertPeople,
+} from '@/repositories/SupabaseRepository'
+import { useAuthStore } from '@/state/authStore'
 
-const DATASET_KEY = 'orbit:dataset:v1'
-const ONBOARDED_KEY = 'orbit:onboarded:v1'
-
-function loadPersistedDataset(): OrganizationDataset | null {
-  try {
-    const raw = localStorage.getItem(DATASET_KEY)
-    return raw ? (JSON.parse(raw) as OrganizationDataset) : null
-  } catch {
-    return null
-  }
-}
-
-function persistDataset(dataset: OrganizationDataset | null) {
-  try {
-    if (dataset) localStorage.setItem(DATASET_KEY, JSON.stringify(dataset))
-    else localStorage.removeItem(DATASET_KEY)
-  } catch {
-    // Storage unavailable (private mode, quota) — the session still works in-memory.
-  }
-}
+export type LoadOrganizationResult = 'loaded' | 'none' | 'error'
 
 interface OrbitState {
   dataset: OrganizationDataset | null
-  repository: OrbitRepository | null
-  onboarded: boolean
-  loadDemo: () => void
-  createOrganization: (input: { name: string; industry: string; size: number }) => void
-  importPeople: (people: Person[], personSkills: PersonSkill[], personTeams: PersonTeam[], newSkills: Skill[]) => void
-  resetOrganization: () => void
-  markOnboarded: () => void
-}
+  loading: boolean
+  error: string | null
+  isDemo: boolean
 
-function emptySources(organizationId: string): Source[] {
-  return [
-    { id: 'src-core-hr', organizationId, type: 'core-hr', name: 'Core HR', status: 'coming-soon' },
-    { id: 'src-m365', organizationId, type: 'microsoft-365', name: 'Microsoft 365', status: 'coming-soon' },
-    { id: 'src-gws', organizationId, type: 'google-workspace', name: 'Google Workspace', status: 'coming-soon' },
-    { id: 'src-slack', organizationId, type: 'slack', name: 'Slack', status: 'coming-soon' },
-    { id: 'src-teams', organizationId, type: 'teams', name: 'Microsoft Teams', status: 'coming-soon' },
-    { id: 'src-notion', organizationId, type: 'notion', name: 'Notion', status: 'coming-soon' },
-    { id: 'src-jira', organizationId, type: 'jira', name: 'Jira', status: 'coming-soon' },
-  ]
+  loadDemo: () => Promise<void>
+  /** Looks up the signed-in user's organization and loads it. 'none' means they haven't created one yet. */
+  loadMyOrganization: () => Promise<LoadOrganizationResult>
+  createOrganization: (input: { name: string; industry: string; size: number }) => Promise<void>
+  importPeople: (people: Person[], personSkills: PersonSkill[], personTeams: PersonTeam[], newSkills: Skill[]) => Promise<void>
+  clear: () => void
 }
 
 export const useOrbitStore = create<OrbitState>((set, get) => ({
-  dataset: loadPersistedDataset(),
-  repository: (() => {
-    const d = loadPersistedDataset()
-    return d ? new OrbitRepository(d) : null
-  })(),
-  onboarded: (() => {
-    try {
-      return localStorage.getItem(ONBOARDED_KEY) === 'true'
-    } catch {
-      return false
-    }
-  })(),
+  dataset: null,
+  loading: false,
+  error: null,
+  isDemo: false,
 
-  loadDemo: () => {
-    const dataset = seedDemoData()
-    persistDataset(dataset)
+  loadDemo: async () => {
+    set({ loading: true, error: null })
     try {
-      localStorage.setItem(ONBOARDED_KEY, 'true')
-    } catch {
-      // ignore
+      const dataset = await fetchDemoDataset()
+      set({ dataset, isDemo: true, loading: false })
+    } catch (err) {
+      set({ loading: false, error: err instanceof Error ? err.message : 'Could not load the demo organization.' })
     }
-    set({ dataset, repository: new OrbitRepository(dataset), onboarded: true })
   },
 
-  createOrganization: ({ name, industry, size }) => {
-    const organizationId = `org-${crypto.randomUUID()}`
-    const organization: Organization = { id: organizationId, name, industry, size }
-    const dataset: OrganizationDataset = {
-      organization,
-      people: [],
-      skills: [],
-      personSkills: [],
-      teams: [],
-      personTeams: [],
-      connections: [],
-      sources: emptySources(organizationId),
-    }
-    persistDataset(dataset)
+  loadMyOrganization: async () => {
+    const userId = useAuthStore.getState().user?.id
+    if (!userId) return 'none'
+
+    set({ loading: true, error: null })
     try {
-      localStorage.setItem(ONBOARDED_KEY, 'true')
-    } catch {
-      // ignore
+      const organizationId = await fetchMyOrganizationId(userId)
+      if (!organizationId) {
+        set({ loading: false })
+        return 'none'
+      }
+      const dataset = await fetchOrganizationDataset(organizationId)
+      set({ dataset, isDemo: false, loading: false })
+      return 'loaded'
+    } catch (err) {
+      set({ loading: false, error: err instanceof Error ? err.message : 'Could not load your organization.' })
+      return 'error'
     }
-    set({ dataset, repository: new OrbitRepository(dataset), onboarded: true })
   },
 
-  importPeople: (people, personSkills, personTeams, newSkills) => {
+  createOrganization: async ({ name, industry, size }) => {
+    set({ loading: true, error: null })
+    try {
+      const organizationId = await createOrganizationRemote({ name, industry, size })
+      const dataset = await fetchOrganizationDataset(organizationId)
+      set({ dataset, isDemo: false, loading: false })
+    } catch (err) {
+      set({ loading: false, error: err instanceof Error ? err.message : 'Could not create your organization.' })
+      throw err
+    }
+  },
+
+  importPeople: async (people, personSkills, personTeams, newSkills) => {
     const { dataset } = get()
     if (!dataset) return
-    const repo = new OrbitRepository(dataset)
-    let next = repo.addSkills(dataset.organization.id, newSkills)
-    const repo2 = new OrbitRepository(next)
-    next = repo2.addPeople(dataset.organization.id, people, personSkills, personTeams)
-    persistDataset(next)
-    set({ dataset: next, repository: new OrbitRepository(next) })
+    await insertPeople(dataset.organization.id, people, personSkills, personTeams, newSkills)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
   },
 
-  resetOrganization: () => {
-    persistDataset(null)
-    try {
-      localStorage.removeItem(ONBOARDED_KEY)
-    } catch {
-      // ignore
-    }
-    set({ dataset: null, repository: null, onboarded: false })
-  },
-
-  markOnboarded: () => {
-    try {
-      localStorage.setItem(ONBOARDED_KEY, 'true')
-    } catch {
-      // ignore
-    }
-    set({ onboarded: true })
-  },
+  clear: () => set({ dataset: null, isDemo: false, error: null }),
 }))

@@ -132,14 +132,11 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
   const personSkills: PersonSkill[] = []
   const personTeams: PersonTeam[] = []
 
-  let nextPersonSeq = dataset.people.length + 1
-  let nextSkillSeq = dataset.skills.length + 1
-
   for (const row of rows) {
     const v = row.values
     if (!v.firstName || !v.lastName || !v.email || !v.jobTitle || !v.department) continue
 
-    const personId = `person-import-${nextPersonSeq++}`
+    const personId = crypto.randomUUID()
     const person: Person = {
       id: personId,
       organizationId,
@@ -165,7 +162,7 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
       let skill = existingSkillsByName.get(skillName.toLowerCase())
       if (!skill) {
         skill = {
-          id: `skill-import-${nextSkillSeq++}`,
+          id: crypto.randomUUID(),
           organizationId,
           name: skillName,
           category: inferSkillCategory(skillName),

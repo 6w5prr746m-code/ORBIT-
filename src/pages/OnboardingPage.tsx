@@ -1,49 +1,59 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { ArrowRight, Orbit, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { ImportPeople } from '@/components/settings/ImportPeople'
 import { useOrbitStore } from '@/state/orbitStore'
+import { useAuthStore } from '@/state/authStore'
+import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
-const STEPS = ['Welcome', 'Organization', 'People', 'Discover'] as const
+const STEPS = ['Organization', 'People', 'Discover'] as const
 
 export function OnboardingPage() {
   const navigate = useNavigate()
-  const loadDemo = useOrbitStore((s) => s.loadDemo)
+  const { session, initialized } = useAuthStore()
   const createOrganization = useOrbitStore((s) => s.createOrganization)
   const dataset = useOrbitStore((s) => s.dataset)
+  const { push } = useToast()
 
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
   const [industry, setIndustry] = useState('')
   const [size, setSize] = useState('')
+  const [creating, setCreating] = useState(false)
 
-  function skipToDemo() {
-    loadDemo()
-    navigate('/')
-  }
+  if (initialized && !session) return <Navigate to="/auth" replace />
 
-  function goNext() {
-    if (step === 1) {
-      createOrganization({ name: name || 'My Organization', industry: industry || 'Technology', size: Number(size) || 100 })
+  async function goNext() {
+    if (step === 0) {
+      setCreating(true)
+      try {
+        await createOrganization({
+          name: name || 'My Organization',
+          industry: industry || 'Technology',
+          size: Number(size) || 100,
+        })
+      } catch {
+        setCreating(false)
+        push({ kind: 'error', title: "Couldn't create your organization", description: 'Please try again.' })
+        return
+      }
+      setCreating(false)
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1))
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
-      <header className="flex items-center justify-between px-6 py-6 sm:px-10">
+      <header className="flex items-center px-6 py-6 sm:px-10">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-ink text-canvas">
             <Orbit className="h-4 w-4" strokeWidth={2} />
           </div>
           <span className="text-[15px] font-semibold tracking-tight text-ink">ORBIT</span>
         </div>
-        <Button variant="ghost" size="sm" onClick={skipToDemo}>
-          Skip — explore demo
-        </Button>
       </header>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col px-6 py-10 sm:px-0">
@@ -54,18 +64,6 @@ export function OnboardingPage() {
         </div>
 
         {step === 0 && (
-          <div className="flex flex-1 flex-col justify-center text-center">
-            <h1 className="text-3xl font-semibold tracking-tight text-ink">Welcome to Orbit.</h1>
-            <p className="mt-3 text-base text-graphite">
-              Know who knows what. Let's set up your organization in a couple of minutes.
-            </p>
-            <Button variant="accent" size="lg" className="mx-auto mt-8 w-fit" onClick={goNext}>
-              Get started <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-
-        {step === 1 && (
           <div className="flex flex-1 flex-col justify-center">
             <h1 className="text-2xl font-semibold tracking-tight text-ink">Tell us about your organization.</h1>
             <div className="mt-6 flex flex-col gap-4">
@@ -82,13 +80,13 @@ export function OnboardingPage() {
                 <Input value={size} onChange={(e) => setSize(e.target.value)} placeholder="250" type="number" min="1" />
               </div>
             </div>
-            <Button variant="accent" size="lg" className="mt-8 w-fit" onClick={goNext}>
-              Continue <ArrowRight className="h-4 w-4" />
+            <Button variant="accent" size="lg" className="mt-8 w-fit" onClick={goNext} disabled={creating}>
+              {creating ? 'Creating…' : 'Continue'} {!creating && <ArrowRight className="h-4 w-4" />}
             </Button>
           </div>
         )}
 
-        {step === 2 && (
+        {step === 1 && (
           <div className="flex flex-1 flex-col justify-center">
             <h1 className="text-2xl font-semibold tracking-tight text-ink">Add your people.</h1>
             <p className="mt-2 text-sm text-graphite">Import a CSV now, or skip and do it later from Settings.</p>
@@ -101,7 +99,7 @@ export function OnboardingPage() {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <div className="flex flex-1 flex-col justify-center text-center">
             <Sparkles className="mx-auto h-10 w-10 text-accent" strokeWidth={1.5} />
             <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink">Discover your organization.</h1>

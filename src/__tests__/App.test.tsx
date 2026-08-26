@@ -1,13 +1,15 @@
-import { describe, expect, it, beforeEach } from 'vitest'
+import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import App from '@/App'
-import { useOrbitStore } from '@/state/orbitStore'
+import { fakeSupabase } from '@/test/fakeSupabase'
+
+vi.mock('@/lib/supabaseClient', () => ({ supabase: fakeSupabase }))
+
+const { default: App } = await import('@/App')
+const { useOrbitStore } = await import('@/state/orbitStore')
 
 beforeEach(() => {
-  // The store persists to localStorage but keeps its own in-memory state, so tests
-  // drive it through its actions (not raw localStorage writes) to stay in sync.
-  useOrbitStore.getState().resetOrganization()
+  useOrbitStore.getState().clear()
 })
 
 describe('App routing', () => {
@@ -22,7 +24,7 @@ describe('App routing', () => {
   })
 
   it('renders the Home page once a demo dataset is present', async () => {
-    useOrbitStore.getState().loadDemo()
+    await useOrbitStore.getState().loadDemo()
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -35,7 +37,7 @@ describe('App routing', () => {
   })
 
   it('shows a 404 state for an unknown route', async () => {
-    useOrbitStore.getState().loadDemo()
+    await useOrbitStore.getState().loadDemo()
 
     render(
       <MemoryRouter initialEntries={['/this-does-not-exist']}>

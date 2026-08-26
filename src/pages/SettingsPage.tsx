@@ -13,9 +13,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { useNavigate } from 'react-router-dom'
 import { ImportPeople } from '@/components/settings/ImportPeople'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
+import { useAuthStore } from '@/state/authStore'
 import { cn } from '@/lib/utils'
 import type { IntegrationSourceType } from '@/types'
 
@@ -50,10 +52,20 @@ const INTEGRATION_LABELS: Record<IntegrationSourceType, string> = {
 }
 
 export function SettingsPage() {
+  const navigate = useNavigate()
   const dataset = useDataset()
-  const resetOrganization = useOrbitStore((s) => s.resetOrganization)
+  const isDemo = useOrbitStore((s) => s.isDemo)
+  const clearDataset = useOrbitStore((s) => s.clear)
+  const user = useAuthStore((s) => s.user)
+  const signOut = useAuthStore((s) => s.signOut)
   const [section, setSection] = useState<SectionId>('workspace')
   const [accent, setAccent] = useState(ACCENT_OPTIONS[0].value)
+
+  async function handleSignOut() {
+    await signOut()
+    clearDataset()
+    navigate('/welcome')
+  }
 
   if (!dataset) return null
 
@@ -155,23 +167,14 @@ export function SettingsPage() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-border pt-4">
-                  <p className="mb-2 text-sm font-medium text-ink">Reset organization</p>
-                  <p className="mb-3 text-sm text-graphite">
-                    Clears all data in this workspace and returns you to onboarding. This cannot be undone.
-                  </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      if (window.confirm('Reset this workspace? All imported data will be removed.')) {
-                        resetOrganization()
-                      }
-                    }}
-                  >
-                    Reset organization
-                  </Button>
-                </div>
+                {isDemo && (
+                  <div className="border-t border-border pt-4">
+                    <p className="text-sm text-graphite">
+                      You're viewing the shared, read-only Northstar demo. Create your own account to build a real
+                      organization.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -230,13 +233,14 @@ export function SettingsPage() {
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Name</label>
-                  <Input value="You" readOnly />
-                </div>
-                <div>
                   <label className="mb-1.5 block text-sm font-medium text-ink">Email</label>
-                  <Input value={`you@${dataset.organization.name.toLowerCase()}.io`} readOnly />
+                  <Input value={user?.email ?? 'Browsing the demo — not signed in'} readOnly />
                 </div>
+                {user && (
+                  <Button variant="outline" size="sm" onClick={handleSignOut} className="w-fit">
+                    Sign out
+                  </Button>
+                )}
               </CardContent>
             </Card>
           )}
