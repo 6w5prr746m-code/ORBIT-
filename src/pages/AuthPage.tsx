@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, MailCheck, Orbit } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuthStore } from '@/state/authStore'
@@ -11,6 +12,7 @@ type Mode = 'signup' | 'login'
 
 export function AuthPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const signUp = useAuthStore((s) => s.signUp)
   const signIn = useAuthStore((s) => s.signIn)
   const loadMyOrganization = useOrbitStore((s) => s.loadMyOrganization)
@@ -50,12 +52,12 @@ export function AuthPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-canvas px-6 text-center">
         <MailCheck className="h-10 w-10 text-accent" strokeWidth={1.5} />
-        <h1 className="text-xl font-semibold text-ink">Check your email</h1>
+        <h1 className="text-xl font-semibold text-ink">{t('auth.checkEmail.title')}</h1>
         <p className="max-w-sm text-sm text-graphite">
-          We sent a confirmation link to <strong>{email}</strong>. Click it, then come back and log in.
+          <Trans i18nKey="auth.checkEmail.description" values={{ email }} components={{ strong: <strong /> }} />
         </p>
         <Button variant="outline" onClick={() => setNeedsConfirmation(false)}>
-          Back to sign in
+          {t('auth.checkEmail.backToSignIn')}
         </Button>
       </div>
     )
@@ -84,25 +86,25 @@ export function AuthPage() {
                 mode === m ? 'bg-canvas-raised text-ink shadow-xs' : 'text-graphite',
               )}
             >
-              {m === 'signup' ? 'Create account' : 'Log in'}
+              {m === 'signup' ? t('auth.createAccount') : t('auth.login')}
             </button>
           ))}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink">Email</label>
+            <label className="mb-1.5 block text-sm font-medium text-ink">{t('auth.email')}</label>
             <Input
               type="email"
               required
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
+              placeholder={t('auth.emailPlaceholder')}
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink">Password</label>
+            <label className="mb-1.5 block text-sm font-medium text-ink">{t('auth.password')}</label>
             <Input
               type="password"
               required
@@ -110,21 +112,21 @@ export function AuthPage() {
               autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
+              placeholder={t('auth.passwordPlaceholder')}
             />
           </div>
 
           {error && <p className="text-sm text-danger">{error}</p>}
 
           <Button type="submit" variant="accent" size="lg" disabled={submitting} className="mt-2">
-            {submitting ? 'Please wait…' : mode === 'signup' ? 'Create account' : 'Log in'}
+            {submitting ? t('auth.pleaseWait') : mode === 'signup' ? t('auth.createAccount') : t('auth.login')}
             {!submitting && <ArrowRight className="h-4 w-4" />}
           </Button>
         </form>
       </div>
 
       <Button variant="ghost" size="sm" onClick={() => navigate('/welcome')}>
-        Back
+        {t('auth.back')}
       </Button>
     </div>
   )

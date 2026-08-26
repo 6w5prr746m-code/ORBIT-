@@ -2,24 +2,24 @@ import { Compass, Home, MessageCircle, Settings, Sparkles, Users, type LucideIco
 
 export interface NavItemDef {
   to: string
-  label: string
+  labelKey: string
   icon: LucideIcon
   end?: boolean
 }
 
 export const NAV_ITEMS: NavItemDef[] = [
-  { to: '/', label: 'Home', icon: Home, end: true },
-  { to: '/people', label: 'People', icon: Users },
-  { to: '/skills', label: 'Skills', icon: Sparkles },
-  { to: '/discover', label: 'Discover', icon: Compass },
-  { to: '/ask', label: 'Ask', icon: MessageCircle },
+  { to: '/', labelKey: 'nav.home', icon: Home, end: true },
+  { to: '/people', labelKey: 'nav.people', icon: Users },
+  { to: '/skills', labelKey: 'nav.skills', icon: Sparkles },
+  { to: '/discover', labelKey: 'nav.discover', icon: Compass },
+  { to: '/ask', labelKey: 'nav.ask', icon: MessageCircle },
 ]
 
-export const SETTINGS_ITEM: NavItemDef = { to: '/settings', label: 'Settings', icon: Settings }
+export const SETTINGS_ITEM: NavItemDef = { to: '/settings', labelKey: 'nav.settings', icon: Settings }
 
 export const MOBILE_NAV_ITEMS: NavItemDef[] = [
-  { to: '/', label: 'Home', icon: Home, end: true },
-  { to: '/people', label: 'People', icon: Users },
-  { to: '/discover', label: 'Discover', icon: Compass },
-  { to: '/ask', label: 'Ask', icon: MessageCircle },
+  { to: '/', labelKey: 'nav.home', icon: Home, end: true },
+  { to: '/people', labelKey: 'nav.people', icon: Users },
+  { to: '/discover', labelKey: 'nav.discover', icon: Compass },
+  { to: '/ask', labelKey: 'nav.ask', icon: MessageCircle },
 ]

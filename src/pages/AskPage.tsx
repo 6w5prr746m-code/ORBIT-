@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CornerDownLeft, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { PageHeader } from '@/components/common/PageHeader'
 import { Avatar } from '@/components/ui/Avatar'
@@ -21,8 +22,11 @@ function scoreTone(score: number): string {
   return 'text-graphite'
 }
 
+const SUGGESTION_KEYS = ['ask.suggestions.salesforce', 'ask.suggestions.ai', 'ask.suggestions.germany', 'ask.suggestions.connected', 'ask.suggestions.finance']
+
 export function AskPage() {
   const dataset = useDataset()
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [input, setInput] = useState('')
   const [turns, setTurns] = useState<ConversationTurn[]>([])
@@ -54,7 +58,7 @@ export function AskPage() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col px-6 pb-6 pt-2 sm:px-10">
-      <PageHeader title="Ask Orbit" description="Ask anything about your organization." />
+      <PageHeader title={t('ask.title')} description={t('ask.description')} />
 
       <div className="py-6">
         {turns.length === 0 ? (
@@ -62,17 +66,15 @@ export function AskPage() {
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-accent">
               <Sparkles className="h-6 w-6" strokeWidth={1.75} />
             </div>
-            <p className="max-w-sm text-sm text-graphite">
-              Ask a question in plain language. ORBIT searches real profiles and skills — every answer explains why.
-            </p>
+            <p className="max-w-sm text-sm text-graphite">{t('ask.intro')}</p>
             <div className="flex flex-wrap justify-center gap-2">
-              {ASK_SUGGESTIONS.map((s) => (
+              {ASK_SUGGESTIONS.map((s, i) => (
                 <button
                   key={s}
                   onClick={() => ask(s)}
                   className="rounded-[var(--radius-pill)] border border-border bg-canvas-raised px-3.5 py-1.5 text-[13px] text-graphite transition-colors hover:border-accent/40 hover:text-accent-ink"
                 >
-                  {s}
+                  {t(SUGGESTION_KEYS[i])}
                 </button>
               ))}
             </div>
@@ -143,13 +145,13 @@ export function AskPage() {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask anything about your organization…"
+          placeholder={t('ask.inputPlaceholder')}
           className="h-11 flex-1 bg-transparent px-3 text-[15px] text-ink placeholder:text-graphite-soft focus-visible:outline-none"
         />
         <button
           type="submit"
           disabled={!input.trim()}
-          aria-label="Send"
+          aria-label={t('ask.send')}
           className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-control)] bg-ink text-canvas transition-opacity disabled:opacity-30"
         >
           <CornerDownLeft className="h-4 w-4" />
