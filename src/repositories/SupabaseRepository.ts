@@ -1,0 +1,111 @@
+import { supabase } from '@/lib/supabaseClient'
+import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
+import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
+import {
+  mapConnection,
+  mapOrganization,
+  mapPerson,
+  mapPersonSkill,
+  mapPersonTeam,
+  mapSkill,
+  mapSource,
+  mapTeam,
+  personSkillToRow,
+  personTeamToRow,
+  personToRow,
+  skillToRow,
+} from './mappers'
+
+/** Fetches everything needed to render the app for one organization, in parallel. */
+export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
+  const [org, people, skills, personSkills, teams, personTeams, connections, sources] = await Promise.all([
+    supabase.from('organizations').select('*').eq('id', organizationId).single(),
+    supabase.from('people').select('*').eq('organization_id', organizationId),
+    supabase.from('skills').select('*').eq('organization_id', organizationId),
+    supabase.from('person_skills').select('*').eq('organization_id', organizationId),
+    supabase.from('teams').select('*').eq('organization_id', organizationId),
+    supabase.from('person_teams').select('*').eq('organization_id', organizationId),
+    supabase.from('connections').select('*').eq('organization_id', organizationId),
+    supabase.from('sources').select('*').eq('organization_id', organizationId),
+  ])
+
+  const failed = [org, people, skills, personSkills, teams, personTeams, connections, sources].find((r) => r.error)
+  if (failed?.error) throw new Error(failed.error.message)
+  if (!org.data) throw new Error('Organization not found')
+
+  return {
+    organization: mapOrganization(org.data),
+    people: (people.data ?? []).map(mapPerson),
+    skills: (skills.data ?? []).map(mapSkill),
+    personSkills: (personSkills.data ?? []).map(mapPersonSkill),
+    teams: (teams.data ?? []).map(mapTeam),
+    personTeams: (personTeams.data ?? []).map(mapPersonTeam),
+    connections: (connections.data ?? []).map(mapConnection),
+    sources: (sources.data ?? []).map(mapSource),
+  }
+}
+
+export function fetchDemoDataset(): Promise<OrganizationDataset> {
+  return fetchOrganizationDataset(DEMO_ORGANIZATION_ID)
+}
+
+/** MVP: one organization per user. Returns null if they haven't created/joined one yet. */
+export async function fetchMyOrganizationId(userId: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('memberships')
+    .select('organization_id')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) throw new Error(error.message)
+  return data?.organization_id ?? null
+}
+
+export async function createOrganization(input: { name: string; industry: string; size: number }): Promise<string> {
+  const { data, error } = await supabase.rpc('create_organization', {
+    org_name: input.name,
+    org_industry: input.industry,
+    org_size: input.size,
+  })
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function insertPeople(
+  organizationId: string,
+  people: Person[],
+  personSkills: PersonSkill[],
+  personTeams: PersonTeam[],
+  newSkills: Skill[],
+): Promise<void> {
+  if (newSkills.length > 0) {
+    const { error } = await supabase
+      .from('skills')
+      .upsert(
+        newSkills.map(skillToRow),
+        { onConflict: 'organization_id,name', ignoreDuplicates: true },
+      )
+    if (error) throw new Error(error.message)
+  }
+
+  if (people.length > 0) {
+    const { error } = await supabase.from('people').insert(people.map(personToRow))
+    if (error) throw new Error(error.message)
+  }
+
+  if (personSkills.length > 0) {
+    const { error } = await supabase
+      .from('person_skills')
+      .insert(personSkills.map((ps) => personSkillToRow(ps, organizationId)))
+    if (error) throw new Error(error.message)
+  }
+
+  if (personTeams.length > 0) {
+    const { error } = await supabase
+      .from('person_teams')
+      .insert(personTeams.map((pt) => personTeamToRow(pt, organizationId)))
+    if (error) throw new Error(error.message)
+  }
+}

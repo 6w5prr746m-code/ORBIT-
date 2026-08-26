@@ -27,6 +27,8 @@ jobs:
       - run: npm run build
         env:
           GH_PAGES: 'true'
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       # GitHub Pages has no server-side rewrites, so a direct link/refresh on a
       # client-side route (e.g. /people) would 404. Serving the same SPA shell
       # as 404.html lets the router pick up the real route from the URL.

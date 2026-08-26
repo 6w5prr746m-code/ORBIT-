@@ -24,9 +24,10 @@ const USE_CASES = [
 export function LandingPage() {
   const navigate = useNavigate()
   const loadDemo = useOrbitStore((s) => s.loadDemo)
+  const demoLoading = useOrbitStore((s) => s.loading)
 
-  function exploreDemo() {
-    loadDemo()
+  async function exploreDemo() {
+    await loadDemo()
     navigate('/')
   }
 
@@ -40,10 +41,10 @@ export function LandingPage() {
           <span className="text-[15px] font-semibold tracking-tight text-ink">ORBIT</span>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/onboarding')}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
             Set up your organization
           </Button>
-          <Button variant="accent" size="sm" onClick={exploreDemo}>
+          <Button variant="accent" size="sm" onClick={exploreDemo} disabled={demoLoading}>
             Explore demo
           </Button>
         </div>
@@ -55,7 +56,7 @@ export function LandingPage() {
           Find the people, skills and expertise hidden inside your company.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button variant="accent" size="lg" onClick={exploreDemo}>
+          <Button variant="accent" size="lg" onClick={exploreDemo} disabled={demoLoading}>
             Explore demo <ArrowRight className="h-4 w-4" />
           </Button>
           <Button
@@ -143,10 +144,10 @@ export function LandingPage() {
         <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Ready to see your own organization?</h2>
         <p className="mt-3 text-graphite">Explore a live demo, or set up your own workspace in minutes.</p>
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button variant="accent" size="lg" onClick={exploreDemo}>
+          <Button variant="accent" size="lg" onClick={exploreDemo} disabled={demoLoading}>
             Explore demo
           </Button>
-          <Button variant="outline" size="lg" onClick={() => navigate('/onboarding')}>
+          <Button variant="outline" size="lg" onClick={() => navigate('/auth')}>
             Set up your organization
           </Button>
         </div>
