@@ -139,6 +139,15 @@ Security itself can only really be verified against a live Postgres
 instance — do that manually via the Supabase SQL editor if you change
 `0002_rls.sql`.
 
+## Versioning
+
+The project follows [Semantic Versioning](https://semver.org/) and keeps a
+[`CHANGELOG.md`](./CHANGELOG.md) (pre-1.0: `MINOR` = new feature, `PATCH` =
+fix). Every merge to `main` that bumps `package.json`'s `version` is
+automatically tagged (`vX.Y.Z`) and published as a GitHub Release by
+[`.github/workflows/tag-release.yml`](./.github/workflows/tag-release.yml),
+using the matching `CHANGELOG.md` section as the release notes.
+
 ## PWA
 
 Configured via `vite-plugin-pwa` (`vite.config.ts`): a generated

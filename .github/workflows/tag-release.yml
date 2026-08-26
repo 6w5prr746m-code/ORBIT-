@@ -1,0 +1,68 @@
+name: Tag Release
+
+# Runs whenever package.json changes on main (i.e. a version bump was merged).
+# Creates a git tag matching the new version and a GitHub Release whose notes
+# are pulled straight from CHANGELOG.md — no manual tagging needed.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version from package.json
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag already exists
+        id: check
+        run: |
+          if git rev-parse "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract changelog section for this version
+        if: steps.check.outputs.exists == 'false'
+        id: notes
+        run: |
+          node -e "
+            const fs = require('fs');
+            const version = '${{ steps.version.outputs.version }}';
+            const text = fs.readFileSync('CHANGELOG.md', 'utf8');
+            const lines = text.split('\n');
+            const startIdx = lines.findIndex((l) => l.startsWith('## [' + version + ']'));
+            if (startIdx === -1) {
+              console.error('No CHANGELOG.md section found for version ' + version);
+              process.exit(1);
+            }
+            let endIdx = lines.findIndex((l, i) => i > startIdx && l.startsWith('## '));
+            if (endIdx === -1) endIdx = lines.length;
+            const section = lines.slice(startIdx + 1, endIdx).join('\n').trim();
+            fs.writeFileSync('release-notes.md', section + '\n');
+          "
+
+      - name: Create tag and GitHub Release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
+          git push origin "v${{ steps.version.outputs.version }}"
+          gh release create "v${{ steps.version.outputs.version }}" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --notes-file release-notes.md
