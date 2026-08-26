@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -15,6 +16,7 @@ const CATEGORIES: SkillCategory[] = ['Technology', 'Business', 'Language', 'Desi
 export function SkillsPage() {
   const dataset = useDataset()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<SkillCategory | ''>('')
   const debouncedQuery = useDebouncedValue(query, 150)
@@ -42,13 +44,13 @@ export function SkillsPage() {
   return (
     <div>
       <PageHeader
-        eyebrow={`${dataset.skills.length} skills`}
-        title="Skills"
-        description="What does your organization know?"
+        eyebrow={t('skills.eyebrow', { count: dataset.skills.length })}
+        title={t('skills.title')}
+        description={t('skills.description')}
       />
 
       <div className="flex flex-col gap-4 px-6 py-6 sm:px-10">
-        <SearchBar placeholder="Search skills…" value={query} onChange={(e) => setQuery(e.target.value)} className="max-w-xl" />
+        <SearchBar placeholder={t('skills.searchPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} className="max-w-xl" />
 
         <div className="flex flex-wrap gap-2">
           <button
@@ -57,7 +59,7 @@ export function SkillsPage() {
               category === '' ? 'border-ink bg-ink text-canvas' : 'border-border bg-canvas-raised text-graphite hover:text-ink'
             }`}
           >
-            All
+            {t('skills.all')}
           </button>
           {CATEGORIES.map((c) => (
             <button
@@ -67,7 +69,7 @@ export function SkillsPage() {
                 category === c ? 'border-ink bg-ink text-canvas' : 'border-border bg-canvas-raised text-graphite hover:text-ink'
               }`}
             >
-              {c}
+              {t(`skills.categories.${c}`)}
             </button>
           ))}
         </div>
@@ -75,9 +77,9 @@ export function SkillsPage() {
         {filteredSkills.length === 0 ? (
           <EmptyState
             icon={Sparkles}
-            title="No skills found yet."
-            description="Import your organization to start discovering expertise."
-            actionLabel="Import people"
+            title={t('skills.empty.title')}
+            description={t('skills.empty.description')}
+            actionLabel={t('skills.empty.action')}
             onAction={() => navigate('/settings')}
           />
         ) : (

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Briefcase, MapPin, MessageCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { Avatar } from '@/components/ui/Avatar'
 import { Tag } from '@/components/ui/Tag'
@@ -16,6 +17,7 @@ export function PersonProfilePage() {
   const { personId } = useParams<{ personId: string }>()
   const dataset = useDataset()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const data = useMemo(() => {
     if (!dataset || !personId) return null
@@ -49,7 +51,7 @@ export function PersonProfilePage() {
         onClick={() => navigate(-1)}
         className="mb-6 flex items-center gap-1.5 text-sm font-medium text-graphite hover:text-ink"
       >
-        <ArrowLeft className="h-4 w-4" /> Back
+        <ArrowLeft className="h-4 w-4" /> {t('personProfile.back')}
       </button>
 
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -76,27 +78,27 @@ export function PersonProfilePage() {
             navigate(
               `/ask?q=${encodeURIComponent(
                 topSkillName
-                  ? `Why is ${person.firstName} a good person to talk to about ${topSkillName}?`
-                  : `Tell me about ${person.firstName} ${person.lastName}`,
+                  ? t('personProfile.askQuestion', { firstName: person.firstName, skill: topSkillName })
+                  : t('personProfile.askQuestionFallback', { fullName: `${person.firstName} ${person.lastName}` }),
               )}`,
             )
           }
         >
           <MessageCircle className="h-4 w-4" />
-          Ask about this person
+          {t('personProfile.askAboutPerson')}
         </Button>
       </div>
 
       <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2">
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">Expertise</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.expertise')}</h2>
             <div className="flex flex-wrap gap-2">
               {nonLanguageSkills.map((s) => (
                 <Tag key={s.id} className="gap-1.5">
                   {s.name}
                   <Badge variant={s.level === 'expert' ? 'accent' : 'default'} className="px-1.5 py-0 text-[10px]">
-                    {s.level}
+                    {t(`common.levels.${s.level}`)}
                   </Badge>
                 </Tag>
               ))}
@@ -104,20 +106,20 @@ export function PersonProfilePage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">About</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.about')}</h2>
             <p className="text-[15px] leading-relaxed text-ink">{person.bio}</p>
           </section>
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">Experience</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.experience')}</h2>
             <Card className="p-5">
               <p className="text-sm font-medium text-ink">{person.jobTitle}</p>
               <p className="text-sm text-graphite">
-                {teams[0]?.name ?? person.department} · since {formatDate(person.startDate)}
+                {teams[0]?.name ?? person.department} · {t('personProfile.since', { date: formatDate(person.startDate) })}
               </p>
               {manager && (
                 <p className="mt-2 text-sm text-graphite-soft">
-                  Reports to{' '}
+                  {t('personProfile.reportsTo')}{' '}
                   <Link to={`/people/${manager.id}`} className="font-medium text-accent-ink hover:underline">
                     {manager.firstName} {manager.lastName}
                   </Link>
@@ -128,7 +130,7 @@ export function PersonProfilePage() {
 
           {canHelpWith.length > 0 && (
             <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">Can help with</h2>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.canHelpWith')}</h2>
               <ul className="flex flex-col gap-2">
                 {canHelpWith.map((topic) => (
                   <li key={topic} className="rounded-[var(--radius-control)] border border-border bg-canvas-raised px-4 py-3 text-sm text-ink">
@@ -143,7 +145,7 @@ export function PersonProfilePage() {
         <div className="flex flex-col gap-8">
           {worksWith.length > 0 && (
             <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">Works with</h2>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.worksWith')}</h2>
               <div className="flex flex-col gap-3">
                 {worksWith.map((p) => (
                   <Link key={p.id} to={`/people/${p.id}`} className="flex items-center gap-3 rounded-[var(--radius-control)] p-2 transition-colors hover:bg-mist">
@@ -164,7 +166,7 @@ export function PersonProfilePage() {
 
       {related.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-graphite-soft">Related people</h2>
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.relatedPeople')}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (
               <PersonCard

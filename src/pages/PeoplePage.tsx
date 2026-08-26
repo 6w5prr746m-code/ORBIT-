@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Users2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -10,6 +11,7 @@ import { normalizeQuery, skillsForPerson } from '@/services/SearchService'
 
 export function PeoplePage() {
   const dataset = useDataset()
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [team, setTeam] = useState('')
   const [location, setLocation] = useState('')
@@ -44,11 +46,15 @@ export function PeoplePage() {
 
   return (
     <div>
-      <PageHeader eyebrow={`${dataset.people.length} people`} title="People" description="Everyone in your organization." />
+      <PageHeader
+        eyebrow={t('people.eyebrow', { count: dataset.people.length })}
+        title={t('people.title')}
+        description={t('people.description')}
+      />
 
       <div className="flex flex-col gap-4 px-6 py-6 sm:px-10">
         <SearchBar
-          placeholder="Search by name, role, team or location…"
+          placeholder={t('people.searchPlaceholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="max-w-xl"
@@ -60,10 +66,10 @@ export function PeoplePage() {
             onChange={(e) => setTeam(e.target.value)}
             className="h-9 rounded-[var(--radius-control)] border border-border bg-canvas-raised px-3 text-sm text-ink focus-visible:outline-none focus:border-accent"
           >
-            <option value="">All teams</option>
-            {teams.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
+            <option value="">{t('people.allTeams')}</option>
+            {teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
               </option>
             ))}
           </select>
@@ -72,7 +78,7 @@ export function PeoplePage() {
             onChange={(e) => setLocation(e.target.value)}
             className="h-9 rounded-[var(--radius-control)] border border-border bg-canvas-raised px-3 text-sm text-ink focus-visible:outline-none focus:border-accent"
           >
-            <option value="">All locations</option>
+            <option value="">{t('people.allLocations')}</option>
             {locations.map((l) => (
               <option key={l} value={l}>
                 {l}
@@ -84,9 +90,9 @@ export function PeoplePage() {
         {filteredPeople.length === 0 ? (
           <EmptyState
             icon={Users2}
-            title="No one matches these filters"
-            description="Try a different search term, or clear your filters to see everyone."
-            actionLabel="Clear filters"
+            title={t('people.empty.title')}
+            description={t('people.empty.description')}
+            actionLabel={t('people.empty.action')}
             onAction={() => {
               setQuery('')
               setTeam('')

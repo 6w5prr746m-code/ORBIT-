@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ArrowRight, Orbit, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { ImportPeople } from '@/components/settings/ImportPeople'
@@ -9,10 +10,11 @@ import { useAuthStore } from '@/state/authStore'
 import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
-const STEPS = ['Organization', 'People', 'Discover'] as const
+const STEP_KEYS = ['onboarding.steps.organization', 'onboarding.steps.people', 'onboarding.steps.discover'] as const
 
 export function OnboardingPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { session, initialized } = useAuthStore()
   const createOrganization = useOrbitStore((s) => s.createOrganization)
   const dataset = useOrbitStore((s) => s.dataset)
@@ -37,12 +39,16 @@ export function OnboardingPage() {
         })
       } catch {
         setCreating(false)
-        push({ kind: 'error', title: "Couldn't create your organization", description: 'Please try again.' })
+        push({
+          kind: 'error',
+          title: t('onboarding.organizationStep.createError.title'),
+          description: t('onboarding.organizationStep.createError.description'),
+        })
         return
       }
       setCreating(false)
     }
-    setStep((s) => Math.min(s + 1, STEPS.length - 1))
+    setStep((s) => Math.min(s + 1, STEP_KEYS.length - 1))
   }
 
   return (
@@ -58,43 +64,43 @@ export function OnboardingPage() {
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col px-6 py-10 sm:px-0">
         <div className="mb-8 flex gap-1.5">
-          {STEPS.map((label, i) => (
-            <div key={label} className={cn('h-1 flex-1 rounded-full', i <= step ? 'bg-ink' : 'bg-mist')} />
+          {STEP_KEYS.map((key, i) => (
+            <div key={key} className={cn('h-1 flex-1 rounded-full', i <= step ? 'bg-ink' : 'bg-mist')} />
           ))}
         </div>
 
         {step === 0 && (
           <div className="flex flex-1 flex-col justify-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink">Tell us about your organization.</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-ink">{t('onboarding.organizationStep.title')}</h1>
             <div className="mt-6 flex flex-col gap-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink">Name</label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Acme Inc." />
+                <label className="mb-1.5 block text-sm font-medium text-ink">{t('onboarding.organizationStep.name')}</label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('onboarding.organizationStep.namePlaceholder')} />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink">Industry</label>
-                <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="B2B SaaS" />
+                <label className="mb-1.5 block text-sm font-medium text-ink">{t('onboarding.organizationStep.industry')}</label>
+                <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder={t('onboarding.organizationStep.industryPlaceholder')} />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink">Company size</label>
-                <Input value={size} onChange={(e) => setSize(e.target.value)} placeholder="250" type="number" min="1" />
+                <label className="mb-1.5 block text-sm font-medium text-ink">{t('onboarding.organizationStep.size')}</label>
+                <Input value={size} onChange={(e) => setSize(e.target.value)} placeholder={t('onboarding.organizationStep.sizePlaceholder')} type="number" min="1" />
               </div>
             </div>
             <Button variant="accent" size="lg" className="mt-8 w-fit" onClick={goNext} disabled={creating}>
-              {creating ? 'Creating…' : 'Continue'} {!creating && <ArrowRight className="h-4 w-4" />}
+              {creating ? t('onboarding.organizationStep.creating') : t('common.continue')} {!creating && <ArrowRight className="h-4 w-4" />}
             </Button>
           </div>
         )}
 
         {step === 1 && (
           <div className="flex flex-1 flex-col justify-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink">Add your people.</h1>
-            <p className="mt-2 text-sm text-graphite">Import a CSV now, or skip and do it later from Settings.</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-ink">{t('onboarding.peopleStep.title')}</h1>
+            <p className="mt-2 text-sm text-graphite">{t('onboarding.peopleStep.subtitle')}</p>
             <div className="mt-6">
               <ImportPeople />
             </div>
             <Button variant="accent" size="lg" className="mt-8 w-fit" onClick={goNext}>
-              Continue <ArrowRight className="h-4 w-4" />
+              {t('common.continue')} <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         )}
@@ -102,14 +108,14 @@ export function OnboardingPage() {
         {step === 2 && (
           <div className="flex flex-1 flex-col justify-center text-center">
             <Sparkles className="mx-auto h-10 w-10 text-accent" strokeWidth={1.5} />
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink">Discover your organization.</h1>
+            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink">{t('onboarding.discoverStep.title')}</h1>
             <p className="mt-2 text-sm text-graphite">
               {dataset && dataset.people.length > 0
-                ? `${dataset.people.length} people are ready to explore.`
-                : 'Your workspace is ready — import people anytime from Settings.'}
+                ? t('onboarding.discoverStep.readyWithPeople', { count: dataset.people.length })
+                : t('onboarding.discoverStep.readyEmpty')}
             </p>
             <Button variant="accent" size="lg" className="mx-auto mt-8 w-fit" onClick={() => navigate('/')}>
-              Go to ORBIT <ArrowRight className="h-4 w-4" />
+              {t('onboarding.discoverStep.goToOrbit')} <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         )}

@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom'
 import { Orbit } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn, initials } from '@/lib/utils'
 import { NAV_ITEMS, SETTINGS_ITEM, type NavItemDef } from './navItems'
 import { useDataset } from '@/hooks/useDataset'
 import { Avatar } from '@/components/ui/Avatar'
 
-function NavItem({ to, label, icon: Icon, end }: NavItemDef) {
+function NavItem({ to, labelKey, icon: Icon, end }: NavItemDef) {
+  const { t } = useTranslation()
   return (
     <NavLink
       to={to}
@@ -18,13 +20,14 @@ function NavItem({ to, label, icon: Icon, end }: NavItemDef) {
       }
     >
       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-      {label}
+      {t(labelKey)}
     </NavLink>
   )
 }
 
 export function Sidebar() {
   const dataset = useDataset()
+  const { t } = useTranslation()
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-canvas-raised px-4 py-6 lg:flex">
@@ -56,7 +59,7 @@ export function Sidebar() {
         )}
         <div className="flex items-center gap-3 px-3 py-2">
           <Avatar name="You" initials="Y" size={28} />
-          <p className="text-[13px] font-medium text-ink">You</p>
+          <p className="text-[13px] font-medium text-ink">{t('sidebar.you')}</p>
         </div>
       </div>
     </aside>

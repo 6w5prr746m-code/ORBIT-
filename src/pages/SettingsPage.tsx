@@ -8,6 +8,7 @@ import {
   UserCircle,
   Wand2,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { PageHeader } from '@/components/common/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useNavigate } from 'react-router-dom'
 import { ImportPeople } from '@/components/settings/ImportPeople'
+import { LanguageSwitcher } from '@/components/settings/LanguageSwitcher'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
 import { useAuthStore } from '@/state/authStore'
@@ -22,33 +24,33 @@ import { cn } from '@/lib/utils'
 import type { IntegrationSourceType } from '@/types'
 
 const ACCENT_OPTIONS = [
-  { name: 'Signal blue', value: '#3b5bfd' },
-  { name: 'Forest', value: '#1c8a5e' },
-  { name: 'Amber', value: '#b5750f' },
-  { name: 'Plum', value: '#6d4fc4' },
+  { nameKey: 'settings.workspace.accentNames.signalBlue', value: '#3b5bfd' },
+  { nameKey: 'settings.workspace.accentNames.forest', value: '#1c8a5e' },
+  { nameKey: 'settings.workspace.accentNames.amber', value: '#b5750f' },
+  { nameKey: 'settings.workspace.accentNames.plum', value: '#6d4fc4' },
 ]
 
 const SECTIONS = [
-  { id: 'workspace', label: 'Workspace', icon: Wand2 },
-  { id: 'organization', label: 'Organization', icon: Building2 },
-  { id: 'data', label: 'Data', icon: Database },
-  { id: 'import', label: 'Import', icon: Upload },
-  { id: 'integrations', label: 'Integrations', icon: Plug },
-  { id: 'security', label: 'Security', icon: Lock },
-  { id: 'user', label: 'User', icon: UserCircle },
+  { id: 'workspace', labelKey: 'settings.sections.workspace', icon: Wand2 },
+  { id: 'organization', labelKey: 'settings.sections.organization', icon: Building2 },
+  { id: 'data', labelKey: 'settings.sections.data', icon: Database },
+  { id: 'import', labelKey: 'settings.sections.import', icon: Upload },
+  { id: 'integrations', labelKey: 'settings.sections.integrations', icon: Plug },
+  { id: 'security', labelKey: 'settings.sections.security', icon: Lock },
+  { id: 'user', labelKey: 'settings.sections.user', icon: UserCircle },
 ] as const
 
 type SectionId = (typeof SECTIONS)[number]['id']
 
-const INTEGRATION_LABELS: Record<IntegrationSourceType, string> = {
-  'core-hr': 'Core HR',
-  'microsoft-365': 'Microsoft 365',
-  'google-workspace': 'Google Workspace',
-  slack: 'Slack',
-  teams: 'Microsoft Teams',
-  notion: 'Notion',
-  jira: 'Jira',
-  'csv-import': 'CSV Import',
+const INTEGRATION_LABEL_KEYS: Record<IntegrationSourceType, string> = {
+  'core-hr': 'settings.integrations.labels.core-hr',
+  'microsoft-365': 'settings.integrations.labels.microsoft-365',
+  'google-workspace': 'settings.integrations.labels.google-workspace',
+  slack: 'settings.integrations.labels.slack',
+  teams: 'settings.integrations.labels.teams',
+  notion: 'settings.integrations.labels.notion',
+  jira: 'settings.integrations.labels.jira',
+  'csv-import': 'settings.integrations.labels.csv-import',
 }
 
 export function SettingsPage() {
@@ -58,6 +60,7 @@ export function SettingsPage() {
   const clearDataset = useOrbitStore((s) => s.clear)
   const user = useAuthStore((s) => s.user)
   const signOut = useAuthStore((s) => s.signOut)
+  const { t } = useTranslation()
   const [section, setSection] = useState<SectionId>('workspace')
   const [accent, setAccent] = useState(ACCENT_OPTIONS[0].value)
 
@@ -76,11 +79,11 @@ export function SettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Settings" description="Manage your workspace, data and integrations." />
+      <PageHeader title={t('settings.title')} description={t('settings.description')} />
 
       <div className="flex flex-col gap-8 px-6 py-8 sm:flex-row sm:px-10">
         <nav className="flex shrink-0 gap-1 overflow-x-auto sm:w-52 sm:flex-col sm:overflow-visible">
-          {SECTIONS.map(({ id, label, icon: Icon }) => (
+          {SECTIONS.map(({ id, labelKey, icon: Icon }) => (
             <button
               key={id}
               onClick={() => setSection(id)}
@@ -90,7 +93,7 @@ export function SettingsPage() {
               )}
             >
               <Icon className="h-4 w-4" strokeWidth={1.75} />
-              {label}
+              {t(labelKey)}
             </button>
           ))}
         </nav>
@@ -99,17 +102,17 @@ export function SettingsPage() {
           {section === 'workspace' && (
             <Card>
               <CardHeader>
-                <CardTitle>Workspace</CardTitle>
-                <CardDescription>Personalize how ORBIT looks for your organization.</CardDescription>
+                <CardTitle>{t('settings.workspace.title')}</CardTitle>
+                <CardDescription>{t('settings.workspace.description')}</CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col gap-4">
+              <CardContent className="flex flex-col gap-6">
                 <div>
-                  <p className="mb-2 text-sm font-medium text-ink">Accent color</p>
+                  <p className="mb-2 text-sm font-medium text-ink">{t('settings.workspace.accentColor')}</p>
                   <div className="flex gap-2">
                     {ACCENT_OPTIONS.map((option) => (
                       <button
                         key={option.value}
-                        aria-label={option.name}
+                        aria-label={t(option.nameKey)}
                         onClick={() => applyAccent(option.value)}
                         className={cn(
                           'h-9 w-9 rounded-full border-2 transition-transform hover:scale-105',
@@ -120,6 +123,10 @@ export function SettingsPage() {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <p className="mb-2 text-sm font-medium text-ink">{t('settings.workspace.language')}</p>
+                  <LanguageSwitcher />
+                </div>
               </CardContent>
             </Card>
           )}
@@ -127,21 +134,21 @@ export function SettingsPage() {
           {section === 'organization' && (
             <Card>
               <CardHeader>
-                <CardTitle>Organization</CardTitle>
-                <CardDescription>Basic information about your company.</CardDescription>
+                <CardTitle>{t('settings.organization.title')}</CardTitle>
+                <CardDescription>{t('settings.organization.description')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Name</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t('settings.organization.name')}</label>
                   <Input value={dataset.organization.name} readOnly />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Industry</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t('settings.organization.industry')}</label>
                   <Input value={dataset.organization.industry} readOnly />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Company size</label>
-                  <Input value={`${dataset.organization.size} employees`} readOnly />
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t('settings.organization.size')}</label>
+                  <Input value={t('settings.organization.employees', { count: dataset.organization.size })} readOnly />
                 </div>
               </CardContent>
             </Card>
@@ -150,16 +157,16 @@ export function SettingsPage() {
           {section === 'data' && (
             <Card>
               <CardHeader>
-                <CardTitle>Data</CardTitle>
-                <CardDescription>What ORBIT currently knows about your organization.</CardDescription>
+                <CardTitle>{t('settings.data.title')}</CardTitle>
+                <CardDescription>{t('settings.data.description')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {[
-                    { label: 'People', value: dataset.people.length },
-                    { label: 'Skills', value: dataset.skills.length },
-                    { label: 'Teams', value: dataset.teams.length },
-                    { label: 'Connections', value: dataset.connections.length },
+                    { label: t('settings.data.people'), value: dataset.people.length },
+                    { label: t('settings.data.skills'), value: dataset.skills.length },
+                    { label: t('settings.data.teams'), value: dataset.teams.length },
+                    { label: t('settings.data.connections'), value: dataset.connections.length },
                   ].map((stat) => (
                     <div key={stat.label} className="rounded-[var(--radius-control)] border border-border p-3">
                       <p className="text-lg font-semibold text-ink">{stat.value}</p>
@@ -169,10 +176,7 @@ export function SettingsPage() {
                 </div>
                 {isDemo && (
                   <div className="border-t border-border pt-4">
-                    <p className="text-sm text-graphite">
-                      You're viewing the shared, read-only Northstar demo. Create your own account to build a real
-                      organization.
-                    </p>
+                    <p className="text-sm text-graphite">{t('settings.data.demoNotice')}</p>
                   </div>
                 )}
               </CardContent>
@@ -182,8 +186,8 @@ export function SettingsPage() {
           {section === 'import' && (
             <div>
               <div className="mb-4">
-                <h2 className="text-base font-semibold text-ink">Import organization</h2>
-                <p className="text-sm text-graphite">Bring your people and their skills into ORBIT via CSV.</p>
+                <h2 className="text-base font-semibold text-ink">{t('settings.import.title')}</h2>
+                <p className="text-sm text-graphite">{t('settings.import.subtitle')}</p>
               </div>
               <ImportPeople />
             </div>
@@ -192,15 +196,15 @@ export function SettingsPage() {
           {section === 'integrations' && (
             <Card>
               <CardHeader>
-                <CardTitle>Integrations</CardTitle>
-                <CardDescription>Connect ORBIT to the systems your organization already uses.</CardDescription>
+                <CardTitle>{t('settings.integrations.title')}</CardTitle>
+                <CardDescription>{t('settings.integrations.description')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-2">
                 {dataset.sources.map((source) => (
                   <div key={source.id} className="flex items-center justify-between rounded-[var(--radius-control)] border border-border px-4 py-3">
-                    <span className="text-sm font-medium text-ink">{INTEGRATION_LABELS[source.type]}</span>
+                    <span className="text-sm font-medium text-ink">{t(INTEGRATION_LABEL_KEYS[source.type])}</span>
                     <Badge variant={source.status === 'connected' ? 'success' : 'default'}>
-                      {source.status === 'connected' ? 'Connected' : 'Coming soon'}
+                      {source.status === 'connected' ? t('settings.integrations.connected') : t('settings.integrations.comingSoon')}
                     </Badge>
                   </div>
                 ))}
@@ -211,15 +215,14 @@ export function SettingsPage() {
           {section === 'security' && (
             <Card>
               <CardHeader>
-                <CardTitle>Security</CardTitle>
-                <CardDescription>How ORBIT protects your organization's data.</CardDescription>
+                <CardTitle>{t('settings.security.title')}</CardTitle>
+                <CardDescription>{t('settings.security.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="flex flex-col gap-3 text-sm text-graphite">
-                  <li>· Every record is scoped to your organization — no data is ever shared across workspaces.</li>
-                  <li>· Imported files are validated and sanitized before anything is stored.</li>
-                  <li>· ORBIT never infers a skill you haven't actually demonstrated or reported.</li>
-                  <li>· No secrets or credentials are ever stored in the browser.</li>
+                  {(t('settings.security.items', { returnObjects: true }) as string[]).map((item) => (
+                    <li key={item}>· {item}</li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>
@@ -228,17 +231,17 @@ export function SettingsPage() {
           {section === 'user' && (
             <Card>
               <CardHeader>
-                <CardTitle>User</CardTitle>
-                <CardDescription>Your ORBIT account.</CardDescription>
+                <CardTitle>{t('settings.user.title')}</CardTitle>
+                <CardDescription>{t('settings.user.description')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Email</label>
-                  <Input value={user?.email ?? 'Browsing the demo — not signed in'} readOnly />
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t('settings.user.email')}</label>
+                  <Input value={user?.email ?? t('settings.user.notSignedIn')} readOnly />
                 </div>
                 {user && (
                   <Button variant="outline" size="sm" onClick={handleSignOut} className="w-fit">
-                    Sign out
+                    {t('common.signOut')}
                   </Button>
                 )}
               </CardContent>

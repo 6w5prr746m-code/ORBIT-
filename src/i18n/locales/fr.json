@@ -1,0 +1,373 @@
+{
+  "common": {
+    "back": "Retour",
+    "cancel": "Annuler",
+    "continue": "Continuer",
+    "loading": "Chargement…",
+    "signOut": "Se déconnecter",
+    "people_one": "{{count}} personne",
+    "people_other": "{{count}} personnes",
+    "levels": {
+      "familiar": "Familier",
+      "proficient": "Confirmé",
+      "expert": "Expert"
+    }
+  },
+  "nav": {
+    "home": "Accueil",
+    "people": "Personnes",
+    "skills": "Compétences",
+    "discover": "Découvrir",
+    "ask": "Demander",
+    "settings": "Paramètres"
+  },
+  "sidebar": {
+    "you": "Vous"
+  },
+  "errorBoundary": {
+    "title": "Une erreur est survenue",
+    "description": "Une erreur inattendue a interrompu cette page. Vous pouvez recharger — vos données sont en sécurité.",
+    "reload": "Recharger ORBIT"
+  },
+  "fullPageSpinner": {
+    "loading": "Chargement de votre organisation…"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "Cette partie de votre organisation n'existe pas — encore.",
+    "backHome": "Retour à l'accueil"
+  },
+  "landing": {
+    "setUpOrg": "Configurer votre organisation",
+    "exploreDemo": "Explorer la démo",
+    "hero": {
+      "title": "Votre organisation, enfin comprise.",
+      "subtitle": "Trouvez les personnes, les compétences et l'expertise cachées dans votre entreprise.",
+      "howItWorks": "Voir comment ça marche"
+    },
+    "problem": {
+      "eyebrow": "Le problème",
+      "items": {
+        "0": { "title": "Connaissances éparpillées", "description": "Les compétences et l'expertise vivent dans les systèmes RH, les fils Slack et la mémoire collective." },
+        "1": { "title": "Découverte lente", "description": "Trouver la bonne personne, c'est demander à cinq collègues en espérant que l'un d'eux sache." },
+        "2": { "title": "Expertise invisible", "description": "Vos spécialistes les plus précieux sont souvent les plus difficiles à trouver." }
+      }
+    },
+    "solution": {
+      "eyebrow": "La solution",
+      "text": "ORBIT se connecte aux outils que vous utilisez déjà et transforme vos données collaborateurs en une carte vivante de l'expertise — consultable, explicable, toujours à jour."
+    },
+    "howItWorks": {
+      "eyebrow": "Comment ça marche",
+      "items": {
+        "0": { "title": "Connecter", "description": "Importez vos données collaborateurs via CSV dès aujourd'hui — Core RH et outils métiers ensuite." },
+        "1": { "title": "Comprendre", "description": "ORBIT construit une carte vivante de qui sait quoi, et qui travaille avec qui." },
+        "2": { "title": "Découvrir", "description": "Cherchez, parcourez ou demandez en langage naturel — trouvez la bonne personne, avec preuve à l'appui." }
+      }
+    },
+    "useCases": {
+      "eyebrow": "Cas d'usage",
+      "items": {
+        "0": { "title": "Trouver l'expert", "description": "Ne devinez plus — allez directement voir la personne qui sait vraiment." },
+        "1": { "title": "Cartographier votre organisation", "description": "Voyez comment les équipes se connectent vraiment, au-delà de l'organigramme." },
+        "2": { "title": "Révéler les talents cachés", "description": "Repérez les expertises rares avant qu'elles ne quittent l'entreprise." }
+      }
+    },
+    "askDemo": {
+      "label": "Ask Orbit",
+      "question": "« Qui peut m'aider sur Salesforce ? »",
+      "personTitle": "Sarah Martin",
+      "personSubtitle": "Salesforce — experte, 5 ans · travaille avec l'équipe Sales"
+    },
+    "finalCta": {
+      "title": "Prêt à voir votre propre organisation ?",
+      "subtitle": "Explorez une démo en direct, ou configurez votre espace en quelques minutes."
+    },
+    "footer": "ORBIT — Sachez qui sait quoi."
+  },
+  "auth": {
+    "createAccount": "Créer un compte",
+    "login": "Se connecter",
+    "email": "E-mail",
+    "emailPlaceholder": "vous@entreprise.com",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "6 caractères minimum",
+    "pleaseWait": "Veuillez patienter…",
+    "back": "Retour",
+    "checkEmail": {
+      "title": "Vérifiez vos e-mails",
+      "description": "Nous avons envoyé un lien de confirmation à <strong>{{email}}</strong>. Cliquez dessus, puis revenez vous connecter.",
+      "backToSignIn": "Retour à la connexion"
+    }
+  },
+  "onboarding": {
+    "steps": {
+      "organization": "Organisation",
+      "people": "Personnes",
+      "discover": "Découvrir"
+    },
+    "organizationStep": {
+      "title": "Parlez-nous de votre organisation.",
+      "name": "Nom",
+      "namePlaceholder": "Acme Inc.",
+      "industry": "Secteur",
+      "industryPlaceholder": "SaaS B2B",
+      "size": "Taille de l'entreprise",
+      "sizePlaceholder": "250",
+      "creating": "Création…",
+      "createError": {
+        "title": "Impossible de créer votre organisation",
+        "description": "Merci de réessayer."
+      }
+    },
+    "peopleStep": {
+      "title": "Ajoutez vos collaborateurs.",
+      "subtitle": "Importez un CSV maintenant, ou passez cette étape et faites-le plus tard depuis les Paramètres."
+    },
+    "discoverStep": {
+      "title": "Découvrez votre organisation.",
+      "readyWithPeople_one": "{{count}} personne est prête à être explorée.",
+      "readyWithPeople_other": "{{count}} personnes sont prêtes à être explorées.",
+      "readyEmpty": "Votre espace est prêt — importez vos collaborateurs à tout moment depuis les Paramètres.",
+      "goToOrbit": "Accéder à ORBIT"
+    }
+  },
+  "home": {
+    "greeting": {
+      "morning": "Bonjour.",
+      "afternoon": "Bon après-midi.",
+      "evening": "Bonsoir."
+    },
+    "title": "Votre organisation, enfin comprise.",
+    "subtitle": "Découvrez les personnes, les compétences et l'expertise de votre organisation.",
+    "searchPlaceholder": "Posez n'importe quelle question sur votre organisation…",
+    "discover": {
+      "eyebrow": "Découvrir",
+      "people": { "label": "Personnes", "description": "Parcourez tout le monde dans votre organisation" },
+      "skills": { "label": "Compétences", "description": "Voyez l'expertise que détient votre entreprise" },
+      "discover": { "label": "Découvrir", "description": "Explorez recommandations et experts cachés" },
+      "ask": { "label": "Ask ORBIT", "description": "Posez une question, trouvez la bonne personne" }
+    },
+    "snapshot": {
+      "eyebrow": "Aperçu de l'organisation",
+      "people": "Personnes",
+      "skills": "Compétences",
+      "teams": "Équipes",
+      "locations": "Lieux"
+    }
+  },
+  "people": {
+    "eyebrow_one": "{{count}} personne",
+    "eyebrow_other": "{{count}} personnes",
+    "title": "Personnes",
+    "description": "Tout le monde dans votre organisation.",
+    "searchPlaceholder": "Rechercher par nom, rôle, équipe ou lieu…",
+    "allTeams": "Toutes les équipes",
+    "allLocations": "Tous les lieux",
+    "empty": {
+      "title": "Personne ne correspond à ces filtres",
+      "description": "Essayez un autre terme de recherche, ou effacez vos filtres pour voir tout le monde.",
+      "action": "Effacer les filtres"
+    }
+  },
+  "skills": {
+    "eyebrow_one": "{{count}} compétence",
+    "eyebrow_other": "{{count}} compétences",
+    "title": "Compétences",
+    "description": "Que sait votre organisation ?",
+    "searchPlaceholder": "Rechercher une compétence…",
+    "all": "Toutes",
+    "categories": {
+      "Technology": "Technologie",
+      "Business": "Business",
+      "Language": "Langue",
+      "Design": "Design",
+      "Operations": "Opérations",
+      "Leadership": "Leadership"
+    },
+    "empty": {
+      "title": "Aucune compétence trouvée pour l'instant.",
+      "description": "Importez votre organisation pour commencer à découvrir les expertises.",
+      "action": "Importer des collaborateurs"
+    }
+  },
+  "skillCard": {
+    "people_one": "{{count}} personne",
+    "people_other": "{{count}} personnes"
+  },
+  "skillDetail": {
+    "back": "Retour",
+    "people_one": "{{count}} personne",
+    "people_other": "{{count}} personnes",
+    "description": "Personnes ayant une expertise en {{skillName}} dans votre organisation.",
+    "topExperts": "Meilleurs experts",
+    "teams": "Équipes",
+    "locations": "Lieux",
+    "relatedSkills": "Compétences associées",
+    "findSomeone": "Trouver quelqu'un",
+    "findSomeonePlaceholder": "Filtrer les personnes ayant cette compétence…"
+  },
+  "personProfile": {
+    "back": "Retour",
+    "askAboutPerson": "Demander à propos de cette personne",
+    "expertise": "Expertise",
+    "about": "À propos",
+    "experience": "Expérience",
+    "since": "depuis {{date}}",
+    "reportsTo": "Rattaché(e) à",
+    "canHelpWith": "Peut aider sur",
+    "worksWith": "Travaille avec",
+    "relatedPeople": "Personnes associées",
+    "askQuestion": "Pourquoi {{firstName}} est-il/elle une bonne personne à qui parler de {{skill}} ?",
+    "askQuestionFallback": "Parlez-moi de {{fullName}}"
+  },
+  "discover": {
+    "title": "Découvrir",
+    "description": "Découvrez votre organisation.",
+    "people_one": "{{count}} personne",
+    "people_other": "{{count}} personnes",
+    "rows": {
+      "ai-technology": { "title": "IA & Technologie", "description": "Les personnes avec l'expertise technique et IA la plus poussée." },
+      "business-experts": { "title": "Experts Business", "description": "Les personnes qui pilotent la stratégie, la croissance et les opérations." },
+      "hidden-experts": { "title": "Experts cachés", "description": "Une expertise rare et précieuse qui n'apparaît presque jamais sur les radars." },
+      "most-connected": { "title": "Les plus connectés", "description": "Les personnes au centre de la façon dont le travail s'organise." },
+      "emerging-skills": { "title": "Compétences émergentes", "description": "Des compétences qui gagnent du terrain dans l'organisation." },
+      "cross-functional": { "title": "Personnes transverses", "description": "Les personnes qui relient les équipes entre elles." }
+    }
+  },
+  "ask": {
+    "title": "Ask Orbit",
+    "description": "Posez n'importe quelle question sur votre organisation.",
+    "intro": "Posez une question en langage naturel. ORBIT explore de vrais profils et de vraies compétences — chaque réponse explique pourquoi.",
+    "inputPlaceholder": "Posez n'importe quelle question sur votre organisation…",
+    "send": "Envoyer",
+    "suggestions": {
+      "salesforce": "Qui connaît Salesforce ?",
+      "ai": "Qui peut aider sur l'IA ?",
+      "germany": "Qui a une expérience en Allemagne ?",
+      "connected": "Qui sont nos collaborateurs les plus connectés ?",
+      "finance": "Qui travaille avec l'équipe Finance ?"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez votre espace de travail, vos données et vos intégrations.",
+    "sections": {
+      "workspace": "Espace de travail",
+      "organization": "Organisation",
+      "data": "Données",
+      "import": "Import",
+      "integrations": "Intégrations",
+      "security": "Sécurité",
+      "user": "Utilisateur"
+    },
+    "workspace": {
+      "title": "Espace de travail",
+      "description": "Personnalisez l'apparence d'ORBIT pour votre organisation.",
+      "accentColor": "Couleur d'accent",
+      "language": "Langue",
+      "accentNames": {
+        "signalBlue": "Bleu signal",
+        "forest": "Forêt",
+        "amber": "Ambre",
+        "plum": "Prune"
+      }
+    },
+    "organization": {
+      "title": "Organisation",
+      "description": "Informations de base sur votre entreprise.",
+      "name": "Nom",
+      "industry": "Secteur",
+      "size": "Taille de l'entreprise",
+      "employees": "{{count}} employés"
+    },
+    "data": {
+      "title": "Données",
+      "description": "Ce qu'ORBIT sait actuellement de votre organisation.",
+      "people": "Personnes",
+      "skills": "Compétences",
+      "teams": "Équipes",
+      "connections": "Connexions",
+      "demoNotice": "Vous consultez la démo Northstar partagée, en lecture seule. Créez votre propre compte pour construire une vraie organisation."
+    },
+    "import": {
+      "title": "Importer une organisation",
+      "subtitle": "Importez vos collaborateurs et leurs compétences dans ORBIT via CSV."
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "description": "Connectez ORBIT aux outils que votre organisation utilise déjà.",
+      "connected": "Connecté",
+      "comingSoon": "Bientôt disponible",
+      "labels": {
+        "core-hr": "Core RH",
+        "microsoft-365": "Microsoft 365",
+        "google-workspace": "Google Workspace",
+        "slack": "Slack",
+        "teams": "Microsoft Teams",
+        "notion": "Notion",
+        "jira": "Jira",
+        "csv-import": "Import CSV"
+      }
+    },
+    "security": {
+      "title": "Sécurité",
+      "description": "Comment ORBIT protège les données de votre organisation.",
+      "items": {
+        "0": "Chaque donnée est cantonnée à votre organisation — aucune donnée n'est jamais partagée entre espaces de travail.",
+        "1": "Les fichiers importés sont validés et nettoyés avant tout stockage.",
+        "2": "ORBIT n'invente jamais une compétence que vous n'avez pas réellement démontrée ou déclarée.",
+        "3": "Aucun secret ni identifiant n'est jamais stocké dans le navigateur."
+      }
+    },
+    "user": {
+      "title": "Utilisateur",
+      "description": "Votre compte ORBIT.",
+      "email": "E-mail",
+      "notSignedIn": "Consultation de la démo — non connecté"
+    }
+  },
+  "import": {
+    "demo": {
+      "title": "Vous consultez la démo partagée",
+      "description": "L'organisation de démonstration est en lecture seule. Créez votre propre organisation pour importer de vraies personnes."
+    },
+    "success": {
+      "title": "Import terminé",
+      "person_one": "{{count}} personne a été ajoutée à votre organisation.",
+      "person_other": "{{count}} personnes ont été ajoutées à votre organisation.",
+      "toastDescription_one": "{{count}} personne ajoutée à {{orgName}}.",
+      "toastDescription_other": "{{count}} personnes ajoutées à {{orgName}}.",
+      "importMore": "Importer davantage"
+    },
+    "error": {
+      "title": "Échec de l'import",
+      "default": "Merci de réessayer."
+    },
+    "preview": {
+      "rowsReady": "{{valid}} lignes prêtes à être importées sur {{total}}",
+      "issues_one": "{{count}} problème",
+      "issues_other": "{{count}} problèmes",
+      "allValid": "Tout est valide",
+      "unreadable": "Ce fichier n'a pas pu être lu.",
+      "cancel": "Annuler",
+      "importing": "Import en cours…",
+      "importAction_one": "Importer {{count}} personne",
+      "importAction_other": "Importer {{count}} personnes"
+    },
+    "upload": {
+      "title": "Importer une organisation",
+      "description": "Importez un CSV avec les colonnes : {{columns}}. Séparez les compétences multiples par un point-virgule.",
+      "chooseFile": "Choisir un fichier CSV",
+      "useSample": "Utiliser le fichier d'exemple",
+      "dragDrop": "ou glissez-déposez un fichier ici"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "de": "Deutsch"
+  }
+}

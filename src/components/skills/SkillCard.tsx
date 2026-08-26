@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { Skill } from '@/types'
 import { Badge } from '@/components/ui/Badge'
 
 export function SkillCard({ skill, peopleCount }: { skill: Skill; peopleCount: number }) {
+  const { t } = useTranslation()
   return (
     <Link
       to={`/skills/${skill.id}`}
@@ -10,14 +12,12 @@ export function SkillCard({ skill, peopleCount }: { skill: Skill; peopleCount: n
     >
       <div>
         <Badge variant="outline" className="mb-3">
-          {skill.category}
+          {t(`skills.categories.${skill.category}`)}
         </Badge>
         <p className="text-[15px] font-semibold text-ink group-hover:text-accent-ink">{skill.name}</p>
         <p className="mt-1 line-clamp-2 text-sm text-graphite">{skill.description}</p>
       </div>
-      <p className="text-sm font-medium text-graphite-soft">
-        {peopleCount} {peopleCount === 1 ? 'person' : 'people'}
-      </p>
+      <p className="text-sm font-medium text-graphite-soft">{t('skillCard.people', { count: peopleCount })}</p>
     </Link>
   )
 }
