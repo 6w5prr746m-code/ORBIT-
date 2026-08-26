@@ -313,12 +313,12 @@
     "security": {
       "title": "Security",
       "description": "How ORBIT protects your organization's data.",
-      "items": {
-        "0": "Every record is scoped to your organization — no data is ever shared across workspaces.",
-        "1": "Imported files are validated and sanitized before anything is stored.",
-        "2": "ORBIT never infers a skill you haven't actually demonstrated or reported.",
-        "3": "No secrets or credentials are ever stored in the browser."
-      }
+      "items": [
+        "Every record is scoped to your organization — no data is ever shared across workspaces.",
+        "Imported files are validated and sanitized before anything is stored.",
+        "ORBIT never infers a skill you haven't actually demonstrated or reported.",
+        "No secrets or credentials are ever stored in the browser."
+      ]
     },
     "user": {
       "title": "User",
