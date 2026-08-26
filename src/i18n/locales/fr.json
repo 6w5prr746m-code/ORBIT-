@@ -313,12 +313,12 @@
     "security": {
       "title": "Sécurité",
       "description": "Comment ORBIT protège les données de votre organisation.",
-      "items": {
-        "0": "Chaque donnée est cantonnée à votre organisation — aucune donnée n'est jamais partagée entre espaces de travail.",
-        "1": "Les fichiers importés sont validés et nettoyés avant tout stockage.",
-        "2": "ORBIT n'invente jamais une compétence que vous n'avez pas réellement démontrée ou déclarée.",
-        "3": "Aucun secret ni identifiant n'est jamais stocké dans le navigateur."
-      }
+      "items": [
+        "Chaque donnée est cantonnée à votre organisation — aucune donnée n'est jamais partagée entre espaces de travail.",
+        "Les fichiers importés sont validés et nettoyés avant tout stockage.",
+        "ORBIT n'invente jamais une compétence que vous n'avez pas réellement démontrée ou déclarée.",
+        "Aucun secret ni identifiant n'est jamais stocké dans le navigateur."
+      ]
     },
     "user": {
       "title": "Utilisateur",

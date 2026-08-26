@@ -313,12 +313,12 @@
     "security": {
       "title": "Sicherheit",
       "description": "Wie ORBIT die Daten deiner Organisation schützt.",
-      "items": {
-        "0": "Jeder Datensatz ist auf deine Organisation beschränkt — Daten werden niemals zwischen Arbeitsbereichen geteilt.",
-        "1": "Importierte Dateien werden validiert und bereinigt, bevor irgendetwas gespeichert wird.",
-        "2": "ORBIT leitet niemals eine Fähigkeit ab, die du nicht tatsächlich nachgewiesen oder angegeben hast.",
-        "3": "Es werden niemals Geheimnisse oder Zugangsdaten im Browser gespeichert."
-      }
+      "items": [
+        "Jeder Datensatz ist auf deine Organisation beschränkt — Daten werden niemals zwischen Arbeitsbereichen geteilt.",
+        "Importierte Dateien werden validiert und bereinigt, bevor irgendetwas gespeichert wird.",
+        "ORBIT leitet niemals eine Fähigkeit ab, die du nicht tatsächlich nachgewiesen oder angegeben hast.",
+        "Es werden niemals Geheimnisse oder Zugangsdaten im Browser gespeichert."
+      ]
     },
     "user": {
       "title": "Benutzer",

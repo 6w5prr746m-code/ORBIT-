@@ -313,12 +313,12 @@
     "security": {
       "title": "Sicurezza",
       "description": "Come ORBIT protegge i dati della tua organizzazione.",
-      "items": {
-        "0": "Ogni record è delimitato alla tua organizzazione — nessun dato viene mai condiviso tra spazi di lavoro.",
-        "1": "I file importati vengono convalidati e sanificati prima che venga memorizzato qualsiasi cosa.",
-        "2": "ORBIT non deduce mai una competenza che non hai effettivamente dimostrato o dichiarato.",
-        "3": "Nessun segreto o credenziale viene mai memorizzato nel browser."
-      }
+      "items": [
+        "Ogni record è delimitato alla tua organizzazione — nessun dato viene mai condiviso tra spazi di lavoro.",
+        "I file importati vengono convalidati e sanificati prima che venga memorizzato qualsiasi cosa.",
+        "ORBIT non deduce mai una competenza che non hai effettivamente dimostrato o dichiarato.",
+        "Nessun segreto o credenziale viene mai memorizzato nel browser."
+      ]
     },
     "user": {
       "title": "Utente",

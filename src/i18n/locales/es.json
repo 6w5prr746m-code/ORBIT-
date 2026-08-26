@@ -313,12 +313,12 @@
     "security": {
       "title": "Seguridad",
       "description": "Cómo protege ORBIT los datos de tu organización.",
-      "items": {
-        "0": "Cada registro está delimitado a tu organización — ningún dato se comparte jamás entre espacios de trabajo.",
-        "1": "Los archivos importados se validan y depuran antes de almacenar nada.",
-        "2": "ORBIT nunca infiere una habilidad que no hayas demostrado o reportado realmente.",
-        "3": "Nunca se almacenan secretos ni credenciales en el navegador."
-      }
+      "items": [
+        "Cada registro está delimitado a tu organización — ningún dato se comparte jamás entre espacios de trabajo.",
+        "Los archivos importados se validan y depuran antes de almacenar nada.",
+        "ORBIT nunca infiere una habilidad que no hayas demostrado o reportado realmente.",
+        "Nunca se almacenan secretos ni credenciales en el navegador."
+      ]
     },
     "user": {
       "title": "Usuario",
