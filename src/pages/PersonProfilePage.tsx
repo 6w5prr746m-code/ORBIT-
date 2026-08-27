@@ -56,7 +56,7 @@ export function PersonProfilePage() {
 
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-center gap-4">
-          <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} size={72} />
+          <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} photoUrl={person.avatar} size={72} />
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-ink">
               {person.firstName} {person.lastName}
@@ -149,7 +149,7 @@ export function PersonProfilePage() {
               <div className="flex flex-col gap-3">
                 {worksWith.map((p) => (
                   <Link key={p.id} to={`/people/${p.id}`} className="flex items-center gap-3 rounded-[var(--radius-control)] p-2 transition-colors hover:bg-mist">
-                    <Avatar name={`${p.firstName} ${p.lastName}`} initials={initials(p.firstName, p.lastName)} size={36} />
+                    <Avatar name={`${p.firstName} ${p.lastName}`} initials={initials(p.firstName, p.lastName)} photoUrl={p.avatar} size={36} />
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium text-ink">
                         {p.firstName} {p.lastName}

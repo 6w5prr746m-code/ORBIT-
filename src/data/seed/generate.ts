@@ -161,6 +161,7 @@ export function seedDemoData(): OrganizationDataset {
         startDate,
         status: 'active',
         email,
+        avatar: `https://i.pravatar.cc/300?u=${encodeURIComponent(email)}`,
       }
       people.push(person)
       personTeams.push({ personId, teamId: team.id })

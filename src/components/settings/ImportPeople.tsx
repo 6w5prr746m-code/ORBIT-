@@ -9,7 +9,7 @@ import { useOrbitStore } from '@/state/orbitStore'
 import { useToast } from '@/components/ui/Toast'
 import { buildImportPayload, buildPreview, CSV_COLUMNS, type ImportPreview } from '@/services/ImportService'
 
-const SAMPLE_CSV = `firstName,lastName,email,jobTitle,department,location,country,skills\nJordan,Rivera,jordan.rivera@example.com,Product Manager,Product,Austin,United States,Product Analytics;Go-To-Market Strategy`
+const SAMPLE_CSV = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl\nJordan,Rivera,jordan.rivera@example.com,Product Manager,Product,Austin,United States,Product Analytics;Go-To-Market Strategy,https://i.pravatar.cc/300?u=jordan.rivera`
 
 type Step = 'upload' | 'preview' | 'success'
 

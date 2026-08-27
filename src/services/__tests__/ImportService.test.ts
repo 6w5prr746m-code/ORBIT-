@@ -70,4 +70,34 @@ describe('buildImportPayload', () => {
     const payload = buildImportPayload(dataset, preview.rows)
     expect(payload.newSkills.some((s) => s.name === 'Quantum Computing')).toBe(true)
   })
+
+  it('carries a valid photoUrl column through to the person avatar', () => {
+    const dataset = seedDemoData()
+    const csv = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France,,https://i.pravatar.cc/300?u=sam.lee`
+    const preview = buildPreview(csv)
+    const payload = buildImportPayload(dataset, preview.rows)
+    expect(payload.people[0].avatar).toBe('https://i.pravatar.cc/300?u=sam.lee')
+  })
+
+  it('drops an invalid photoUrl instead of storing it', () => {
+    const dataset = seedDemoData()
+    const csv = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France,,not-a-url`
+    const preview = buildPreview(csv)
+    const payload = buildImportPayload(dataset, preview.rows)
+    expect(payload.people[0].avatar).toBeUndefined()
+  })
+})
+
+describe('buildPreview photoUrl validation', () => {
+  it('flags a malformed photoUrl as a row error', () => {
+    const csv = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France,,not-a-url`
+    const preview = buildPreview(csv)
+    expect(preview.errors.some((e) => e.field === 'photoUrl')).toBe(true)
+  })
+
+  it('accepts a row with no photoUrl at all', () => {
+    const csv = `firstName,lastName,email,jobTitle,department,location,country\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France`
+    const preview = buildPreview(csv)
+    expect(preview.validRowCount).toBe(1)
+  })
 })

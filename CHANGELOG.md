@@ -8,6 +8,13 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-26
+### Added
+- Trombinoscope: a photo-grid view on the People page (toggle between list and
+  grid), real photo rendering everywhere a person appears (falls back to
+  initials if the photo fails to load), and an optional `photoUrl` CSV import
+  column. Photos are plain external URLs — no new storage infrastructure.
+
 ## [0.1.1] - 2026-08-26
 ### Added
 - Semantic versioning process: `CHANGELOG.md`, and a GitHub Actions workflow

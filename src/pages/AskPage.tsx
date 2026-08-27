@@ -99,6 +99,7 @@ export function AskPage() {
                               <Avatar
                                 name={`${r.person.firstName} ${r.person.lastName}`}
                                 initials={initials(r.person.firstName, r.person.lastName)}
+                                photoUrl={r.person.avatar}
                                 size={40}
                               />
                               <div className="min-w-0">
