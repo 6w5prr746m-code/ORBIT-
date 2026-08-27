@@ -158,6 +158,16 @@
       "locations": "Lieux"
     }
   },
+  "digest": {
+    "eyebrow": "Pour vous",
+    "newJoiners_one": "{{names}} a rejoint l'équipe ce mois-ci.",
+    "newJoiners_other": "{{count}} personnes ont rejoint l'équipe ce mois-ci, dont {{names}}.",
+    "criticalSkill": "{{skill}} est désormais un point de défaillance unique — seul(e) {{person}} maîtrise cette compétence.",
+    "hiddenExperts_one": "{{count}} expert caché que vous ne connaissez peut-être pas.",
+    "hiddenExperts_other": "{{count}} experts cachés que vous ne connaissez peut-être pas.",
+    "emergingSkills_one": "{{count}} compétence gagne du terrain dans l'organisation.",
+    "emergingSkills_other": "{{count}} compétences gagnent du terrain dans l'organisation."
+  },
   "people": {
     "eyebrow_one": "{{count}} personne",
     "eyebrow_other": "{{count}} personnes",

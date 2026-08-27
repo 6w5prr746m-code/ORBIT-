@@ -158,6 +158,16 @@
       "locations": "Standorte"
     }
   },
+  "digest": {
+    "eyebrow": "Für dich",
+    "newJoiners_one": "{{names}} ist diesen Monat dazugekommen.",
+    "newJoiners_other": "{{count}} Personen sind diesen Monat dazugekommen, darunter {{names}}.",
+    "criticalSkill": "{{skill}} ist jetzt ein einzelner Ausfallpunkt — nur {{person}} beherrscht es.",
+    "hiddenExperts_one": "{{count}} verborgene Expertin/verborgener Experte, die/den du vielleicht nicht kennst.",
+    "hiddenExperts_other": "{{count}} verborgene Expertinnen und Experten, die du vielleicht nicht kennst.",
+    "emergingSkills_one": "{{count}} Fähigkeit gewinnt in der Organisation an Bedeutung.",
+    "emergingSkills_other": "{{count}} Fähigkeiten gewinnen in der Organisation an Bedeutung."
+  },
   "people": {
     "eyebrow_one": "{{count}} Person",
     "eyebrow_other": "{{count}} Personen",

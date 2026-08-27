@@ -1,11 +1,19 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Compass, Sparkles, Users2, Layers } from 'lucide-react'
+import { Compass, Sparkles, ShieldAlert, TrendingUp, UserPlus, Users2, Layers } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { SearchBar } from '@/components/common/SearchBar'
 import { Card } from '@/components/ui/Card'
 import { ASK_SUGGESTIONS } from '@/services/AskService'
+import { buildDigest, type DigestItemKind } from '@/services/DigestService'
+
+const DIGEST_ICONS: Record<DigestItemKind, typeof Sparkles> = {
+  'new-joiners': UserPlus,
+  'critical-skill': ShieldAlert,
+  'hidden-experts': Users2,
+  'emerging-skills': TrendingUp,
+}
 
 function greetingKey(): string {
   const hour = new Date().getHours()
@@ -40,6 +48,8 @@ export function HomePage() {
     }
   }, [dataset])
 
+  const digest = useMemo(() => (dataset ? buildDigest(dataset) : []), [dataset])
+
   function submitSearch(value: string) {
     const trimmed = value.trim()
     if (!trimmed) return
@@ -73,6 +83,29 @@ export function HomePage() {
           ))}
         </div>
       </div>
+
+      {digest.length > 0 && (
+        <div>
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('digest.eyebrow')}</h2>
+          <div className="flex flex-col gap-2">
+            {digest.map((item) => {
+              const Icon = DIGEST_ICONS[item.kind]
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => navigate(item.linkTo)}
+                  className="flex items-center gap-3 rounded-[var(--radius-control)] border border-border bg-canvas-raised px-4 py-3 text-left transition-colors hover:border-accent/40"
+                >
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-accent-soft text-accent">
+                    <Icon className="h-4 w-4" strokeWidth={1.75} />
+                  </div>
+                  <p className="text-sm text-ink">{t(item.i18nKey, item.params)}</p>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <div>
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('home.discover.eyebrow')}</h2>
