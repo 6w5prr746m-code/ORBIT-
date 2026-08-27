@@ -1,23 +1,31 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Briefcase, MapPin, MessageCircle } from 'lucide-react'
+import { ArrowLeft, Briefcase, MapPin, MessageCircle, ThumbsUp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
+import { useOrbitStore } from '@/state/orbitStore'
+import { useAuthStore } from '@/state/authStore'
 import { Avatar } from '@/components/ui/Avatar'
 import { Tag } from '@/components/ui/Tag'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { PersonCard } from '@/components/people/PersonCard'
-import { initials, formatDate } from '@/lib/utils'
+import { cn, initials, formatDate } from '@/lib/utils'
 import { recommendPeople, skillsForPerson } from '@/services/SearchService'
 import { canHelpTopicsFor } from '@/data/seed/generate'
 
 export function PersonProfilePage() {
   const { personId } = useParams<{ personId: string }>()
   const dataset = useDataset()
+  const isDemo = useOrbitStore((s) => s.isDemo)
+  const endorseSkill = useOrbitStore((s) => s.endorseSkill)
+  const removeEndorsement = useOrbitStore((s) => s.removeEndorsement)
+  const authUser = useAuthStore((s) => s.user)
   const navigate = useNavigate()
   const { t } = useTranslation()
+
+  const myPerson = dataset?.people.find((p) => p.claimedByUserId === authUser?.id)
 
   const data = useMemo(() => {
     if (!dataset || !personId) return null
@@ -94,14 +102,36 @@ export function PersonProfilePage() {
           <section>
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-graphite-soft">{t('personProfile.expertise')}</h2>
             <div className="flex flex-wrap gap-2">
-              {nonLanguageSkills.map((s) => (
-                <Tag key={s.id} className="gap-1.5">
-                  {s.name}
-                  <Badge variant={s.level === 'expert' ? 'accent' : 'default'} className="px-1.5 py-0 text-[10px]">
-                    {t(`common.levels.${s.level}`)}
-                  </Badge>
-                </Tag>
-              ))}
+              {nonLanguageSkills.map((s) => {
+                const endorsements = dataset.skillEndorsements.filter((e) => e.personId === person.id && e.skillId === s.id)
+                const endorsedByMe = !!myPerson && endorsements.some((e) => e.endorsedByPersonId === myPerson.id)
+                const canEndorse = !isDemo && myPerson && myPerson.id !== person.id
+
+                return (
+                  <Tag key={s.id} className="gap-1.5">
+                    {s.name}
+                    <Badge variant={s.level === 'expert' ? 'accent' : 'default'} className="px-1.5 py-0 text-[10px]">
+                      {t(`common.levels.${s.level}`)}
+                    </Badge>
+                    {(endorsements.length > 0 || canEndorse) && (
+                      <button
+                        onClick={() => (canEndorse ? (endorsedByMe ? removeEndorsement(person.id, s.id) : endorseSkill(person.id, s.id)) : undefined)}
+                        disabled={!canEndorse}
+                        aria-label={t('personProfile.endorse.action', { skill: s.name })}
+                        aria-pressed={endorsedByMe}
+                        className={cn(
+                          'flex items-center gap-0.5 rounded-full px-1 text-[11px] font-medium transition-colors',
+                          endorsedByMe ? 'text-accent-ink' : 'text-graphite-soft',
+                          canEndorse && 'hover:text-accent-ink',
+                        )}
+                      >
+                        <ThumbsUp className="h-3 w-3" fill={endorsedByMe ? 'currentColor' : 'none'} strokeWidth={1.75} />
+                        {endorsements.length > 0 && endorsements.length}
+                      </button>
+                    )}
+                  </Tag>
+                )
+              })}
             </div>
           </section>
 

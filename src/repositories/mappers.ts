@@ -1,4 +1,4 @@
-import type { Connection, Organization, Person, PersonSkill, PersonTeam, Skill, Source, Team } from '@/types'
+import type { Connection, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
@@ -50,6 +50,25 @@ export function mapPersonSkill(row: Tables['person_skills']['Row']): PersonSkill
     level: row.level,
     yearsExperience: row.years_experience,
     source: row.source,
+  }
+}
+
+export function mapSkillEndorsement(row: Tables['skill_endorsements']['Row']): SkillEndorsement {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    personId: row.person_id,
+    skillId: row.skill_id,
+    endorsedByPersonId: row.endorsed_by_person_id,
+  }
+}
+
+export function skillEndorsementToRow(e: Omit<SkillEndorsement, 'id'>): Tables['skill_endorsements']['Insert'] {
+  return {
+    organization_id: e.organizationId,
+    person_id: e.personId,
+    skill_id: e.skillId,
+    endorsed_by_person_id: e.endorsedByPersonId,
   }
 }
 

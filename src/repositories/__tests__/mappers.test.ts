@@ -6,11 +6,13 @@ import {
   mapPersonSkill,
   mapPersonTeam,
   mapSkill,
+  mapSkillEndorsement,
   mapSource,
   mapTeam,
   personSkillToRow,
   personTeamToRow,
   personToRow,
+  skillEndorsementToRow,
   skillToRow,
 } from '@/repositories/mappers'
 
@@ -137,6 +139,22 @@ describe('DB row -> app type mappers', () => {
         status: 'connected',
       }),
     ).toMatchObject({ id: 'src1', type: 'csv-import', lastSyncAt: undefined })
+
+    expect(
+      mapSkillEndorsement({
+        id: 'e1',
+        organization_id: 'org-1',
+        person_id: 'p1',
+        skill_id: 's1',
+        endorsed_by_person_id: 'p2',
+        created_at: '2026-01-01T00:00:00Z',
+      }),
+    ).toEqual({ id: 'e1', organizationId: 'org-1', personId: 'p1', skillId: 's1', endorsedByPersonId: 'p2' })
+  })
+
+  it('round-trips a skill endorsement through skillEndorsementToRow', () => {
+    const row = skillEndorsementToRow({ organizationId: 'org-1', personId: 'p1', skillId: 's1', endorsedByPersonId: 'p2' })
+    expect(row).toEqual({ organization_id: 'org-1', person_id: 'p1', skill_id: 's1', endorsed_by_person_id: 'p2' })
   })
 })
 

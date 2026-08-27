@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { UserCheck2, X } from 'lucide-react'
+import { ThumbsUp, UserCheck2, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
@@ -209,12 +209,19 @@ export function ProfilePage() {
               {mySkills.map((ps) => {
                 const skill = dataset.skills.find((s) => s.id === ps.skillId)
                 if (!skill) return null
+                const endorsementCount = dataset.skillEndorsements.filter((e) => e.personId === myPerson.id && e.skillId === ps.skillId).length
                 return (
                   <Tag key={ps.skillId} className="gap-1.5">
                     {skill.name}
                     <Badge variant={ps.level === 'expert' ? 'accent' : 'default'} className="px-1.5 py-0 text-[10px]">
                       {t(`common.levels.${ps.level}`)}
                     </Badge>
+                    {endorsementCount > 0 && (
+                      <span className="flex items-center gap-0.5 text-[11px] font-medium text-accent-ink">
+                        <ThumbsUp className="h-3 w-3" fill="currentColor" strokeWidth={1.75} />
+                        {endorsementCount}
+                      </span>
+                    )}
                     <button
                       onClick={() => removeMySkill(myPerson.id, ps.skillId)}
                       aria-label={t('profile.skills.remove', { skill: skill.name })}
