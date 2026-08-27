@@ -355,6 +355,7 @@
       "entities": "Entidades",
       "access": "Equipo y accesos",
       "invitations": "Invitaciones",
+      "upsell": "Permisos avanzados",
       "data": "Datos",
       "import": "Importar",
       "integrations": "Integraciones",
@@ -574,6 +575,37 @@
     "notFound": {
       "title": "Invitación no encontrada",
       "description": "Este enlace de invitación no es válido, ha caducado o ya se ha utilizado."
+    }
+  },
+  "upsell": {
+    "demo": {
+      "title": "No disponible en la demo",
+      "description": "La organización de demostración es de solo lectura. Crea tu propia organización para solicitar el complemento de permisos avanzados."
+    },
+    "notAuthorized": {
+      "title": "Solo propietarios y administradores de RR. HH.",
+      "description": "Pide a un propietario o administrador de RR. HH. de tu organización que haga esta solicitud."
+    },
+    "error": "Algo salió mal",
+    "title": "Permisos avanzados",
+    "description": "Ve más allá de los cuatro roles integrados con roles personalizados y permisos detallados, adaptados a cómo trabaja realmente tu organización.",
+    "features": [
+      "Define tantos roles personalizados como necesites, más allá de Colaborador/Manager/Director/Admin RR. HH.",
+      "Permisos detallados por función, no solo por entidad",
+      "El mismo modelo de seguridad — solo que más configurable"
+    ],
+    "noteLabel": "¿Algo que debamos saber?",
+    "notePlaceholder": "Opcional",
+    "cta": "Solicitar activación",
+    "sending": "Enviando…",
+    "pendingNotice": "Solicitud enviada — te contactaremos para activarla.",
+    "sent": {
+      "title": "Solicitud enviada",
+      "description": "Hemos avisado a nuestro equipo. Te contactaremos para activarla."
+    },
+    "enabled": {
+      "title": "Permisos avanzados activos",
+      "description": "Tu organización tiene los permisos avanzados activados. Contáctanos para configurar roles personalizados."
     }
   }
 }

@@ -16,6 +16,8 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   ],
   entities: [],
   invitations: [],
+  upgrade_requests: [],
+  organization_features: [{ organization_id: DEMO_ORGANIZATION_ID, advanced_permissions_enabled: false }],
   people: [
     {
       id: 'p1',
@@ -89,6 +91,7 @@ const TABLES_WITH_ID_PK = new Set([
   'connections',
   'sources',
   'invitations',
+  'upgrade_requests',
 ])
 
 /** Mirrors a table's `default ...` columns, for rows inserted/upserted without them (matching Postgres, not just id generation). */
@@ -98,6 +101,11 @@ const ROW_DEFAULTS: Record<string, () => Record<string, unknown>> = {
     status: 'pending',
     last_sent_at: null,
     accepted_at: null,
+    created_at: new Date().toISOString(),
+  }),
+  upgrade_requests: () => ({
+    status: 'pending',
+    resolved_at: null,
     created_at: new Date().toISOString(),
   }),
 }
@@ -248,6 +256,7 @@ export const fakeSupabase = {
         logo: null,
         created_at: new Date().toISOString(),
       })
+      FIXTURES.organization_features.push({ organization_id: id, advanced_permissions_enabled: false })
       return { data: id, error: null }
     }
     return { data: null, error: null }
@@ -262,6 +271,9 @@ export const fakeSupabase = {
           if (ids.includes(inv.id as string)) inv.last_sent_at = now
         }
         return { data: { results: ids.map((id) => ({ id, ok: true })) }, error: null }
+      }
+      if (fnName === 'notify-upgrade-request') {
+        return { data: { ok: true }, error: null }
       }
       return { data: null, error: null }
     },

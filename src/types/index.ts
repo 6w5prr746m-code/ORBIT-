@@ -7,6 +7,7 @@ export interface Organization {
   industry: string
   size: number
   entityIsolationMode: EntityIsolationMode
+  advancedPermissionsEnabled: boolean
 }
 
 export interface Entity {
@@ -41,6 +42,18 @@ export interface Invitation {
   status: InvitationStatus
   lastSentAt?: string
   acceptedAt?: string
+}
+
+export type UpgradeRequestStatus = 'pending' | 'approved' | 'declined'
+
+export interface UpgradeRequest {
+  id: string
+  organizationId: string
+  requestedBy: string
+  status: UpgradeRequestStatus
+  note: string
+  createdAt: string
+  resolvedAt?: string
 }
 
 export type PersonStatus = 'active' | 'inactive'
@@ -148,6 +161,7 @@ export interface OrganizationDataset {
   entities: Entity[]
   memberships: Membership[]
   invitations: Invitation[]
+  upgradeRequests: UpgradeRequest[]
   people: Person[]
   skills: Skill[]
   personSkills: PersonSkill[]

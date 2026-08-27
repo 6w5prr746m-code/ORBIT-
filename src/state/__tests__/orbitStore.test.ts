@@ -278,3 +278,26 @@ describe('orbitStore invitations', () => {
     expect(useOrbitStore.getState().dataset?.invitations.find((i) => i.id === invitationId)?.status).toBe('revoked')
   })
 })
+
+describe('orbitStore advanced permissions upsell', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  it('starts with advanced permissions disabled', () => {
+    expect(useOrbitStore.getState().dataset?.organization.advancedPermissionsEnabled).toBe(false)
+  })
+
+  it('records an upgrade request and notifies the vendor', async () => {
+    await useOrbitStore.getState().requestAdvancedPermissions('We need custom roles for our regional teams.')
+
+    const requests = useOrbitStore.getState().dataset?.upgradeRequests
+    expect(requests).toHaveLength(1)
+    expect(requests?.[0]).toMatchObject({
+      status: 'pending',
+      requestedBy: 'u1',
+      note: 'We need custom roles for our regional teams.',
+    })
+  })
+})

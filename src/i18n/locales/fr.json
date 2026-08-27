@@ -355,6 +355,7 @@
       "entities": "Entités",
       "access": "Équipe et accès",
       "invitations": "Invitations",
+      "upsell": "Permissions avancées",
       "data": "Données",
       "import": "Import",
       "integrations": "Intégrations",
@@ -574,6 +575,37 @@
     "notFound": {
       "title": "Invitation introuvable",
       "description": "Ce lien d’invitation est invalide, expiré, ou a déjà été utilisé."
+    }
+  },
+  "upsell": {
+    "demo": {
+      "title": "Indisponible en démo",
+      "description": "L’organisation de démonstration est en lecture seule. Créez votre propre organisation pour demander l’option permissions avancées."
+    },
+    "notAuthorized": {
+      "title": "Réservé aux propriétaires et admins RH",
+      "description": "Demandez à un propriétaire ou un admin RH de votre organisation de faire cette demande."
+    },
+    "error": "Une erreur est survenue",
+    "title": "Permissions avancées",
+    "description": "Allez au-delà des quatre rôles intégrés grâce à des rôles personnalisés et des permissions fines, adaptées à votre organisation.",
+    "features": [
+      "Définissez autant de rôles personnalisés que nécessaire, au-delà de Collaborateur/Manager/Directeur/Admin RH",
+      "Permissions fines par fonctionnalité, pas seulement par entité",
+      "Le même modèle de sécurité — juste plus configurable"
+    ],
+    "noteLabel": "Une précision à nous donner ?",
+    "notePlaceholder": "Facultatif",
+    "cta": "Demander l’activation",
+    "sending": "Envoi…",
+    "pendingNotice": "Demande envoyée — nous revenons vers vous pour l’activer.",
+    "sent": {
+      "title": "Demande envoyée",
+      "description": "Notre équipe a été prévenue. Nous revenons vers vous pour l’activer."
+    },
+    "enabled": {
+      "title": "Permissions avancées activées",
+      "description": "Les permissions avancées sont actives pour votre organisation. Contactez-nous pour configurer vos rôles personnalisés."
     }
   }
 }

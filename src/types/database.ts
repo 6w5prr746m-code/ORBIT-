@@ -51,6 +51,34 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['entities']['Row']>
         Relationships: []
       }
+      organization_features: {
+        Row: {
+          organization_id: string
+          advanced_permissions_enabled: boolean
+        }
+        Insert: Partial<Database['public']['Tables']['organization_features']['Row']> & {
+          organization_id: string
+        }
+        Update: Partial<Database['public']['Tables']['organization_features']['Row']>
+        Relationships: []
+      }
+      upgrade_requests: {
+        Row: {
+          id: string
+          organization_id: string
+          requested_by: string
+          status: 'pending' | 'approved' | 'declined'
+          note: string
+          created_at: string
+          resolved_at: string | null
+        }
+        Insert: Partial<Database['public']['Tables']['upgrade_requests']['Row']> & {
+          organization_id: string
+          requested_by: string
+        }
+        Update: Partial<Database['public']['Tables']['upgrade_requests']['Row']>
+        Relationships: []
+      }
       memberships: {
         Row: {
           user_id: string

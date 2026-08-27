@@ -7,6 +7,7 @@ import {
   Plug,
   Send,
   ShieldCheck,
+  Sparkles,
   Upload,
   UserCircle,
   Wand2,
@@ -22,6 +23,7 @@ import { ImportPeople } from '@/components/settings/ImportPeople'
 import { EntitiesSettings } from '@/components/settings/EntitiesSettings'
 import { AccessSettings } from '@/components/settings/AccessSettings'
 import { InvitationsSettings } from '@/components/settings/InvitationsSettings'
+import { UpsellSettings } from '@/components/settings/UpsellSettings'
 import { LanguageSwitcher } from '@/components/settings/LanguageSwitcher'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
@@ -42,6 +44,7 @@ const SECTIONS = [
   { id: 'entities', labelKey: 'settings.sections.entities', icon: Network },
   { id: 'access', labelKey: 'settings.sections.access', icon: ShieldCheck },
   { id: 'invitations', labelKey: 'settings.sections.invitations', icon: Send },
+  { id: 'upsell', labelKey: 'settings.sections.upsell', icon: Sparkles },
   { id: 'data', labelKey: 'settings.sections.data', icon: Database },
   { id: 'import', labelKey: 'settings.sections.import', icon: Upload },
   { id: 'integrations', labelKey: 'settings.sections.integrations', icon: Plug },
@@ -168,6 +171,8 @@ export function SettingsPage() {
           {section === 'access' && <AccessSettings />}
 
           {section === 'invitations' && <InvitationsSettings />}
+
+          {section === 'upsell' && <UpsellSettings />}
 
           {section === 'data' && (
             <Card>
