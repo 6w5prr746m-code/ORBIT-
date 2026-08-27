@@ -1,8 +1,10 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { Entity, EntityIsolationMode, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
+  entityToRow,
   mapConnection,
+  mapEntity,
   mapOrganization,
   mapPerson,
   mapPersonSkill,
@@ -20,8 +22,9 @@ import {
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, entities, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
+    supabase.from('entities').select('*').eq('organization_id', organizationId),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
@@ -32,7 +35,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+  const failed = [org, entities, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
     (r) => r.error,
   )
   if (failed?.error) throw new Error(failed.error.message)
@@ -40,6 +43,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
 
   return {
     organization: mapOrganization(org.data),
+    entities: (entities.data ?? []).map(mapEntity),
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
@@ -85,6 +89,7 @@ export async function insertPeople(
   personSkills: PersonSkill[],
   personTeams: PersonTeam[],
   newSkills: Skill[],
+  newEntities: Entity[] = [],
 ): Promise<void> {
   if (newSkills.length > 0) {
     const { error } = await supabase
@@ -93,6 +98,13 @@ export async function insertPeople(
         newSkills.map(skillToRow),
         { onConflict: 'organization_id,name', ignoreDuplicates: true },
       )
+    if (error) throw new Error(error.message)
+  }
+
+  if (newEntities.length > 0) {
+    const { error } = await supabase
+      .from('entities')
+      .upsert(newEntities.map((e) => entityToRow(e)), { onConflict: 'organization_id,name', ignoreDuplicates: true })
     if (error) throw new Error(error.message)
   }
 
@@ -190,5 +202,35 @@ export async function removeEndorsement(personId: string, skillId: string, endor
     .eq('person_id', personId)
     .eq('skill_id', skillId)
     .eq('endorsed_by_person_id', endorsedByPersonId)
+  if (error) throw new Error(error.message)
+}
+
+export async function createEntity(organizationId: string, name: string): Promise<Entity> {
+  const { data, error } = await supabase
+    .from('entities')
+    .insert(entityToRow({ organizationId, name }))
+    .select('*')
+    .single()
+  if (error) throw new Error(error.message)
+  return mapEntity(data)
+}
+
+export async function renameEntity(entityId: string, name: string): Promise<void> {
+  const { error } = await supabase.from('entities').update({ name }).eq('id', entityId)
+  if (error) throw new Error(error.message)
+}
+
+export async function deleteEntity(entityId: string): Promise<void> {
+  const { error } = await supabase.from('entities').delete().eq('id', entityId)
+  if (error) throw new Error(error.message)
+}
+
+export async function assignPersonToEntity(personId: string, entityId: string | null): Promise<void> {
+  const { error } = await supabase.from('people').update({ entity_id: entityId }).eq('id', personId)
+  if (error) throw new Error(error.message)
+}
+
+export async function setEntityIsolationMode(organizationId: string, mode: EntityIsolationMode): Promise<void> {
+  const { error } = await supabase.from('organizations').update({ entity_isolation_mode: mode }).eq('id', organizationId)
   if (error) throw new Error(error.message)
 }

@@ -1,4 +1,4 @@
-import type { Connection, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
+import type { Connection, Entity, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
@@ -10,6 +10,23 @@ export function mapOrganization(row: Tables['organizations']['Row']): Organizati
     logo: row.logo ?? undefined,
     industry: row.industry,
     size: row.size,
+    entityIsolationMode: row.entity_isolation_mode,
+  }
+}
+
+export function mapEntity(row: Tables['entities']['Row']): Entity {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    name: row.name,
+  }
+}
+
+export function entityToRow(e: Omit<Entity, 'id'> & { id?: string }): Tables['entities']['Insert'] {
+  return {
+    id: e.id,
+    organization_id: e.organizationId,
+    name: e.name,
   }
 }
 
@@ -30,6 +47,7 @@ export function mapPerson(row: Tables['people']['Row']): Person {
     status: row.status,
     email: row.email,
     claimedByUserId: row.claimed_by_user_id ?? undefined,
+    entityId: row.entity_id ?? undefined,
   }
 }
 
@@ -129,6 +147,7 @@ export function personToRow(p: Person): Tables['people']['Insert'] {
     status: p.status,
     email: p.email,
     claimed_by_user_id: p.claimedByUserId ?? null,
+    entity_id: p.entityId ?? null,
   }
 }
 

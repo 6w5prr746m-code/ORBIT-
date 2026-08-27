@@ -352,6 +352,7 @@
     "sections": {
       "workspace": "Espacio de trabajo",
       "organization": "Organización",
+      "entities": "Entidades",
       "data": "Datos",
       "import": "Importar",
       "integrations": "Integraciones",
@@ -467,5 +468,34 @@
     "es": "Español",
     "it": "Italiano",
     "de": "Deutsch"
+  },
+  "entities": {
+    "demo": {
+      "title": "No disponible en la demo",
+      "description": "La organización de demostración es de solo lectura. Crea tu propia organización para gestionar entidades."
+    },
+    "error": "Algo salió mal",
+    "isolation": {
+      "title": "Aislamiento de entidades",
+      "description": "Elige con qué rigor se separan las entidades entre sí en esta organización.",
+      "filter": {
+        "title": "Filtro simple",
+        "description": "Las entidades son solo una agrupación — todos en la organización ven a todos, sin importar la entidad."
+      },
+      "strict": {
+        "title": "Aislamiento estricto",
+        "description": "Una persona de una entidad nunca ve los datos de otra, salvo que su rol abarque explícitamente toda la organización."
+      }
+    },
+    "list": {
+      "title": "Entidades",
+      "description": "Filiales o unidades de negocio dentro de tu organización.",
+      "empty": "Aún no hay entidades.",
+      "memberCount_one": "{{count}} persona",
+      "memberCount_other": "{{count}} personas",
+      "remove": "Quitar {{name}}",
+      "addPlaceholder": "Nombre de la nueva entidad…",
+      "addAction": "Añadir"
+    }
   }
 }

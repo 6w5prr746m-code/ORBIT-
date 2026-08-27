@@ -1,9 +1,18 @@
+export type EntityIsolationMode = 'strict' | 'filter'
+
 export interface Organization {
   id: string
   name: string
   logo?: string
   industry: string
   size: number
+  entityIsolationMode: EntityIsolationMode
+}
+
+export interface Entity {
+  id: string
+  organizationId: string
+  name: string
 }
 
 export type PersonStatus = 'active' | 'inactive'
@@ -24,6 +33,7 @@ export interface Person {
   status: PersonStatus
   email: string
   claimedByUserId?: string
+  entityId?: string
 }
 
 export type SkillCategory =
@@ -107,6 +117,7 @@ export interface Source {
 
 export interface OrganizationDataset {
   organization: Organization
+  entities: Entity[]
   people: Person[]
   skills: Skill[]
   personSkills: PersonSkill[]

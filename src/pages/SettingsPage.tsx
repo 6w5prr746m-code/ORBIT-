@@ -3,6 +3,7 @@ import {
   Building2,
   Database,
   Lock,
+  Network,
   Plug,
   Upload,
   UserCircle,
@@ -16,6 +17,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useNavigate } from 'react-router-dom'
 import { ImportPeople } from '@/components/settings/ImportPeople'
+import { EntitiesSettings } from '@/components/settings/EntitiesSettings'
 import { LanguageSwitcher } from '@/components/settings/LanguageSwitcher'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
@@ -33,6 +35,7 @@ const ACCENT_OPTIONS = [
 const SECTIONS = [
   { id: 'workspace', labelKey: 'settings.sections.workspace', icon: Wand2 },
   { id: 'organization', labelKey: 'settings.sections.organization', icon: Building2 },
+  { id: 'entities', labelKey: 'settings.sections.entities', icon: Network },
   { id: 'data', labelKey: 'settings.sections.data', icon: Database },
   { id: 'import', labelKey: 'settings.sections.import', icon: Upload },
   { id: 'integrations', labelKey: 'settings.sections.integrations', icon: Plug },
@@ -153,6 +156,8 @@ export function SettingsPage() {
               </CardContent>
             </Card>
           )}
+
+          {section === 'entities' && <EntitiesSettings />}
 
           {section === 'data' && (
             <Card>

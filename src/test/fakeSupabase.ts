@@ -10,9 +10,11 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
       industry: 'B2B SaaS',
       size: 500,
       is_demo: true,
+      entity_isolation_mode: 'filter',
       created_at: '2026-01-01T00:00:00Z',
     },
   ],
+  entities: [],
   people: [
     {
       id: 'p1',
@@ -30,6 +32,7 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
       status: 'active',
       email: 'ada@northstar.io',
       claimed_by_user_id: null,
+      entity_id: null,
       created_at: '2026-01-01T00:00:00Z',
     },
     {
@@ -48,6 +51,7 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
       status: 'active',
       email: 'grace@northstar.io',
       claimed_by_user_id: null,
+      entity_id: null,
       created_at: '2026-01-01T00:00:00Z',
     },
   ],
@@ -78,8 +82,9 @@ class FakeQuery {
   private limitCount: number | null = null
   private table: string
   private rows: Record<string, unknown>[]
-  private pendingOp: 'update' | 'delete' | null = null
+  private pendingOp: 'update' | 'delete' | 'insert' | null = null
   private pendingPatch: Record<string, unknown> | null = null
+  private pendingInsertRows: Record<string, unknown>[] | null = null
 
   constructor(table: string, rows: Record<string, unknown>[]) {
     this.table = table
@@ -120,20 +125,10 @@ class FakeQuery {
     return this
   }
 
-  private resolveRows() {
-    let result = this.rows.filter((row) => this.filters.every((f) => f(row)))
-    if (this.limitCount !== null) result = result.slice(0, this.limitCount)
-    return result
-  }
-
-  single() {
-    const rows = this.resolveRows()
-    return Promise.resolve({ data: rows[0] ?? null, error: rows[0] ? null : { message: `${this.table}: not found` } })
-  }
-
-  maybeSingle() {
-    const rows = this.resolveRows()
-    return Promise.resolve({ data: rows[0] ?? null, error: null })
+  insert(rows: Record<string, unknown>[] | Record<string, unknown>) {
+    this.pendingOp = 'insert'
+    this.pendingInsertRows = Array.isArray(rows) ? rows : [rows]
+    return this
   }
 
   upsert(rows: Record<string, unknown>[], options?: { onConflict?: string }) {
@@ -151,16 +146,15 @@ class FakeQuery {
     return Promise.resolve({ data: null, error: null })
   }
 
-  insert(rows: Record<string, unknown>[]) {
-    this.rows.push(...rows)
-    return Promise.resolve({ data: null, error: null })
-  }
-
-  then<T>(
-    onfulfilled?: ((value: { data: Record<string, unknown>[]; error: null }) => T) | null,
-    onrejected?: (reason: unknown) => T,
-  ) {
-    const matched = this.resolveRows()
+  private execute(): Record<string, unknown>[] {
+    if (this.pendingOp === 'insert' && this.pendingInsertRows) {
+      for (const row of this.pendingInsertRows) {
+        if ('id' in row && row.id === undefined) row.id = crypto.randomUUID()
+      }
+      this.rows.push(...this.pendingInsertRows)
+      return this.pendingInsertRows
+    }
+    const matched = this.rows.filter((row) => this.filters.every((f) => f(row)))
     if (this.pendingOp === 'update' && this.pendingPatch) {
       for (const row of matched) Object.assign(row, this.pendingPatch)
     } else if (this.pendingOp === 'delete') {
@@ -169,7 +163,24 @@ class FakeQuery {
         if (idx !== -1) this.rows.splice(idx, 1)
       }
     }
-    return Promise.resolve({ data: matched, error: null }).then(onfulfilled, onrejected)
+    return this.limitCount !== null ? matched.slice(0, this.limitCount) : matched
+  }
+
+  single() {
+    const rows = this.execute()
+    return Promise.resolve({ data: rows[0] ?? null, error: rows[0] ? null : { message: `${this.table}: not found` } })
+  }
+
+  maybeSingle() {
+    const rows = this.execute()
+    return Promise.resolve({ data: rows[0] ?? null, error: null })
+  }
+
+  then<T>(
+    onfulfilled?: ((value: { data: Record<string, unknown>[]; error: null }) => T) | null,
+    onrejected?: (reason: unknown) => T,
+  ) {
+    return Promise.resolve({ data: this.execute(), error: null }).then(onfulfilled, onrejected)
   }
 }
 
@@ -193,6 +204,7 @@ export const fakeSupabase = {
         industry: args?.org_industry,
         size: args?.org_size,
         is_demo: false,
+        entity_isolation_mode: 'filter',
         logo: null,
         created_at: new Date().toISOString(),
       })

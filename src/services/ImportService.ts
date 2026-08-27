@@ -1,7 +1,7 @@
-import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
+import type { Entity, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
 
-export const CSV_COLUMNS = ['firstName', 'lastName', 'email', 'jobTitle', 'department', 'location', 'country', 'skills', 'photoUrl'] as const
-const OPTIONAL_CSV_COLUMNS: readonly string[] = ['skills', 'photoUrl']
+export const CSV_COLUMNS = ['firstName', 'lastName', 'email', 'jobTitle', 'department', 'location', 'country', 'skills', 'photoUrl', 'entity'] as const
+const OPTIONAL_CSV_COLUMNS: readonly string[] = ['skills', 'photoUrl', 'entity']
 
 export interface ParsedRow {
   rowNumber: number
@@ -126,12 +126,15 @@ export interface ImportPayload {
   personSkills: PersonSkill[]
   personTeams: PersonTeam[]
   newSkills: Skill[]
+  newEntities: Entity[]
 }
 
 export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow[]): ImportPayload {
   const organizationId = dataset.organization.id
   const existingSkillsByName = new Map(dataset.skills.map((s) => [s.name.toLowerCase(), s]))
+  const existingEntitiesByName = new Map(dataset.entities.map((e) => [e.name.toLowerCase(), e]))
   const newSkills: Skill[] = []
+  const newEntities: Entity[] = []
   const people: Person[] = []
   const personSkills: PersonSkill[] = []
   const personTeams: PersonTeam[] = []
@@ -139,6 +142,17 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
   for (const row of rows) {
     const v = row.values
     if (!v.firstName || !v.lastName || !v.email || !v.jobTitle || !v.department) continue
+
+    let entityId: string | undefined
+    if (v.entity) {
+      let entity = existingEntitiesByName.get(v.entity.toLowerCase())
+      if (!entity) {
+        entity = { id: crypto.randomUUID(), organizationId, name: v.entity }
+        newEntities.push(entity)
+        existingEntitiesByName.set(v.entity.toLowerCase(), entity)
+      }
+      entityId = entity.id
+    }
 
     const personId = crypto.randomUUID()
     const person: Person = {
@@ -155,6 +169,7 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
       startDate: new Date().toISOString().slice(0, 10),
       status: 'active',
       avatar: v.photoUrl && URL_PATTERN.test(v.photoUrl) ? v.photoUrl : undefined,
+      entityId,
     }
     people.push(person)
 
@@ -186,5 +201,5 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
     }
   }
 
-  return { people, personSkills, personTeams, newSkills }
+  return { people, personSkills, personTeams, newSkills, newEntities }
 }

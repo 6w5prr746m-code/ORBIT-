@@ -86,6 +86,34 @@ describe('buildImportPayload', () => {
     const payload = buildImportPayload(dataset, preview.rows)
     expect(payload.people[0].avatar).toBeUndefined()
   })
+
+  it('creates a new entity when the CSV references one that does not exist yet', () => {
+    const dataset = seedDemoData()
+    const csv = `firstName,lastName,email,jobTitle,department,location,country,entity\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France,Acme France`
+    const preview = buildPreview(csv)
+    const payload = buildImportPayload(dataset, preview.rows)
+    expect(payload.newEntities.some((e) => e.name === 'Acme France')).toBe(true)
+    expect(payload.people[0].entityId).toBe(payload.newEntities[0].id)
+  })
+
+  it('reuses an existing entity by name instead of creating a duplicate', () => {
+    const dataset = seedDemoData()
+    const existingEntity = { id: 'ent-existing', organizationId: dataset.organization.id, name: 'Acme France' }
+    const datasetWithEntity = { ...dataset, entities: [existingEntity] }
+    const csv = `firstName,lastName,email,jobTitle,department,location,country,entity\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France,Acme France`
+    const preview = buildPreview(csv)
+    const payload = buildImportPayload(datasetWithEntity, preview.rows)
+    expect(payload.newEntities).toHaveLength(0)
+    expect(payload.people[0].entityId).toBe('ent-existing')
+  })
+
+  it('leaves entityId undefined when no entity column is provided', () => {
+    const dataset = seedDemoData()
+    const csv = `firstName,lastName,email,jobTitle,department,location,country\nSam,Lee,sam.lee@example.com,Analyst,Finance,Remote,France`
+    const preview = buildPreview(csv)
+    const payload = buildImportPayload(dataset, preview.rows)
+    expect(payload.people[0].entityId).toBeUndefined()
+  })
 })
 
 describe('buildPreview photoUrl validation', () => {
