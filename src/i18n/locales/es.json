@@ -19,6 +19,7 @@
     "skills": "Habilidades",
     "discover": "Descubrir",
     "coverage": "Riesgos",
+    "teamBuilder": "Formar equipo",
     "ask": "Preguntar",
     "settings": "Ajustes"
   },
@@ -303,6 +304,23 @@
       "team": "Equipo",
       "members": "Miembros"
     }
+  },
+  "teamBuilder": {
+    "title": "Formar equipo",
+    "description": "Describe lo que necesitas — obtén un equipo candidato, con pruebas.",
+    "skillsLabel": "Habilidades requeridas",
+    "skillsPlaceholder": "Añadir una habilidad…",
+    "addSkill": "Añadir",
+    "removeSkill": "Quitar {{skill}}",
+    "teamSizeLabel": "Tamaño del equipo",
+    "locationLabel": "Ubicación",
+    "anyLocation": "Cualquier ubicación",
+    "emptyPrompt": "Añade al menos una habilidad requerida para ver candidatos.",
+    "noMatch": {
+      "title": "Nadie coincide todavía",
+      "description": "Prueba a quitar el filtro de ubicación o a añadir otra habilidad."
+    },
+    "uncovered": "Nadie cubre actualmente: {{skills}}."
   },
   "ask": {
     "title": "Ask Orbit",
