@@ -352,6 +352,7 @@
     "sections": {
       "workspace": "Espace de travail",
       "organization": "Organisation",
+      "entities": "Entités",
       "data": "Données",
       "import": "Import",
       "integrations": "Intégrations",
@@ -467,5 +468,34 @@
     "es": "Español",
     "it": "Italiano",
     "de": "Deutsch"
+  },
+  "entities": {
+    "demo": {
+      "title": "Indisponible dans la démo",
+      "description": "L'organisation de démonstration est en lecture seule. Créez votre propre organisation pour gérer les entités."
+    },
+    "error": "Une erreur est survenue",
+    "isolation": {
+      "title": "Isolation des entités",
+      "description": "Choisissez à quel point les entités sont séparées les unes des autres dans cette organisation.",
+      "filter": {
+        "title": "Simple filtre",
+        "description": "Les entités ne servent qu'à regrouper — tout le monde dans l'organisation voit tout le monde, quelle que soit l'entité."
+      },
+      "strict": {
+        "title": "Isolation stricte",
+        "description": "Une personne d'une entité ne voit jamais les données d'une autre entité, sauf si son rôle couvre explicitement toute l'organisation."
+      }
+    },
+    "list": {
+      "title": "Entités",
+      "description": "Filiales ou unités métier au sein de votre organisation.",
+      "empty": "Aucune entité pour le moment.",
+      "memberCount_one": "{{count}} personne",
+      "memberCount_other": "{{count}} personnes",
+      "remove": "Retirer {{name}}",
+      "addPlaceholder": "Nom de la nouvelle entité…",
+      "addAction": "Ajouter"
+    }
   }
 }

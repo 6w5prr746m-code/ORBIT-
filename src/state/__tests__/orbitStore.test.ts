@@ -163,3 +163,42 @@ describe('orbitStore peer endorsements', () => {
     expect(useOrbitStore.getState().dataset?.skillEndorsements.some((e) => e.personId === 'p1' && e.skillId === 's1')).toBe(false)
   })
 })
+
+describe('orbitStore entities', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  it('creates an entity', async () => {
+    await useOrbitStore.getState().createEntity('Acme France')
+    const entity = useOrbitStore.getState().dataset?.entities.find((e) => e.name === 'Acme France')
+    expect(entity).toBeDefined()
+  })
+
+  it('renames an entity', async () => {
+    await useOrbitStore.getState().createEntity('Acme France')
+    const entityId = useOrbitStore.getState().dataset!.entities.find((e) => e.name === 'Acme France')!.id
+    await useOrbitStore.getState().renameEntity(entityId, 'Acme FR')
+    expect(useOrbitStore.getState().dataset?.entities.find((e) => e.id === entityId)?.name).toBe('Acme FR')
+  })
+
+  it('deletes an entity', async () => {
+    await useOrbitStore.getState().createEntity('Acme France')
+    const entityId = useOrbitStore.getState().dataset!.entities.find((e) => e.name === 'Acme France')!.id
+    await useOrbitStore.getState().deleteEntity(entityId)
+    expect(useOrbitStore.getState().dataset?.entities.some((e) => e.id === entityId)).toBe(false)
+  })
+
+  it('assigns a person to an entity', async () => {
+    await useOrbitStore.getState().createEntity('Acme France')
+    const entityId = useOrbitStore.getState().dataset!.entities.find((e) => e.name === 'Acme France')!.id
+    await useOrbitStore.getState().assignPersonToEntity('p1', entityId)
+    expect(useOrbitStore.getState().dataset?.people.find((p) => p.id === 'p1')?.entityId).toBe(entityId)
+  })
+
+  it('changes the entity isolation mode', async () => {
+    await useOrbitStore.getState().setEntityIsolationMode('strict')
+    expect(useOrbitStore.getState().dataset?.organization.entityIsolationMode).toBe('strict')
+  })
+})

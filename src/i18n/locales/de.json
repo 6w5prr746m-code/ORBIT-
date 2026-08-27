@@ -352,6 +352,7 @@
     "sections": {
       "workspace": "Arbeitsbereich",
       "organization": "Organisation",
+      "entities": "Einheiten",
       "data": "Daten",
       "import": "Import",
       "integrations": "Integrationen",
@@ -467,5 +468,34 @@
     "es": "Español",
     "it": "Italiano",
     "de": "Deutsch"
+  },
+  "entities": {
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstelle deine eigene Organisation, um Einheiten zu verwalten."
+    },
+    "error": "Etwas ist schiefgelaufen",
+    "isolation": {
+      "title": "Trennung der Einheiten",
+      "description": "Lege fest, wie streng Einheiten in dieser Organisation voneinander getrennt sind.",
+      "filter": {
+        "title": "Einfacher Filter",
+        "description": "Einheiten dienen nur zur Gruppierung — alle in der Organisation sehen alle, unabhängig von der Einheit."
+      },
+      "strict": {
+        "title": "Strikte Trennung",
+        "description": "Eine Person einer Einheit sieht nie die Daten einer anderen Einheit, außer ihre Rolle umfasst ausdrücklich die gesamte Organisation."
+      }
+    },
+    "list": {
+      "title": "Einheiten",
+      "description": "Tochtergesellschaften oder Geschäftseinheiten innerhalb deiner Organisation.",
+      "empty": "Noch keine Einheiten.",
+      "memberCount_one": "{{count}} Person",
+      "memberCount_other": "{{count}} Personen",
+      "remove": "{{name}} entfernen",
+      "addPlaceholder": "Name der neuen Einheit…",
+      "addAction": "Hinzufügen"
+    }
   }
 }

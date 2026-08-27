@@ -30,10 +30,25 @@ export interface Database {
           industry: string
           size: number
           is_demo: boolean
+          entity_isolation_mode: 'strict' | 'filter'
           created_at: string
         }
         Insert: Partial<Database['public']['Tables']['organizations']['Row']> & { name: string }
         Update: Partial<Database['public']['Tables']['organizations']['Row']>
+        Relationships: []
+      }
+      entities: {
+        Row: {
+          id: string
+          organization_id: string
+          name: string
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['entities']['Row']> & {
+          organization_id: string
+          name: string
+        }
+        Update: Partial<Database['public']['Tables']['entities']['Row']>
         Relationships: []
       }
       memberships: {
@@ -67,6 +82,7 @@ export interface Database {
           status: 'active' | 'inactive'
           email: string
           claimed_by_user_id: string | null
+          entity_id: string | null
           created_at: string
         }
         Insert: Partial<Database['public']['Tables']['people']['Row']> & {

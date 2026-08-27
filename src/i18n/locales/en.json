@@ -352,6 +352,7 @@
     "sections": {
       "workspace": "Workspace",
       "organization": "Organization",
+      "entities": "Entities",
       "data": "Data",
       "import": "Import",
       "integrations": "Integrations",
@@ -467,5 +468,34 @@
     "es": "Español",
     "it": "Italiano",
     "de": "Deutsch"
+  },
+  "entities": {
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to manage entities."
+    },
+    "error": "Something went wrong",
+    "isolation": {
+      "title": "Entity isolation",
+      "description": "Choose how strictly entities are separated from each other in this organization.",
+      "filter": {
+        "title": "Simple filter",
+        "description": "Entities are just a grouping — everyone in the organization can see everyone, regardless of entity."
+      },
+      "strict": {
+        "title": "Strict isolation",
+        "description": "A person in one entity never sees another entity's data, unless their role explicitly spans the whole organization."
+      }
+    },
+    "list": {
+      "title": "Entities",
+      "description": "Subsidiaries or business units within your organization.",
+      "empty": "No entities yet.",
+      "memberCount_one": "{{count}} person",
+      "memberCount_other": "{{count}} people",
+      "remove": "Remove {{name}}",
+      "addPlaceholder": "New entity name…",
+      "addAction": "Add"
+    }
   }
 }

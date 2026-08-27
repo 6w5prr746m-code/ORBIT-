@@ -9,7 +9,7 @@ import { useOrbitStore } from '@/state/orbitStore'
 import { useToast } from '@/components/ui/Toast'
 import { buildImportPayload, buildPreview, CSV_COLUMNS, type ImportPreview } from '@/services/ImportService'
 
-const SAMPLE_CSV = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl\nJordan,Rivera,jordan.rivera@example.com,Product Manager,Product,Austin,United States,Product Analytics;Go-To-Market Strategy,https://i.pravatar.cc/300?u=jordan.rivera`
+const SAMPLE_CSV = `firstName,lastName,email,jobTitle,department,location,country,skills,photoUrl,entity\nJordan,Rivera,jordan.rivera@example.com,Product Manager,Product,Austin,United States,Product Analytics;Go-To-Market Strategy,https://i.pravatar.cc/300?u=jordan.rivera,Acme US`
 
 type Step = 'upload' | 'preview' | 'success'
 
@@ -40,7 +40,7 @@ export function ImportPeople() {
     setImporting(true)
     const payload = buildImportPayload(dataset, preview.rows)
     try {
-      await importPeople(payload.people, payload.personSkills, payload.personTeams, payload.newSkills)
+      await importPeople(payload.people, payload.personSkills, payload.personTeams, payload.newSkills, payload.newEntities)
       setImportedCount(payload.people.length)
       setStep('success')
       push({

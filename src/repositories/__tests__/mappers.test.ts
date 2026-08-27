@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  entityToRow,
   mapConnection,
+  mapEntity,
   mapOrganization,
   mapPerson,
   mapPersonSkill,
@@ -25,9 +27,10 @@ describe('DB row -> app type mappers', () => {
       industry: 'B2B SaaS',
       size: 500,
       is_demo: true,
+      entity_isolation_mode: 'filter',
       created_at: '2026-01-01T00:00:00Z',
     })
-    expect(org).toEqual({ id: 'org-1', name: 'Northstar', logo: undefined, industry: 'B2B SaaS', size: 500 })
+    expect(org).toEqual({ id: 'org-1', name: 'Northstar', logo: undefined, industry: 'B2B SaaS', size: 500, entityIsolationMode: 'filter' })
   })
 
   it('maps a person row, converting null manager_id/avatar to undefined', () => {
@@ -47,6 +50,7 @@ describe('DB row -> app type mappers', () => {
       status: 'active',
       email: 'ada@northstar.io',
       claimed_by_user_id: null,
+      entity_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
     expect(person.managerId).toBeUndefined()
@@ -73,6 +77,7 @@ describe('DB row -> app type mappers', () => {
       status: 'active',
       email: 'ada@northstar.io',
       claimed_by_user_id: 'user-42',
+      entity_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
     expect(person.claimedByUserId).toBe('user-42')
@@ -156,6 +161,12 @@ describe('DB row -> app type mappers', () => {
     const row = skillEndorsementToRow({ organizationId: 'org-1', personId: 'p1', skillId: 's1', endorsedByPersonId: 'p2' })
     expect(row).toEqual({ organization_id: 'org-1', person_id: 'p1', skill_id: 's1', endorsed_by_person_id: 'p2' })
   })
+
+  it('maps and round-trips an entity row', () => {
+    const entity = mapEntity({ id: 'ent-1', organization_id: 'org-1', name: 'Acme France', created_at: '2026-01-01T00:00:00Z' })
+    expect(entity).toEqual({ id: 'ent-1', organizationId: 'org-1', name: 'Acme France' })
+    expect(entityToRow(entity)).toEqual({ id: 'ent-1', organization_id: 'org-1', name: 'Acme France' })
+  })
 })
 
 describe('app type -> DB row (write path)', () => {
@@ -176,6 +187,7 @@ describe('app type -> DB row (write path)', () => {
       status: 'active',
       email: 'ada@northstar.io',
       claimed_by_user_id: null,
+      entity_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
     const row = personToRow(person)

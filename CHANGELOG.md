@@ -8,6 +8,17 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-27
+### Added
+- Multi-entity support: an organization can now have entities (subsidiaries
+  / business units), managed from Settings → Entities — create, rename,
+  delete, and assign people (also settable via an optional `entity` CSV
+  import column). A per-organization choice of isolation mode (`filter`:
+  simple grouping, everyone still sees everyone; `strict`: hard wall between
+  entities) is stored but not yet enforced — that lands with role-based
+  access control in the next release, which is what actually needs the
+  isolation mode to mean something.
+
 ## [0.7.0] - 2026-08-26
 ### Added
 - In-app digest on Home: proactive, deterministic signals surfaced on
