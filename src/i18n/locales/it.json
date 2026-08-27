@@ -354,6 +354,7 @@
       "organization": "Organizzazione",
       "entities": "Entità",
       "access": "Team e accessi",
+      "invitations": "Inviti",
       "data": "Dati",
       "import": "Importa",
       "integrations": "Integrazioni",
@@ -521,6 +522,58 @@
       "director": "Direttore",
       "manager": "Manager",
       "collaborator": "Collaboratore"
+    }
+  },
+  "invitations": {
+    "demo": {
+      "title": "Non disponibile nella demo",
+      "description": "L'organizzazione demo è di sola lettura. Crea la tua organizzazione per invitare persone."
+    },
+    "notAuthorized": {
+      "title": "Solo proprietari e admin HR",
+      "description": "Chiedi a un proprietario o admin HR della tua organizzazione di invitare nuove persone."
+    },
+    "error": "Qualcosa è andato storto",
+    "form": {
+      "title": "Invita persone",
+      "description": "Incolla un'email per riga (o separale con virgole) per invitare più persone contemporaneamente, con lo stesso ruolo ed entità.",
+      "emailsPlaceholder": "jane@azienda.com\njohn@azienda.com",
+      "sending": "Invio in corso…",
+      "send_one": "Invia {{count}} invito",
+      "send_other": "Invia {{count}} inviti"
+    },
+    "sent": {
+      "title": "Inviti inviati",
+      "description_one": "{{count}} invito inviato.",
+      "description_other": "{{count}} inviti inviati."
+    },
+    "resentAll_one": "{{count}} promemoria inviato",
+    "resentAll_other": "{{count}} promemoria inviati",
+    "list": {
+      "title": "Inviti inviati",
+      "description": "Tieni traccia di chi è stato invitato e reinvia o revoca se necessario.",
+      "empty": "Nessun invito inviato finora.",
+      "resend": "Reinvia",
+      "revoke": "Revoca",
+      "resendAll_one": "Reinvia {{count}} in attesa",
+      "resendAll_other": "Reinvia {{count}} in attesa"
+    },
+    "status": {
+      "pending": "In attesa",
+      "accepted": "Accettato",
+      "revoked": "Revocato"
+    }
+  },
+  "acceptInvite": {
+    "invitedTo": "Sei stato invitato a unirti a {{org}} come {{role}}.",
+    "createAccountAndJoin": "Crea account e unisciti",
+    "signInAndJoin": "Accedi e unisciti",
+    "confirmEmailFirst": "Controlla la tua email e conferma il tuo account, poi riapri questo link di invito per completare l'iscrizione.",
+    "error": "Impossibile accettare questo invito",
+    "goHome": "Vai a ORBIT",
+    "notFound": {
+      "title": "Invito non trovato",
+      "description": "Questo link di invito non è valido, è scaduto o è già stato utilizzato."
     }
   }
 }

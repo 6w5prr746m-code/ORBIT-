@@ -233,3 +233,48 @@ describe('orbitStore RBAC', () => {
     expect(membership?.entityId).toBeUndefined()
   })
 })
+
+describe('orbitStore invitations', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  it('creates invitations and sends the emails', async () => {
+    await useOrbitStore.getState().createInvitations([{ email: 'new1@northstar.io', role: 'collaborator' }, { email: 'new2@northstar.io', role: 'manager' }])
+    const invitations = useOrbitStore.getState().dataset?.invitations
+    expect(invitations).toHaveLength(2)
+    expect(invitations?.every((i) => i.status === 'pending')).toBe(true)
+    expect(invitations?.every((i) => i.lastSentAt)).toBe(true)
+  })
+
+  it('does not create a duplicate invitation for an already-invited email', async () => {
+    await useOrbitStore.getState().createInvitations([{ email: 'new1@northstar.io', role: 'collaborator' }])
+    await useOrbitStore.getState().createInvitations([{ email: 'new1@northstar.io', role: 'director' }])
+    const invitations = useOrbitStore.getState().dataset?.invitations
+    expect(invitations).toHaveLength(1)
+    expect(invitations?.[0].role).toBe('collaborator')
+  })
+
+  it('resends an invitation, updating lastSentAt', async () => {
+    await useOrbitStore.getState().createInvitations([{ email: 'new1@northstar.io', role: 'collaborator' }])
+    const invitationId = useOrbitStore.getState().dataset!.invitations[0].id
+    const firstSentAt = useOrbitStore.getState().dataset!.invitations[0].lastSentAt
+
+    await new Promise((resolve) => setTimeout(resolve, 5))
+    await useOrbitStore.getState().resendInvitations([invitationId])
+
+    const resent = useOrbitStore.getState().dataset?.invitations.find((i) => i.id === invitationId)
+    expect(resent?.lastSentAt).toBeDefined()
+    expect(resent?.lastSentAt).not.toBe(firstSentAt)
+  })
+
+  it('revokes an invitation', async () => {
+    await useOrbitStore.getState().createInvitations([{ email: 'new1@northstar.io', role: 'collaborator' }])
+    const invitationId = useOrbitStore.getState().dataset!.invitations[0].id
+
+    await useOrbitStore.getState().revokeInvitation(invitationId)
+
+    expect(useOrbitStore.getState().dataset?.invitations.find((i) => i.id === invitationId)?.status).toBe('revoked')
+  })
+})

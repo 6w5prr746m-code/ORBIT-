@@ -354,6 +354,7 @@
       "organization": "Organisation",
       "entities": "Entités",
       "access": "Équipe et accès",
+      "invitations": "Invitations",
       "data": "Données",
       "import": "Import",
       "integrations": "Intégrations",
@@ -521,6 +522,58 @@
       "director": "Directeur",
       "manager": "Manager",
       "collaborator": "Collaborateur"
+    }
+  },
+  "invitations": {
+    "demo": {
+      "title": "Indisponible en démo",
+      "description": "L’organisation de démonstration est en lecture seule. Créez votre propre organisation pour inviter des personnes."
+    },
+    "notAuthorized": {
+      "title": "Réservé aux propriétaires et admins RH",
+      "description": "Demandez à un propriétaire ou un admin RH de votre organisation d’inviter de nouvelles personnes."
+    },
+    "error": "Une erreur est survenue",
+    "form": {
+      "title": "Inviter des personnes",
+      "description": "Collez un email par ligne (ou séparez-les par des virgules) pour inviter plusieurs personnes à la fois, avec le même rôle et la même entité.",
+      "emailsPlaceholder": "jane@entreprise.com\njohn@entreprise.com",
+      "sending": "Envoi en cours…",
+      "send_one": "Envoyer {{count}} invitation",
+      "send_other": "Envoyer {{count}} invitations"
+    },
+    "sent": {
+      "title": "Invitations envoyées",
+      "description_one": "{{count}} invitation envoyée.",
+      "description_other": "{{count}} invitations envoyées."
+    },
+    "resentAll_one": "{{count}} relance envoyée",
+    "resentAll_other": "{{count}} relances envoyées",
+    "list": {
+      "title": "Invitations envoyées",
+      "description": "Suivez qui a été invité, et relancez ou révoquez si besoin.",
+      "empty": "Aucune invitation envoyée pour l’instant.",
+      "resend": "Relancer",
+      "revoke": "Révoquer",
+      "resendAll_one": "Relancer {{count}} en attente",
+      "resendAll_other": "Relancer {{count}} en attente"
+    },
+    "status": {
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "revoked": "Révoquée"
+    }
+  },
+  "acceptInvite": {
+    "invitedTo": "Vous avez été invité(e) à rejoindre {{org}} en tant que {{role}}.",
+    "createAccountAndJoin": "Créer un compte et rejoindre",
+    "signInAndJoin": "Se connecter et rejoindre",
+    "confirmEmailFirst": "Vérifiez votre email et confirmez votre compte, puis rouvrez ce lien d’invitation pour finaliser votre inscription.",
+    "error": "Cette invitation n’a pas pu être acceptée",
+    "goHome": "Aller sur ORBIT",
+    "notFound": {
+      "title": "Invitation introuvable",
+      "description": "Ce lien d’invitation est invalide, expiré, ou a déjà été utilisé."
     }
   }
 }

@@ -14,6 +14,7 @@ import { AskPage } from '@/pages/AskPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { AuthPage } from '@/pages/AuthPage'
+import { AcceptInvitePage } from '@/pages/AcceptInvitePage'
 import { OnboardingPage } from '@/pages/OnboardingPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
@@ -22,6 +23,7 @@ function App() {
     <Routes>
       <Route path="/welcome" element={<LandingPage />} />
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/invite/:token" element={<AcceptInvitePage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
 
       <Route element={<RequireDataset />}>

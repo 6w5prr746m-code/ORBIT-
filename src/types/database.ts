@@ -193,6 +193,29 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['connections']['Row']>
         Relationships: []
       }
+      invitations: {
+        Row: {
+          id: string
+          organization_id: string
+          email: string
+          role: 'hr_admin' | 'director' | 'manager' | 'collaborator'
+          entity_id: string | null
+          invited_by: string
+          token: string
+          status: 'pending' | 'accepted' | 'revoked'
+          last_sent_at: string | null
+          accepted_at: string | null
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['invitations']['Row']> & {
+          organization_id: string
+          email: string
+          role: 'hr_admin' | 'director' | 'manager' | 'collaborator'
+          invited_by: string
+        }
+        Update: Partial<Database['public']['Tables']['invitations']['Row']>
+        Relationships: []
+      }
       sources: {
         Row: {
           id: string
@@ -217,6 +240,14 @@ export interface Database {
       create_organization: {
         Args: { org_name: string; org_industry: string; org_size: number }
         Returns: string
+      }
+      accept_invitation: {
+        Args: { invitation_token: string }
+        Returns: string
+      }
+      get_invitation_preview: {
+        Args: { invitation_token: string }
+        Returns: { email: string; organization_name: string; role: string }[]
       }
     }
   }

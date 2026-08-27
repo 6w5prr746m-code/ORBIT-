@@ -15,6 +15,7 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
     },
   ],
   entities: [],
+  invitations: [],
   people: [
     {
       id: 'p1',
@@ -77,6 +78,26 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   ],
 }
 
+/** Mirrors a table's `default ...` columns, for rows inserted/upserted without them (matching Postgres, not just id generation). */
+const ROW_DEFAULTS: Record<string, () => Record<string, unknown>> = {
+  invitations: () => ({
+    token: crypto.randomUUID(),
+    status: 'pending',
+    last_sent_at: null,
+    accepted_at: null,
+    created_at: new Date().toISOString(),
+  }),
+}
+
+function applyRowDefaults(table: string, row: Record<string, unknown>) {
+  if ('id' in row && row.id === undefined) row.id = crypto.randomUUID()
+  const defaults = ROW_DEFAULTS[table]?.()
+  if (!defaults) return
+  for (const [key, value] of Object.entries(defaults)) {
+    if (!(key in row) || row[key] === undefined) row[key] = value
+  }
+}
+
 class FakeQuery {
   private filters: Array<(row: Record<string, unknown>) => boolean> = []
   private limitCount: number | null = null
@@ -131,16 +152,17 @@ class FakeQuery {
     return this
   }
 
-  upsert(rows: Record<string, unknown>[], options?: { onConflict?: string }) {
+  upsert(rows: Record<string, unknown>[], options?: { onConflict?: string; ignoreDuplicates?: boolean }) {
     const conflictColumns = options?.onConflict?.split(',')
     for (const row of rows) {
       if (conflictColumns) {
         const existingIdx = this.rows.findIndex((r) => conflictColumns.every((c) => r[c] === row[c]))
         if (existingIdx !== -1) {
-          this.rows[existingIdx] = { ...this.rows[existingIdx], ...row }
+          if (!options?.ignoreDuplicates) this.rows[existingIdx] = { ...this.rows[existingIdx], ...row }
           continue
         }
       }
+      applyRowDefaults(this.table, row)
       this.rows.push(row)
     }
     return Promise.resolve({ data: null, error: null })
@@ -149,7 +171,7 @@ class FakeQuery {
   private execute(): Record<string, unknown>[] {
     if (this.pendingOp === 'insert' && this.pendingInsertRows) {
       for (const row of this.pendingInsertRows) {
-        if ('id' in row && row.id === undefined) row.id = crypto.randomUUID()
+        applyRowDefaults(this.table, row)
       }
       this.rows.push(...this.pendingInsertRows)
       return this.pendingInsertRows
@@ -211,6 +233,20 @@ export const fakeSupabase = {
       return { data: id, error: null }
     }
     return { data: null, error: null }
+  },
+  functions: {
+    /** Stands in for the send-invitation-emails Edge Function: marks each invitation sent, no real network call. */
+    invoke: async (fnName: string, opts?: { body?: Record<string, unknown> }) => {
+      if (fnName === 'send-invitation-emails') {
+        const ids = (opts?.body?.invitationIds as string[] | undefined) ?? []
+        const now = new Date().toISOString()
+        for (const inv of FIXTURES.invitations) {
+          if (ids.includes(inv.id as string)) inv.last_sent_at = now
+        }
+        return { data: { results: ids.map((id) => ({ id, ok: true })) }, error: null }
+      }
+      return { data: null, error: null }
+    },
   },
 }
 

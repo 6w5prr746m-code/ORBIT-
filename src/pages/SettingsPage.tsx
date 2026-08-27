@@ -5,6 +5,7 @@ import {
   Lock,
   Network,
   Plug,
+  Send,
   ShieldCheck,
   Upload,
   UserCircle,
@@ -20,6 +21,7 @@ import { useNavigate } from 'react-router-dom'
 import { ImportPeople } from '@/components/settings/ImportPeople'
 import { EntitiesSettings } from '@/components/settings/EntitiesSettings'
 import { AccessSettings } from '@/components/settings/AccessSettings'
+import { InvitationsSettings } from '@/components/settings/InvitationsSettings'
 import { LanguageSwitcher } from '@/components/settings/LanguageSwitcher'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
@@ -39,6 +41,7 @@ const SECTIONS = [
   { id: 'organization', labelKey: 'settings.sections.organization', icon: Building2 },
   { id: 'entities', labelKey: 'settings.sections.entities', icon: Network },
   { id: 'access', labelKey: 'settings.sections.access', icon: ShieldCheck },
+  { id: 'invitations', labelKey: 'settings.sections.invitations', icon: Send },
   { id: 'data', labelKey: 'settings.sections.data', icon: Database },
   { id: 'import', labelKey: 'settings.sections.import', icon: Upload },
   { id: 'integrations', labelKey: 'settings.sections.integrations', icon: Plug },
@@ -163,6 +166,8 @@ export function SettingsPage() {
           {section === 'entities' && <EntitiesSettings />}
 
           {section === 'access' && <AccessSettings />}
+
+          {section === 'invitations' && <InvitationsSettings />}
 
           {section === 'data' && (
             <Card>

@@ -1,4 +1,4 @@
-import type { Connection, Entity, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
+import type { Connection, Entity, Invitation, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
@@ -36,6 +36,34 @@ export function mapMembership(row: Tables['memberships']['Row']): Membership {
     organizationId: row.organization_id,
     role: row.role,
     entityId: row.entity_id ?? undefined,
+  }
+}
+
+export function mapInvitation(row: Tables['invitations']['Row']): Invitation {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    email: row.email,
+    role: row.role,
+    entityId: row.entity_id ?? undefined,
+    invitedBy: row.invited_by,
+    token: row.token,
+    status: row.status,
+    lastSentAt: row.last_sent_at ?? undefined,
+    acceptedAt: row.accepted_at ?? undefined,
+  }
+}
+
+export function invitationToRow(
+  i: Omit<Invitation, 'id' | 'token' | 'status' | 'lastSentAt' | 'acceptedAt'>,
+): Tables['invitations']['Insert'] {
+  return {
+    id: undefined,
+    organization_id: i.organizationId,
+    email: i.email,
+    role: i.role,
+    entity_id: i.entityId ?? null,
+    invited_by: i.invitedBy,
   }
 }
 
