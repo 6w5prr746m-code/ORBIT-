@@ -4,10 +4,12 @@ import {
   claimPerson as claimPersonRemote,
   createOrganization as createOrganizationRemote,
   createSkillIfMissing,
+  endorseSkill as endorseSkillRemote,
   fetchDemoDataset,
   fetchMyOrganizationId,
   fetchOrganizationDataset,
   insertPeople,
+  removeEndorsement as removeEndorsementRemote,
   removePersonSkill as removePersonSkillRemote,
   updatePersonProfile,
   upsertPersonSkill,
@@ -32,6 +34,8 @@ interface OrbitState {
   updateMyProfile: (personId: string, patch: { bio?: string; avatar?: string | null }) => Promise<void>
   addMySkill: (personId: string, input: { skillId?: string; skillName?: string; level: SkillLevel; yearsExperience: number }) => Promise<void>
   removeMySkill: (personId: string, skillId: string) => Promise<void>
+  endorseSkill: (personId: string, skillId: string) => Promise<void>
+  removeEndorsement: (personId: string, skillId: string) => Promise<void>
   clear: () => void
 }
 
@@ -140,6 +144,26 @@ export const useOrbitStore = create<OrbitState>((set, get) => ({
     const { dataset } = get()
     if (!dataset) return
     await removePersonSkillRemote(personId, skillId)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  endorseSkill: async (personId, skillId) => {
+    const { dataset } = get()
+    const userId = useAuthStore.getState().user?.id
+    const myPerson = dataset?.people.find((p) => p.claimedByUserId === userId)
+    if (!dataset || !myPerson) return
+    await endorseSkillRemote(dataset.organization.id, personId, skillId, myPerson.id)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  removeEndorsement: async (personId, skillId) => {
+    const { dataset } = get()
+    const userId = useAuthStore.getState().user?.id
+    const myPerson = dataset?.people.find((p) => p.claimedByUserId === userId)
+    if (!dataset || !myPerson) return
+    await removeEndorsementRemote(personId, skillId, myPerson.id)
     const refreshed = await fetchOrganizationDataset(dataset.organization.id)
     set({ dataset: refreshed })
   },

@@ -112,6 +112,24 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['person_skills']['Row']>
         Relationships: []
       }
+      skill_endorsements: {
+        Row: {
+          id: string
+          organization_id: string
+          person_id: string
+          skill_id: string
+          endorsed_by_person_id: string
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['skill_endorsements']['Row']> & {
+          organization_id: string
+          person_id: string
+          skill_id: string
+          endorsed_by_person_id: string
+        }
+        Update: Partial<Database['public']['Tables']['skill_endorsements']['Row']>
+        Relationships: []
+      }
       teams: {
         Row: {
           id: string

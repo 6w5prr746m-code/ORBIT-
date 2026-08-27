@@ -26,4 +26,9 @@ describe('fetchOrganizationDataset', () => {
     for (const person of dataset.people) expect(person.organizationId).toBe(DEMO_ORGANIZATION_ID)
     for (const skill of dataset.skills) expect(skill.organizationId).toBe(DEMO_ORGANIZATION_ID)
   })
+
+  it('includes an empty skillEndorsements array when there are none yet', async () => {
+    const dataset = await fetchOrganizationDataset(DEMO_ORGANIZATION_ID)
+    expect(dataset.skillEndorsements).toEqual([])
+  })
 })

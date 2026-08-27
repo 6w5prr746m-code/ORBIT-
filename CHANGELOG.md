@@ -8,6 +8,14 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-26
+### Added
+- Peer endorsements: a person with a claimed profile can vouch for a
+  colleague's skill (one endorsement per person per skill, can't endorse
+  yourself). Endorsement counts show up as a small thumbs-up badge next to
+  each skill on a person's profile, giving self-reported skills social
+  proof without silently rewriting `person_skills.source`.
+
 ## [0.3.0] - 2026-08-26
 ### Added
 - Claim your profile: a signed-in user can link their account to their own

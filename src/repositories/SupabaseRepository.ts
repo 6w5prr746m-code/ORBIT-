@@ -8,28 +8,33 @@ import {
   mapPersonSkill,
   mapPersonTeam,
   mapSkill,
+  mapSkillEndorsement,
   mapSource,
   mapTeam,
   personSkillToRow,
   personTeamToRow,
   personToRow,
+  skillEndorsementToRow,
   skillToRow,
 } from './mappers'
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, people, skills, personSkills, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
+    supabase.from('skill_endorsements').select('*').eq('organization_id', organizationId),
     supabase.from('teams').select('*').eq('organization_id', organizationId),
     supabase.from('person_teams').select('*').eq('organization_id', organizationId),
     supabase.from('connections').select('*').eq('organization_id', organizationId),
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, people, skills, personSkills, teams, personTeams, connections, sources].find((r) => r.error)
+  const failed = [org, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+    (r) => r.error,
+  )
   if (failed?.error) throw new Error(failed.error.message)
   if (!org.data) throw new Error('Organization not found')
 
@@ -38,6 +43,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
+    skillEndorsements: (skillEndorsements.data ?? []).map(mapSkillEndorsement),
     teams: (teams.data ?? []).map(mapTeam),
     personTeams: (personTeams.data ?? []).map(mapPersonTeam),
     connections: (connections.data ?? []).map(mapConnection),
@@ -159,5 +165,30 @@ export async function createSkillIfMissing(skill: Skill): Promise<void> {
   const { error } = await supabase
     .from('skills')
     .upsert([skillToRow(skill)], { onConflict: 'organization_id,name', ignoreDuplicates: true })
+  if (error) throw new Error(error.message)
+}
+
+export async function endorseSkill(
+  organizationId: string,
+  personId: string,
+  skillId: string,
+  endorsedByPersonId: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from('skill_endorsements')
+    .upsert(
+      [skillEndorsementToRow({ organizationId, personId, skillId, endorsedByPersonId })],
+      { onConflict: 'person_id,skill_id,endorsed_by_person_id', ignoreDuplicates: true },
+    )
+  if (error) throw new Error(error.message)
+}
+
+export async function removeEndorsement(personId: string, skillId: string, endorsedByPersonId: string): Promise<void> {
+  const { error } = await supabase
+    .from('skill_endorsements')
+    .delete()
+    .eq('person_id', personId)
+    .eq('skill_id', skillId)
+    .eq('endorsed_by_person_id', endorsedByPersonId)
   if (error) throw new Error(error.message)
 }

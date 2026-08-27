@@ -223,7 +223,10 @@
     "worksWith": "Works with",
     "relatedPeople": "Related people",
     "askQuestion": "Why is {{firstName}} a good person to talk to about {{skill}}?",
-    "askQuestionFallback": "Tell me about {{fullName}}"
+    "askQuestionFallback": "Tell me about {{fullName}}",
+    "endorse": {
+      "action": "Endorse {{skill}}"
+    }
   },
   "profile": {
     "title": "Your profile",

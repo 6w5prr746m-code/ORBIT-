@@ -53,6 +53,14 @@ export interface PersonSkill {
   source: SkillSource
 }
 
+export interface SkillEndorsement {
+  id: string
+  organizationId: string
+  personId: string
+  skillId: string
+  endorsedByPersonId: string
+}
+
 export interface Team {
   id: string
   organizationId: string
@@ -102,6 +110,7 @@ export interface OrganizationDataset {
   people: Person[]
   skills: Skill[]
   personSkills: PersonSkill[]
+  skillEndorsements: SkillEndorsement[]
   teams: Team[]
   personTeams: PersonTeam[]
   connections: Connection[]

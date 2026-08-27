@@ -137,3 +137,29 @@ describe('orbitStore profile self-service', () => {
     expect(useOrbitStore.getState().dataset?.personSkills.some((ps) => ps.personId === 'p1' && ps.skillId === skillId)).toBe(false)
   })
 })
+
+describe('orbitStore peer endorsements', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u2' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+    await useOrbitStore.getState().claimPerson('p2', 'u2')
+  })
+
+  it('does nothing when the signed-in user has no claimed person', async () => {
+    useAuthStore.setState({ user: { id: 'u-without-a-claim' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().endorseSkill('p1', 's1')
+    expect(useOrbitStore.getState().dataset?.skillEndorsements).toHaveLength(0)
+  })
+
+  it('endorses a colleague on a skill', async () => {
+    await useOrbitStore.getState().endorseSkill('p1', 's1')
+    const endorsement = useOrbitStore.getState().dataset?.skillEndorsements.find((e) => e.personId === 'p1' && e.skillId === 's1')
+    expect(endorsement?.endorsedByPersonId).toBe('p2')
+  })
+
+  it('removes an endorsement', async () => {
+    await useOrbitStore.getState().endorseSkill('p1', 's1')
+    await useOrbitStore.getState().removeEndorsement('p1', 's1')
+    expect(useOrbitStore.getState().dataset?.skillEndorsements.some((e) => e.personId === 'p1' && e.skillId === 's1')).toBe(false)
+  })
+})

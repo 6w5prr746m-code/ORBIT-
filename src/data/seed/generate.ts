@@ -250,7 +250,7 @@ export function seedDemoData(): OrganizationDataset {
     { id: 'src-8', organizationId: ORGANIZATION_ID, type: 'jira', name: 'Jira', status: 'coming-soon' },
   ]
 
-  return { organization, people, skills, personSkills, teams, personTeams, connections, sources }
+  return { organization, people, skills, personSkills, skillEndorsements: [], teams, personTeams, connections, sources }
 }
 
 export function canHelpTopicsFor(personId: string, dataset: OrganizationDataset): string[] {

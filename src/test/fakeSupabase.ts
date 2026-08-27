@@ -32,6 +32,24 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
       claimed_by_user_id: null,
       created_at: '2026-01-01T00:00:00Z',
     },
+    {
+      id: 'p2',
+      organization_id: DEMO_ORGANIZATION_ID,
+      first_name: 'Grace',
+      last_name: 'Hopper',
+      avatar: null,
+      job_title: 'Principal Engineer',
+      department: 'Engineering',
+      location: 'Remote',
+      country: 'United States',
+      bio: 'Test bio.',
+      manager_id: null,
+      start_date: '2020-01-01',
+      status: 'active',
+      email: 'grace@northstar.io',
+      claimed_by_user_id: null,
+      created_at: '2026-01-01T00:00:00Z',
+    },
   ],
   skills: [
     {
@@ -44,11 +62,15 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
     },
   ],
   person_skills: [],
+  skill_endorsements: [],
   teams: [],
   person_teams: [],
   connections: [],
   sources: [],
-  memberships: [{ user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', created_at: '2026-01-01T00:00:00Z' }],
+  memberships: [
+    { user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', created_at: '2026-01-01T00:00:00Z' },
+    { user_id: 'u2', organization_id: DEMO_ORGANIZATION_ID, role: 'member', created_at: '2026-01-01T00:00:00Z' },
+  ],
 }
 
 class FakeQuery {
@@ -114,8 +136,18 @@ class FakeQuery {
     return Promise.resolve({ data: rows[0] ?? null, error: null })
   }
 
-  upsert(rows: Record<string, unknown>[]) {
-    this.rows.push(...rows)
+  upsert(rows: Record<string, unknown>[], options?: { onConflict?: string }) {
+    const conflictColumns = options?.onConflict?.split(',')
+    for (const row of rows) {
+      if (conflictColumns) {
+        const existingIdx = this.rows.findIndex((r) => conflictColumns.every((c) => r[c] === row[c]))
+        if (existingIdx !== -1) {
+          this.rows[existingIdx] = { ...this.rows[existingIdx], ...row }
+          continue
+        }
+      }
+      this.rows.push(row)
+    }
     return Promise.resolve({ data: null, error: null })
   }
 
