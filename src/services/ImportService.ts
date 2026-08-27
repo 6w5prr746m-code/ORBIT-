@@ -1,6 +1,7 @@
 import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
 
-export const CSV_COLUMNS = ['firstName', 'lastName', 'email', 'jobTitle', 'department', 'location', 'country', 'skills'] as const
+export const CSV_COLUMNS = ['firstName', 'lastName', 'email', 'jobTitle', 'department', 'location', 'country', 'skills', 'photoUrl'] as const
+const OPTIONAL_CSV_COLUMNS: readonly string[] = ['skills', 'photoUrl']
 
 export interface ParsedRow {
   rowNumber: number
@@ -65,6 +66,7 @@ export function parseCsv(text: string): string[][] {
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const URL_PATTERN = /^https?:\/\/\S+$/i
 
 export function buildPreview(csvText: string): ImportPreview {
   const rawRows = parseCsv(csvText)
@@ -75,7 +77,7 @@ export function buildPreview(csvText: string): ImportPreview {
   }
 
   const header = rawRows[0].map((h) => h.trim())
-  const missingColumns = CSV_COLUMNS.filter((c) => c !== 'skills' && !header.includes(c))
+  const missingColumns = CSV_COLUMNS.filter((c) => !OPTIONAL_CSV_COLUMNS.includes(c) && !header.includes(c))
   if (missingColumns.length > 0) {
     errors.push({ rowNumber: 0, message: `Missing required columns: ${missingColumns.join(', ')}` })
     return { rows: [], errors, validRowCount: 0 }
@@ -98,6 +100,8 @@ export function buildPreview(csvText: string): ImportPreview {
     else if (!EMAIL_PATTERN.test(row.values.email)) rowErrors.push({ rowNumber: row.rowNumber, field: 'email', message: 'Email looks invalid.' })
     if (!row.values.jobTitle) rowErrors.push({ rowNumber: row.rowNumber, field: 'jobTitle', message: 'Job title is required.' })
     if (!row.values.department) rowErrors.push({ rowNumber: row.rowNumber, field: 'department', message: 'Department is required.' })
+    if (row.values.photoUrl && !URL_PATTERN.test(row.values.photoUrl))
+      rowErrors.push({ rowNumber: row.rowNumber, field: 'photoUrl', message: 'Photo URL looks invalid.' })
 
     if (rowErrors.length === 0) validRowCount += 1
     errors.push(...rowErrors)
@@ -150,6 +154,7 @@ export function buildImportPayload(dataset: OrganizationDataset, rows: ParsedRow
       bio: `Imported via CSV. ${v.jobTitle} in ${v.department}.`,
       startDate: new Date().toISOString().slice(0, 10),
       status: 'active',
+      avatar: v.photoUrl && URL_PATTERN.test(v.photoUrl) ? v.photoUrl : undefined,
     }
     people.push(person)
 

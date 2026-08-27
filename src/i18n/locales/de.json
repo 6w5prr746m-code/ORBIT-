@@ -164,6 +164,10 @@
     "searchPlaceholder": "Suche nach Name, Rolle, Team oder Standort…",
     "allTeams": "Alle Teams",
     "allLocations": "Alle Standorte",
+    "view": {
+      "list": "Listenansicht",
+      "trombinoscope": "Fotoansicht"
+    },
     "empty": {
       "title": "Niemand entspricht diesen Filtern",
       "description": "Probiere einen anderen Suchbegriff oder setze die Filter zurück, um alle zu sehen.",

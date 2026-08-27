@@ -164,6 +164,10 @@
     "searchPlaceholder": "Busca por nombre, puesto, equipo o ubicación…",
     "allTeams": "Todos los equipos",
     "allLocations": "Todas las ubicaciones",
+    "view": {
+      "list": "Vista de lista",
+      "trombinoscope": "Vista de fotos"
+    },
     "empty": {
       "title": "Nadie coincide con estos filtros",
       "description": "Prueba otro término de búsqueda o borra los filtros para ver a todos.",

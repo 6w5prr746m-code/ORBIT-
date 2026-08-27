@@ -164,6 +164,10 @@
     "searchPlaceholder": "Cerca per nome, ruolo, team o sede…",
     "allTeams": "Tutti i team",
     "allLocations": "Tutte le sedi",
+    "view": {
+      "list": "Vista elenco",
+      "trombinoscope": "Vista foto"
+    },
     "empty": {
       "title": "Nessuno corrisponde a questi filtri",
       "description": "Prova un altro termine di ricerca, oppure cancella i filtri per vedere tutti.",

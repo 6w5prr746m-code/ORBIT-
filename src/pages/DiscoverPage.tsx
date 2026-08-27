@@ -17,7 +17,7 @@ function Card({ card }: { card: DiscoverCard }) {
         to={`/people/${person.id}`}
         className="flex w-56 shrink-0 snap-start flex-col gap-3 rounded-[var(--radius-card)] border border-border bg-canvas-raised p-4 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-raised)]"
       >
-        <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} size={40} />
+        <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} photoUrl={person.avatar} size={40} />
         <div>
           <p className="truncate text-sm font-semibold text-ink">
             {person.firstName} {person.lastName}

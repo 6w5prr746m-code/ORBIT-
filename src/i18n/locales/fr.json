@@ -164,6 +164,10 @@
     "searchPlaceholder": "Rechercher par nom, rôle, équipe ou lieu…",
     "allTeams": "Toutes les équipes",
     "allLocations": "Tous les lieux",
+    "view": {
+      "list": "Vue liste",
+      "trombinoscope": "Vue trombinoscope"
+    },
     "empty": {
       "title": "Personne ne correspond à ces filtres",
       "description": "Essayez un autre terme de recherche, ou effacez vos filtres pour voir tout le monde.",

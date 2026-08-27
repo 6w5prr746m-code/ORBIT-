@@ -44,7 +44,7 @@ lines.push('-- People')
 for (const p of dataset.people) {
   const id = personIdMap.get(p.id)
   lines.push(
-    `insert into people (id, organization_id, first_name, last_name, job_title, department, location, country, bio, start_date, status, email) values (${sqlString(id)}, ${sqlString(DEMO_ORG_ID)}, ${sqlString(p.firstName)}, ${sqlString(p.lastName)}, ${sqlString(p.jobTitle)}, ${sqlString(p.department)}, ${sqlString(p.location)}, ${sqlString(p.country)}, ${sqlString(p.bio)}, ${sqlString(p.startDate)}, ${sqlString(p.status)}, ${sqlString(p.email)});`,
+    `insert into people (id, organization_id, first_name, last_name, job_title, department, location, country, bio, start_date, status, email, avatar) values (${sqlString(id)}, ${sqlString(DEMO_ORG_ID)}, ${sqlString(p.firstName)}, ${sqlString(p.lastName)}, ${sqlString(p.jobTitle)}, ${sqlString(p.department)}, ${sqlString(p.location)}, ${sqlString(p.country)}, ${sqlString(p.bio)}, ${sqlString(p.startDate)}, ${sqlString(p.status)}, ${sqlString(p.email)}, ${sqlString(p.avatar)});`,
   )
 }
 lines.push('')

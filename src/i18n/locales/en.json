@@ -164,6 +164,10 @@
     "searchPlaceholder": "Search by name, role, team or location…",
     "allTeams": "All teams",
     "allLocations": "All locations",
+    "view": {
+      "list": "List view",
+      "trombinoscope": "Photo grid view"
+    },
     "empty": {
       "title": "No one matches these filters",
       "description": "Try a different search term, or clear your filters to see everyone.",

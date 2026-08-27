@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react'
-import { Users2 } from 'lucide-react'
+import { LayoutGrid, List, Users2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '@/hooks/useDataset'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { PageHeader } from '@/components/common/PageHeader'
 import { SearchBar } from '@/components/common/SearchBar'
 import { PersonCard } from '@/components/people/PersonCard'
+import { PersonGridCard } from '@/components/people/PersonGridCard'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { normalizeQuery, skillsForPerson } from '@/services/SearchService'
+import { cn } from '@/lib/utils'
+
+type PeopleView = 'list' | 'trombinoscope'
 
 export function PeoplePage() {
   const dataset = useDataset()
@@ -15,6 +19,7 @@ export function PeoplePage() {
   const [query, setQuery] = useState('')
   const [team, setTeam] = useState('')
   const [location, setLocation] = useState('')
+  const [view, setView] = useState<PeopleView>('list')
   const debouncedQuery = useDebouncedValue(query, 150)
 
   const { teams, locations } = useMemo(() => {
@@ -85,6 +90,31 @@ export function PeoplePage() {
               </option>
             ))}
           </select>
+
+          <div className="ml-auto flex gap-1 rounded-[var(--radius-control)] border border-border bg-canvas-raised p-1">
+            <button
+              onClick={() => setView('list')}
+              aria-label={t('people.view.list')}
+              aria-pressed={view === 'list'}
+              className={cn(
+                'flex h-7 w-7 items-center justify-center rounded-[6px] transition-colors',
+                view === 'list' ? 'bg-ink text-canvas' : 'text-graphite hover:text-ink',
+              )}
+            >
+              <List className="h-4 w-4" strokeWidth={1.75} />
+            </button>
+            <button
+              onClick={() => setView('trombinoscope')}
+              aria-label={t('people.view.trombinoscope')}
+              aria-pressed={view === 'trombinoscope'}
+              className={cn(
+                'flex h-7 w-7 items-center justify-center rounded-[6px] transition-colors',
+                view === 'trombinoscope' ? 'bg-ink text-canvas' : 'text-graphite hover:text-ink',
+              )}
+            >
+              <LayoutGrid className="h-4 w-4" strokeWidth={1.75} />
+            </button>
+          </div>
         </div>
 
         {filteredPeople.length === 0 ? (
@@ -99,6 +129,12 @@ export function PeoplePage() {
               setLocation('')
             }}
           />
+        ) : view === 'trombinoscope' ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {filteredPeople.map((person) => (
+              <PersonGridCard key={person.id} person={person} />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredPeople.map((person) => (

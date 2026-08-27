@@ -12,7 +12,7 @@ export function PersonCard({ person, topSkills }: { person: Person; topSkills: s
       className="group flex flex-col gap-4 rounded-[var(--radius-card)] border border-border bg-canvas-raised p-5 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-raised)]"
     >
       <div className="flex items-center gap-3">
-        <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} size={44} />
+        <Avatar name={`${person.firstName} ${person.lastName}`} initials={initials(person.firstName, person.lastName)} photoUrl={person.avatar} size={44} />
         <div className="min-w-0">
           <p className="truncate text-[15px] font-semibold text-ink">
             {person.firstName} {person.lastName}
