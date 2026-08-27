@@ -8,6 +8,14 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-26
+### Added
+- Skill Risk (`/coverage`): a deterministic, rule-based view of "bus factor"
+  — skills held by exactly one person org-wide ("single points of failure")
+  or exactly two ("fragile"), plus a per-team breakdown of how much of that
+  risk sits on each team. Pure computation over existing data, no schema
+  changes.
+
 ## [0.4.0] - 2026-08-26
 ### Added
 - Peer endorsements: a person with a claimed profile can vouch for a

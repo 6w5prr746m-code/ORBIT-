@@ -18,6 +18,7 @@
     "people": "Persone",
     "skills": "Competenze",
     "discover": "Scopri",
+    "coverage": "Rischi",
     "ask": "Chiedi",
     "settings": "Impostazioni"
   },
@@ -275,6 +276,32 @@
       "most-connected": { "title": "Più connessi", "description": "Le persone al centro di come si svolge il lavoro." },
       "emerging-skills": { "title": "Competenze emergenti", "description": "Capacità che guadagnano terreno in tutta l'organizzazione." },
       "cross-functional": { "title": "Persone trasversali", "description": "Persone che collegano i team tra loro." }
+    }
+  },
+  "coverage": {
+    "title": "Rischio competenze",
+    "description": "Dove una sola persona — o due — è l'unica linea di difesa.",
+    "stats": {
+      "totalSkills": "Competenze monitorate",
+      "critical": "Punti critici di fallimento",
+      "fragile": "Competenze fragili",
+      "teams": "Team"
+    },
+    "critical": {
+      "title": "Punti critici di fallimento",
+      "description": "Detenute da una sola persona in tutta l'organizzazione — se se ne va, questa conoscenza va persa con lei.",
+      "empty": "Nessun punto critico di fallimento al momento.",
+      "emptyDescription": "Ogni competenza della tua organizzazione è detenuta da almeno due persone."
+    },
+    "fragile": {
+      "title": "Competenze fragili",
+      "description": "Detenute da esattamente due persone — a un'uscita dal diventare critiche.",
+      "empty": "Nessuna competenza fragile al momento."
+    },
+    "byTeam": {
+      "title": "Rischio per team",
+      "team": "Team",
+      "members": "Membri"
     }
   },
   "ask": {

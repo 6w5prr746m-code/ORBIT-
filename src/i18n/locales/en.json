@@ -18,6 +18,7 @@
     "people": "People",
     "skills": "Skills",
     "discover": "Discover",
+    "coverage": "Coverage",
     "ask": "Ask",
     "settings": "Settings"
   },
@@ -275,6 +276,32 @@
       "most-connected": { "title": "Most Connected", "description": "People at the center of how work gets done." },
       "emerging-skills": { "title": "Emerging Skills", "description": "Capabilities gaining ground across the organization." },
       "cross-functional": { "title": "Cross-functional People", "description": "People who connect teams together." }
+    }
+  },
+  "coverage": {
+    "title": "Skill Risk",
+    "description": "Where a single person — or two — is the only line of defense.",
+    "stats": {
+      "totalSkills": "Skills tracked",
+      "critical": "Single points of failure",
+      "fragile": "Fragile skills",
+      "teams": "Teams"
+    },
+    "critical": {
+      "title": "Single points of failure",
+      "description": "Held by exactly one person org-wide — if they leave, this knowledge leaves with them.",
+      "empty": "No single points of failure right now.",
+      "emptyDescription": "Every skill in your organization is held by at least two people."
+    },
+    "fragile": {
+      "title": "Fragile skills",
+      "description": "Held by exactly two people — one departure away from becoming critical.",
+      "empty": "No fragile skills right now."
+    },
+    "byTeam": {
+      "title": "Risk by team",
+      "team": "Team",
+      "members": "Members"
     }
   },
   "ask": {

@@ -1,4 +1,4 @@
-import { Compass, Home, MessageCircle, Settings, Sparkles, Users, type LucideIcon } from 'lucide-react'
+import { Compass, Home, MessageCircle, Settings, ShieldAlert, Sparkles, Users, type LucideIcon } from 'lucide-react'
 
 export interface NavItemDef {
   to: string
@@ -12,6 +12,7 @@ export const NAV_ITEMS: NavItemDef[] = [
   { to: '/people', labelKey: 'nav.people', icon: Users },
   { to: '/skills', labelKey: 'nav.skills', icon: Sparkles },
   { to: '/discover', labelKey: 'nav.discover', icon: Compass },
+  { to: '/coverage', labelKey: 'nav.coverage', icon: ShieldAlert },
   { to: '/ask', labelKey: 'nav.ask', icon: MessageCircle },
 ]
 
