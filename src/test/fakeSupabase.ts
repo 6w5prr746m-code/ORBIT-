@@ -78,6 +78,19 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   ],
 }
 
+/** Tables whose primary key is a single `id` column with a `default gen_random_uuid()` — as opposed to composite-PK tables like person_skills/person_teams, which have no id column at all. */
+const TABLES_WITH_ID_PK = new Set([
+  'organizations',
+  'entities',
+  'people',
+  'skills',
+  'skill_endorsements',
+  'teams',
+  'connections',
+  'sources',
+  'invitations',
+])
+
 /** Mirrors a table's `default ...` columns, for rows inserted/upserted without them (matching Postgres, not just id generation). */
 const ROW_DEFAULTS: Record<string, () => Record<string, unknown>> = {
   invitations: () => ({
@@ -89,8 +102,13 @@ const ROW_DEFAULTS: Record<string, () => Record<string, unknown>> = {
   }),
 }
 
+/**
+ * A row missing (or explicitly setting undefined) a column with a Postgres
+ * default — e.g. `id`, or invitations' `token`/`status` — should get that
+ * default applied, exactly as a real insert/upsert against Supabase would.
+ */
 function applyRowDefaults(table: string, row: Record<string, unknown>) {
-  if ('id' in row && row.id === undefined) row.id = crypto.randomUUID()
+  if (TABLES_WITH_ID_PK.has(table) && (!('id' in row) || row.id === undefined)) row.id = crypto.randomUUID()
   const defaults = ROW_DEFAULTS[table]?.()
   if (!defaults) return
   for (const [key, value] of Object.entries(defaults)) {
