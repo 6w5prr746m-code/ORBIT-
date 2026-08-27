@@ -225,6 +225,41 @@
     "askQuestion": "Pourquoi {{firstName}} est-il/elle une bonne personne à qui parler de {{skill}} ?",
     "askQuestionFallback": "Parlez-moi de {{fullName}}"
   },
+  "profile": {
+    "title": "Votre profil",
+    "claim": {
+      "subtitle": "Retrouvez-vous dans la liste ci-dessous pour revendiquer votre profil et commencer à le modifier.",
+      "searchPlaceholder": "Rechercher par nom, rôle ou e-mail…",
+      "suggested": "Cela pourrait être vous",
+      "action": "C'est moi",
+      "empty": "Tout le monde dans cette organisation a déjà revendiqué son profil.",
+      "error": "Impossible de revendiquer ce profil"
+    },
+    "edit": {
+      "title": "Vos informations",
+      "description": "Vous seul pouvez modifier ceci — vos collègues verront vos changements immédiatement.",
+      "bioLabel": "À propos de vous",
+      "photoLabel": "URL de la photo",
+      "photoPlaceholder": "https://…",
+      "save": "Enregistrer",
+      "saved": "Profil mis à jour",
+      "error": "Impossible d'enregistrer votre profil"
+    },
+    "skills": {
+      "title": "Vos compétences",
+      "description": "Ajoutez les compétences que vous avez réellement — elles apparaîtront comme auto-déclarées jusqu'à ce qu'un collègue les valide.",
+      "empty": "Vous n'avez encore ajouté aucune compétence.",
+      "addPlaceholder": "Ajouter une compétence…",
+      "levelLabel": "Niveau",
+      "yearsLabel": "Années",
+      "addAction": "Ajouter",
+      "remove": "Retirer {{skill}}"
+    },
+    "demo": {
+      "title": "Indisponible dans la démo",
+      "description": "L'organisation de démonstration est en lecture seule. Créez votre propre organisation pour revendiquer et modifier un profil."
+    }
+  },
   "discover": {
     "title": "Découvrir",
     "description": "Découvrez votre organisation.",
@@ -328,7 +363,8 @@
       "title": "Utilisateur",
       "description": "Votre compte ORBIT.",
       "email": "E-mail",
-      "notSignedIn": "Consultation de la démo — non connecté"
+      "notSignedIn": "Consultation de la démo — non connecté",
+      "manageProfile": "Gérer votre profil"
     }
   },
   "import": {

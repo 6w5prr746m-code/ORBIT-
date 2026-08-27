@@ -4,6 +4,7 @@ import { RequireDataset } from '@/components/layout/RequireDataset'
 import { HomePage } from '@/pages/HomePage'
 import { PeoplePage } from '@/pages/PeoplePage'
 import { PersonProfilePage } from '@/pages/PersonProfilePage'
+import { ProfilePage } from '@/pages/ProfilePage'
 import { SkillsPage } from '@/pages/SkillsPage'
 import { SkillPage } from '@/pages/SkillPage'
 import { DiscoverPage } from '@/pages/DiscoverPage'
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/people" element={<PeoplePage />} />
           <Route path="/people/:personId" element={<PersonProfilePage />} />
+          <Route path="/me" element={<ProfilePage />} />
           <Route path="/skills" element={<SkillsPage />} />
           <Route path="/skills/:skillId" element={<SkillPage />} />
           <Route path="/discover" element={<DiscoverPage />} />

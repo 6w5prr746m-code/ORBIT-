@@ -8,6 +8,14 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-26
+### Added
+- Claim your profile: a signed-in user can link their account to their own
+  `people` row (`/me`, also reachable from the sidebar and Settings → User)
+  and self-service edit their bio, photo URL and skill list. Skills added
+  this way are recorded as self-reported, keeping the door open for peer
+  endorsement to upgrade them to verified in a future release.
+
 ## [0.2.0] - 2026-08-26
 ### Added
 - Trombinoscope: a photo-grid view on the People page (toggle between list and

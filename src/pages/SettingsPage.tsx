@@ -240,9 +240,14 @@ export function SettingsPage() {
                   <Input value={user?.email ?? t('settings.user.notSignedIn')} readOnly />
                 </div>
                 {user && (
-                  <Button variant="outline" size="sm" onClick={handleSignOut} className="w-fit">
-                    {t('common.signOut')}
-                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => navigate('/me')}>
+                      {t('settings.user.manageProfile')}
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleSignOut}>
+                      {t('common.signOut')}
+                    </Button>
+                  </div>
                 )}
               </CardContent>
             </Card>

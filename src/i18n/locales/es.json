@@ -225,6 +225,41 @@
     "askQuestion": "¿Por qué {{firstName}} es una buena persona con quien hablar sobre {{skill}}?",
     "askQuestionFallback": "Cuéntame sobre {{fullName}}"
   },
+  "profile": {
+    "title": "Tu perfil",
+    "claim": {
+      "subtitle": "Encuéntrate en la siguiente lista para reclamar tu perfil y empezar a editarlo.",
+      "searchPlaceholder": "Buscar por nombre, puesto o correo…",
+      "suggested": "Esto parece ser tú",
+      "action": "Soy yo",
+      "empty": "Todos en esta organización ya reclamaron su perfil.",
+      "error": "No se pudo reclamar este perfil"
+    },
+    "edit": {
+      "title": "Tus datos",
+      "description": "Solo tú puedes editar esto — tus colegas verán tus cambios de inmediato.",
+      "bioLabel": "Sobre ti",
+      "photoLabel": "URL de la foto",
+      "photoPlaceholder": "https://…",
+      "save": "Guardar",
+      "saved": "Perfil actualizado",
+      "error": "No se pudo guardar tu perfil"
+    },
+    "skills": {
+      "title": "Tus habilidades",
+      "description": "Añade las habilidades que realmente tienes — aparecerán como autodeclaradas hasta que un colega las valide.",
+      "empty": "Aún no has añadido ninguna habilidad.",
+      "addPlaceholder": "Añadir una habilidad…",
+      "levelLabel": "Nivel",
+      "yearsLabel": "Años",
+      "addAction": "Añadir",
+      "remove": "Quitar {{skill}}"
+    },
+    "demo": {
+      "title": "No disponible en la demo",
+      "description": "La organización de demostración es de solo lectura. Crea tu propia organización para reclamar y editar un perfil."
+    }
+  },
   "discover": {
     "title": "Descubrir",
     "description": "Descubre tu organización.",
@@ -328,7 +363,8 @@
       "title": "Usuario",
       "description": "Tu cuenta de ORBIT.",
       "email": "Correo electrónico",
-      "notSignedIn": "Explorando la demo — sin sesión iniciada"
+      "notSignedIn": "Explorando la demo — sin sesión iniciada",
+      "manageProfile": "Gestionar tu perfil"
     }
   },
   "import": {

@@ -90,3 +90,50 @@ describe('orbitStore.importPeople', () => {
     expect(useOrbitStore.getState().dataset?.people.some((p) => p.id === 'new-person')).toBe(true)
   })
 })
+
+describe('orbitStore profile self-service', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  it('claims a person for the signed-in user', async () => {
+    await useOrbitStore.getState().claimPerson('p1', 'u1')
+    const me = useOrbitStore.getState().dataset?.people.find((p) => p.id === 'p1')
+    expect(me?.claimedByUserId).toBe('u1')
+  })
+
+  it('rejects claiming a person that is already claimed', async () => {
+    await useOrbitStore.getState().claimPerson('p1', 'u1')
+    await expect(useOrbitStore.getState().claimPerson('p1', 'someone-else')).rejects.toThrow()
+  })
+
+  it('updates the bio and photo of a claimed profile', async () => {
+    await useOrbitStore.getState().claimPerson('p1', 'u1')
+    await useOrbitStore.getState().updateMyProfile('p1', { bio: 'New bio.', avatar: 'https://example.com/me.jpg' })
+    const me = useOrbitStore.getState().dataset?.people.find((p) => p.id === 'p1')
+    expect(me?.bio).toBe('New bio.')
+    expect(me?.avatar).toBe('https://example.com/me.jpg')
+  })
+
+  it('adds a new self-reported skill, creating the skill if it does not exist yet', async () => {
+    await useOrbitStore.getState().addMySkill('p1', { skillName: 'Quantum Computing', level: 'proficient', yearsExperience: 1 })
+    const state = useOrbitStore.getState()
+    const skill = state.dataset?.skills.find((s) => s.name === 'Quantum Computing')
+    expect(skill).toBeDefined()
+    expect(state.dataset?.personSkills.some((ps) => ps.personId === 'p1' && ps.skillId === skill!.id && ps.source === 'self-reported')).toBe(true)
+  })
+
+  it('reuses an existing skill by name instead of creating a duplicate', async () => {
+    await useOrbitStore.getState().addMySkill('p1', { skillName: 'Salesforce', level: 'expert', yearsExperience: 5 })
+    const state = useOrbitStore.getState()
+    expect(state.dataset?.skills.filter((s) => s.name === 'Salesforce')).toHaveLength(1)
+  })
+
+  it('removes a skill', async () => {
+    await useOrbitStore.getState().addMySkill('p1', { skillName: 'Salesforce', level: 'expert', yearsExperience: 5 })
+    const skillId = useOrbitStore.getState().dataset!.skills.find((s) => s.name === 'Salesforce')!.id
+    await useOrbitStore.getState().removeMySkill('p1', skillId)
+    expect(useOrbitStore.getState().dataset?.personSkills.some((ps) => ps.personId === 'p1' && ps.skillId === skillId)).toBe(false)
+  })
+})

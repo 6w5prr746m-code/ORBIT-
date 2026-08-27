@@ -110,7 +110,7 @@ export function buildPreview(csvText: string): ImportPreview {
   return { rows, errors, validRowCount }
 }
 
-function inferSkillCategory(name: string): Skill['category'] {
+export function inferSkillCategory(name: string): Skill['category'] {
   const lower = name.toLowerCase()
   if (/(python|java|sql|cloud|aws|azure|react|node|api|data|ai|ml|security|devops|salesforce|hubspot)/.test(lower))
     return 'Technology'

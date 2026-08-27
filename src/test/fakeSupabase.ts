@@ -29,6 +29,7 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
       start_date: '2020-01-01',
       status: 'active',
       email: 'ada@northstar.io',
+      claimed_by_user_id: null,
       created_at: '2026-01-01T00:00:00Z',
     },
   ],
@@ -55,6 +56,8 @@ class FakeQuery {
   private limitCount: number | null = null
   private table: string
   private rows: Record<string, unknown>[]
+  private pendingOp: 'update' | 'delete' | null = null
+  private pendingPatch: Record<string, unknown> | null = null
 
   constructor(table: string, rows: Record<string, unknown>[]) {
     this.table = table
@@ -70,12 +73,28 @@ class FakeQuery {
     return this
   }
 
+  is(column: string, value: unknown) {
+    this.filters.push((row) => row[column] === value)
+    return this
+  }
+
   order() {
     return this
   }
 
   limit(n: number) {
     this.limitCount = n
+    return this
+  }
+
+  update(patch: Record<string, unknown>) {
+    this.pendingOp = 'update'
+    this.pendingPatch = patch
+    return this
+  }
+
+  delete() {
+    this.pendingOp = 'delete'
     return this
   }
 
@@ -109,7 +128,16 @@ class FakeQuery {
     onfulfilled?: ((value: { data: Record<string, unknown>[]; error: null }) => T) | null,
     onrejected?: (reason: unknown) => T,
   ) {
-    return Promise.resolve({ data: this.resolveRows(), error: null }).then(onfulfilled, onrejected)
+    const matched = this.resolveRows()
+    if (this.pendingOp === 'update' && this.pendingPatch) {
+      for (const row of matched) Object.assign(row, this.pendingPatch)
+    } else if (this.pendingOp === 'delete') {
+      for (const row of matched) {
+        const idx = this.rows.indexOf(row)
+        if (idx !== -1) this.rows.splice(idx, 1)
+      }
+    }
+    return Promise.resolve({ data: matched, error: null }).then(onfulfilled, onrejected)
   }
 }
 
@@ -142,9 +170,11 @@ export const fakeSupabase = {
   },
 }
 
-/** Test helper: reset fixture tables mutated by rpc()/insert()/upsert() between tests. */
+const INITIAL_FIXTURES = structuredClone(FIXTURES)
+
+/** Test helper: reset every fixture table (rows and in-place mutations alike) between tests. */
 export function resetFakeSupabaseFixtures() {
-  FIXTURES.organizations = FIXTURES.organizations.slice(0, 1)
-  FIXTURES.people = FIXTURES.people.slice(0, 1)
-  FIXTURES.skills = FIXTURES.skills.slice(0, 1)
+  for (const table of Object.keys(FIXTURES)) {
+    FIXTURES[table] = structuredClone(INITIAL_FIXTURES[table])
+  }
 }

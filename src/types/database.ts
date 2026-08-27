@@ -66,6 +66,7 @@ export interface Database {
           start_date: string
           status: 'active' | 'inactive'
           email: string
+          claimed_by_user_id: string | null
           created_at: string
         }
         Insert: Partial<Database['public']['Tables']['people']['Row']> & {

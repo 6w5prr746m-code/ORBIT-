@@ -29,6 +29,7 @@ export function mapPerson(row: Tables['people']['Row']): Person {
     startDate: row.start_date,
     status: row.status,
     email: row.email,
+    claimedByUserId: row.claimed_by_user_id ?? undefined,
   }
 }
 
@@ -108,6 +109,7 @@ export function personToRow(p: Person): Tables['people']['Insert'] {
     start_date: p.startDate,
     status: p.status,
     email: p.email,
+    claimed_by_user_id: p.claimedByUserId ?? null,
   }
 }
 

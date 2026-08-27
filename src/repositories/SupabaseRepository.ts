@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill } from '@/types'
+import type { OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
   mapConnection,
   mapOrganization,
@@ -108,4 +108,56 @@ export async function insertPeople(
       .insert(personTeams.map((pt) => personTeamToRow(pt, organizationId)))
     if (error) throw new Error(error.message)
   }
+}
+
+/**
+ * Links a person row to the signed-in user ("claim your profile"). The
+ * `.is('claimed_by_user_id', null)` guard makes this safe against a race
+ * with someone else claiming the same row a moment earlier — the update
+ * simply matches zero rows in that case, which the caller surfaces as an
+ * error rather than silently succeeding.
+ */
+export async function claimPerson(personId: string, userId: string): Promise<void> {
+  const { data, error } = await supabase
+    .from('people')
+    .update({ claimed_by_user_id: userId })
+    .eq('id', personId)
+    .is('claimed_by_user_id', null)
+    .select('id')
+  if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error('This profile was just claimed by someone else.')
+}
+
+export async function updatePersonProfile(personId: string, patch: { bio?: string; avatar?: string | null }): Promise<void> {
+  const { error } = await supabase
+    .from('people')
+    .update({ bio: patch.bio, avatar: patch.avatar ?? null })
+    .eq('id', personId)
+  if (error) throw new Error(error.message)
+}
+
+export async function upsertPersonSkill(
+  organizationId: string,
+  personId: string,
+  skillId: string,
+  level: SkillLevel,
+  yearsExperience: number,
+): Promise<void> {
+  const { error } = await supabase.from('person_skills').upsert(
+    [personSkillToRow({ personId, skillId, level, yearsExperience, source: 'self-reported' }, organizationId)],
+    { onConflict: 'person_id,skill_id' },
+  )
+  if (error) throw new Error(error.message)
+}
+
+export async function removePersonSkill(personId: string, skillId: string): Promise<void> {
+  const { error } = await supabase.from('person_skills').delete().eq('person_id', personId).eq('skill_id', skillId)
+  if (error) throw new Error(error.message)
+}
+
+export async function createSkillIfMissing(skill: Skill): Promise<void> {
+  const { error } = await supabase
+    .from('skills')
+    .upsert([skillToRow(skill)], { onConflict: 'organization_id,name', ignoreDuplicates: true })
+  if (error) throw new Error(error.message)
 }

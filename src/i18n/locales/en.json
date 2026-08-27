@@ -225,6 +225,41 @@
     "askQuestion": "Why is {{firstName}} a good person to talk to about {{skill}}?",
     "askQuestionFallback": "Tell me about {{fullName}}"
   },
+  "profile": {
+    "title": "Your profile",
+    "claim": {
+      "subtitle": "Find yourself in the list below to claim your profile and start editing it.",
+      "searchPlaceholder": "Search by name, role or email…",
+      "suggested": "This looks like you",
+      "action": "This is me",
+      "empty": "Everyone in this organization has already claimed their profile.",
+      "error": "Couldn't claim this profile"
+    },
+    "edit": {
+      "title": "Your details",
+      "description": "Only you can edit this — colleagues will see your changes right away.",
+      "bioLabel": "About you",
+      "photoLabel": "Photo URL",
+      "photoPlaceholder": "https://…",
+      "save": "Save",
+      "saved": "Profile updated",
+      "error": "Couldn't save your profile"
+    },
+    "skills": {
+      "title": "Your skills",
+      "description": "Add the skills you actually have — they'll show up as self-reported until a colleague endorses them.",
+      "empty": "You haven't added any skills yet.",
+      "addPlaceholder": "Add a skill…",
+      "levelLabel": "Level",
+      "yearsLabel": "Years",
+      "addAction": "Add",
+      "remove": "Remove {{skill}}"
+    },
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to claim and edit a profile."
+    }
+  },
   "discover": {
     "title": "Discover",
     "description": "Discover your organization.",
@@ -328,7 +363,8 @@
       "title": "User",
       "description": "Your ORBIT account.",
       "email": "Email",
-      "notSignedIn": "Browsing the demo — not signed in"
+      "notSignedIn": "Browsing the demo — not signed in",
+      "manageProfile": "Manage your profile"
     }
   },
   "import": {
