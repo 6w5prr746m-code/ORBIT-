@@ -158,6 +158,16 @@
       "locations": "Locations"
     }
   },
+  "digest": {
+    "eyebrow": "For you",
+    "newJoiners_one": "{{names}} joined this month.",
+    "newJoiners_other": "{{count}} people joined this month, including {{names}}.",
+    "criticalSkill": "{{skill}} is now a single point of failure — only {{person}} knows it.",
+    "hiddenExperts_one": "{{count}} hidden expert you might not know about.",
+    "hiddenExperts_other": "{{count}} hidden experts you might not know about.",
+    "emergingSkills_one": "{{count}} skill is gaining ground across the organization.",
+    "emergingSkills_other": "{{count}} skills are gaining ground across the organization."
+  },
   "people": {
     "eyebrow_one": "{{count}} person",
     "eyebrow_other": "{{count}} people",

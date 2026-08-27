@@ -158,6 +158,16 @@
       "locations": "Sedi"
     }
   },
+  "digest": {
+    "eyebrow": "Per te",
+    "newJoiners_one": "{{names}} si è unito/a questo mese.",
+    "newJoiners_other": "{{count}} persone si sono unite questo mese, tra cui {{names}}.",
+    "criticalSkill": "{{skill}} è ora un punto critico di fallimento — solo {{person}} la conosce.",
+    "hiddenExperts_one": "{{count}} esperto nascosto che forse non conosci.",
+    "hiddenExperts_other": "{{count}} esperti nascosti che forse non conosci.",
+    "emergingSkills_one": "{{count}} competenza sta guadagnando terreno nell'organizzazione.",
+    "emergingSkills_other": "{{count}} competenze stanno guadagnando terreno nell'organizzazione."
+  },
   "people": {
     "eyebrow_one": "{{count}} persona",
     "eyebrow_other": "{{count}} persone",

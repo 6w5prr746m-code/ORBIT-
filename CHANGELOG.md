@@ -8,6 +8,14 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-26
+### Added
+- In-app digest on Home: proactive, deterministic signals surfaced on
+  arrival instead of waiting for someone to go looking — recent joiners,
+  skills that just became a single point of failure, hidden experts, and
+  emerging skills. Reuses CoverageService and DiscoverService as the single
+  source of truth for what those mean; no email, no new infrastructure.
+
 ## [0.6.0] - 2026-08-26
 ### Added
 - Team Builder (`/team-builder`): describe the skills a project needs, an
