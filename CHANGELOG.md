@@ -8,6 +8,26 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-08-27
+### Added
+- Bulk invitations: an owner or HR admin can invite several people at once
+  from Settings → Invitations (paste one email per line, pick a role and
+  an entity), track status (pending/accepted/revoked), and resend one or
+  all pending invitations as a reminder. Accepting an invitation
+  (`/invite/:token`) walks a new teammate straight into a signup form
+  prefilled with their invited email, then drops them into the
+  organization with the role/entity they were invited with.
+- Actually sending the email is a new Supabase Edge Function
+  (`send-invitation-emails`) that calls Resend — the API key lives there,
+  server-side only, as a Supabase secret; it is never present in the
+  browser bundle. See `supabase/functions/send-invitation-emails/index.ts`.
+### Note for deployment
+- This release adds new infrastructure beyond a SQL migration: after
+  applying `supabase/migrations/0010_invitations.sql`, the Edge Function
+  needs deploying and its secrets configuring once:
+  `supabase functions deploy send-invitation-emails`, then
+  `supabase secrets set RESEND_API_KEY=... SITE_URL=https://your-orbit-domain`.
+
 ## [0.9.0] - 2026-08-27
 ### Added
 - Role-based access control: four fixed roles on top of the existing

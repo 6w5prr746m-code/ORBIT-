@@ -1,10 +1,12 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { AssignableRole, Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
   entityToRow,
+  invitationToRow,
   mapConnection,
   mapEntity,
+  mapInvitation,
   mapMembership,
   mapOrganization,
   mapPerson,
@@ -23,10 +25,11 @@ import {
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, entities, memberships, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, entities, memberships, invitations, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
     supabase.from('entities').select('*').eq('organization_id', organizationId),
     supabase.from('memberships').select('*').eq('organization_id', organizationId),
+    supabase.from('invitations').select('*').eq('organization_id', organizationId),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
@@ -37,7 +40,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, entities, memberships, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+  const failed = [org, entities, memberships, invitations, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
     (r) => r.error,
   )
   if (failed?.error) throw new Error(failed.error.message)
@@ -47,6 +50,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     organization: mapOrganization(org.data),
     entities: (entities.data ?? []).map(mapEntity),
     memberships: (memberships.data ?? []).map(mapMembership),
+    invitations: (invitations.data ?? []).map(mapInvitation),
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
@@ -236,6 +240,47 @@ export async function assignPersonToEntity(personId: string, entityId: string | 
 export async function setEntityIsolationMode(organizationId: string, mode: EntityIsolationMode): Promise<void> {
   const { error } = await supabase.from('organizations').update({ entity_isolation_mode: mode }).eq('id', organizationId)
   if (error) throw new Error(error.message)
+}
+
+export async function createInvitations(
+  organizationId: string,
+  invitedBy: string,
+  entries: { email: string; role: AssignableRole; entityId?: string }[],
+): Promise<void> {
+  if (entries.length === 0) return
+  const { error } = await supabase.from('invitations').upsert(
+    entries.map((e) => invitationToRow({ organizationId, invitedBy, email: e.email, role: e.role, entityId: e.entityId })),
+    { onConflict: 'organization_id,email', ignoreDuplicates: true },
+  )
+  if (error) throw new Error(error.message)
+}
+
+export async function revokeInvitation(invitationId: string): Promise<void> {
+  const { error } = await supabase.from('invitations').update({ status: 'revoked' }).eq('id', invitationId)
+  if (error) throw new Error(error.message)
+}
+
+/** Calls the send-invitation-emails Edge Function, which holds the Resend API key server-side. */
+export async function sendInvitationEmails(invitationIds: string[]): Promise<void> {
+  if (invitationIds.length === 0) return
+  const { error } = await supabase.functions.invoke('send-invitation-emails', { body: { invitationIds } })
+  if (error) throw new Error(error.message)
+}
+
+export async function acceptInvitation(token: string): Promise<string> {
+  const { data, error } = await supabase.rpc('accept_invitation', { invitation_token: token })
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function getInvitationPreview(
+  token: string,
+): Promise<{ email: string; organizationName: string; role: AssignableRole } | null> {
+  const { data, error } = await supabase.rpc('get_invitation_preview', { invitation_token: token })
+  if (error) throw new Error(error.message)
+  const row = data?.[0]
+  if (!row) return null
+  return { email: row.email, organizationName: row.organization_name, role: row.role as AssignableRole }
 }
 
 export async function updateMembershipRole(

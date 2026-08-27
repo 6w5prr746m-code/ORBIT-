@@ -1,9 +1,11 @@
 import { create } from 'zustand'
-import type { Entity, EntityIsolationMode, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { AssignableRole, Entity, EntityIsolationMode, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
+  acceptInvitation as acceptInvitationRemote,
   assignPersonToEntity as assignPersonToEntityRemote,
   claimPerson as claimPersonRemote,
   createEntity as createEntityRemote,
+  createInvitations as createInvitationsRemote,
   createOrganization as createOrganizationRemote,
   createSkillIfMissing,
   deleteEntity as deleteEntityRemote,
@@ -15,6 +17,8 @@ import {
   removeEndorsement as removeEndorsementRemote,
   removePersonSkill as removePersonSkillRemote,
   renameEntity as renameEntityRemote,
+  revokeInvitation as revokeInvitationRemote,
+  sendInvitationEmails,
   setEntityIsolationMode as setEntityIsolationModeRemote,
   updateMembershipRole as updateMembershipRoleRemote,
   updatePersonProfile,
@@ -54,6 +58,10 @@ interface OrbitState {
   assignPersonToEntity: (personId: string, entityId: string | null) => Promise<void>
   setEntityIsolationMode: (mode: EntityIsolationMode) => Promise<void>
   updateMembershipRole: (userId: string, role: MembershipRole, entityId: string | null) => Promise<void>
+  createInvitations: (entries: { email: string; role: AssignableRole; entityId?: string }[]) => Promise<void>
+  resendInvitations: (invitationIds: string[]) => Promise<void>
+  revokeInvitation: (invitationId: string) => Promise<void>
+  acceptInvitation: (token: string) => Promise<void>
   clear: () => void
 }
 
@@ -232,6 +240,52 @@ export const useOrbitStore = create<OrbitState>((set, get) => ({
     await updateMembershipRoleRemote(dataset.organization.id, userId, role, entityId)
     const refreshed = await fetchOrganizationDataset(dataset.organization.id)
     set({ dataset: refreshed })
+  },
+
+  createInvitations: async (entries) => {
+    const { dataset } = get()
+    const userId = useAuthStore.getState().user?.id
+    if (!dataset || !userId || entries.length === 0) return
+    await createInvitationsRemote(dataset.organization.id, userId, entries)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+
+    const newIds = refreshed.invitations
+      .filter((inv) => inv.status === 'pending' && entries.some((e) => e.email === inv.email))
+      .map((inv) => inv.id)
+    if (newIds.length > 0) {
+      await sendInvitationEmails(newIds)
+      const resent = await fetchOrganizationDataset(dataset.organization.id)
+      set({ dataset: resent })
+    }
+  },
+
+  resendInvitations: async (invitationIds) => {
+    if (invitationIds.length === 0) return
+    await sendInvitationEmails(invitationIds)
+    const { dataset } = get()
+    if (!dataset) return
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  revokeInvitation: async (invitationId) => {
+    const { dataset } = get()
+    if (!dataset) return
+    await revokeInvitationRemote(invitationId)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  acceptInvitation: async (token) => {
+    set({ loading: true, error: null })
+    try {
+      await acceptInvitationRemote(token)
+      await get().loadMyOrganization()
+    } catch (err) {
+      set({ loading: false, error: err instanceof Error ? err.message : 'Could not accept this invitation.' })
+      throw err
+    }
   },
 
   clear: () => set({ dataset: null, isDemo: false, error: null }),

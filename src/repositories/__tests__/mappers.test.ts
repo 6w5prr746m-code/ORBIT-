@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
   entityToRow,
+  invitationToRow,
   mapConnection,
   mapEntity,
+  mapInvitation,
   mapMembership,
   mapOrganization,
   mapPerson,
@@ -178,6 +180,39 @@ describe('DB row -> app type mappers', () => {
       created_at: '2026-01-01T00:00:00Z',
     })
     expect(membership).toEqual({ userId: 'u1', organizationId: 'org-1', role: 'director', entityId: undefined })
+  })
+
+  it('maps an invitation row, converting nulls to undefined', () => {
+    const invitation = mapInvitation({
+      id: 'inv-1',
+      organization_id: 'org-1',
+      email: 'jane@example.com',
+      role: 'manager',
+      entity_id: null,
+      invited_by: 'u1',
+      token: 'tok-1',
+      status: 'pending',
+      last_sent_at: null,
+      accepted_at: null,
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    expect(invitation).toEqual({
+      id: 'inv-1',
+      organizationId: 'org-1',
+      email: 'jane@example.com',
+      role: 'manager',
+      entityId: undefined,
+      invitedBy: 'u1',
+      token: 'tok-1',
+      status: 'pending',
+      lastSentAt: undefined,
+      acceptedAt: undefined,
+    })
+  })
+
+  it('builds an invitation insert row without id/token/status (left to the DB defaults)', () => {
+    const row = invitationToRow({ organizationId: 'org-1', email: 'jane@example.com', role: 'manager', invitedBy: 'u1', entityId: 'ent-1' })
+    expect(row).toEqual({ id: undefined, organization_id: 'org-1', email: 'jane@example.com', role: 'manager', entity_id: 'ent-1', invited_by: 'u1' })
   })
 })
 

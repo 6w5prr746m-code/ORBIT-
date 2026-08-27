@@ -354,6 +354,7 @@
       "organization": "Organization",
       "entities": "Entities",
       "access": "Team & access",
+      "invitations": "Invitations",
       "data": "Data",
       "import": "Import",
       "integrations": "Integrations",
@@ -521,6 +522,58 @@
       "director": "Director",
       "manager": "Manager",
       "collaborator": "Collaborator"
+    }
+  },
+  "invitations": {
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to invite people."
+    },
+    "notAuthorized": {
+      "title": "Owners and HR admins only",
+      "description": "Ask an owner or HR admin of your organization to invite new people."
+    },
+    "error": "Something went wrong",
+    "form": {
+      "title": "Invite people",
+      "description": "Paste one email per line (or separate with commas) to invite several people at once, with the same role and entity.",
+      "emailsPlaceholder": "jane@company.com\njohn@company.com",
+      "sending": "Sending…",
+      "send_one": "Send {{count}} invitation",
+      "send_other": "Send {{count}} invitations"
+    },
+    "sent": {
+      "title": "Invitations sent",
+      "description_one": "{{count}} invitation was sent.",
+      "description_other": "{{count}} invitations were sent."
+    },
+    "resentAll_one": "{{count}} reminder sent",
+    "resentAll_other": "{{count}} reminders sent",
+    "list": {
+      "title": "Sent invitations",
+      "description": "Track who's been invited, and resend or revoke as needed.",
+      "empty": "No invitations sent yet.",
+      "resend": "Resend",
+      "revoke": "Revoke",
+      "resendAll_one": "Resend {{count}} pending",
+      "resendAll_other": "Resend {{count}} pending"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "revoked": "Revoked"
+    }
+  },
+  "acceptInvite": {
+    "invitedTo": "You've been invited to join {{org}} as {{role}}.",
+    "createAccountAndJoin": "Create account & join",
+    "signInAndJoin": "Sign in & join",
+    "confirmEmailFirst": "Check your email and confirm your account, then open this invitation link again to finish joining.",
+    "error": "This invitation could not be accepted",
+    "goHome": "Go to ORBIT",
+    "notFound": {
+      "title": "Invitation not found",
+      "description": "This invitation link is invalid, has expired, or has already been used."
     }
   }
 }

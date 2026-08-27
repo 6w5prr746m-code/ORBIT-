@@ -354,6 +354,7 @@
       "organization": "Organisation",
       "entities": "Einheiten",
       "access": "Team & Zugriff",
+      "invitations": "Einladungen",
       "data": "Daten",
       "import": "Import",
       "integrations": "Integrationen",
@@ -521,6 +522,58 @@
       "director": "Direktor",
       "manager": "Manager",
       "collaborator": "Mitarbeiter"
+    }
+  },
+  "invitations": {
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstellen Sie Ihre eigene Organisation, um Personen einzuladen."
+    },
+    "notAuthorized": {
+      "title": "Nur für Inhaber und HR-Admins",
+      "description": "Bitten Sie einen Inhaber oder HR-Admin Ihrer Organisation, neue Personen einzuladen."
+    },
+    "error": "Etwas ist schiefgelaufen",
+    "form": {
+      "title": "Personen einladen",
+      "description": "Fügen Sie eine E-Mail-Adresse pro Zeile ein (oder trennen Sie sie mit Kommas), um mehrere Personen gleichzeitig mit derselben Rolle und Einheit einzuladen.",
+      "emailsPlaceholder": "jane@firma.de\njohn@firma.de",
+      "sending": "Wird gesendet…",
+      "send_one": "{{count}} Einladung senden",
+      "send_other": "{{count}} Einladungen senden"
+    },
+    "sent": {
+      "title": "Einladungen gesendet",
+      "description_one": "{{count}} Einladung wurde gesendet.",
+      "description_other": "{{count}} Einladungen wurden gesendet."
+    },
+    "resentAll_one": "{{count}} Erinnerung gesendet",
+    "resentAll_other": "{{count}} Erinnerungen gesendet",
+    "list": {
+      "title": "Gesendete Einladungen",
+      "description": "Behalten Sie im Blick, wer eingeladen wurde, und senden Sie erneut oder widerrufen Sie bei Bedarf.",
+      "empty": "Noch keine Einladungen gesendet.",
+      "resend": "Erneut senden",
+      "revoke": "Widerrufen",
+      "resendAll_one": "{{count}} ausstehende erneut senden",
+      "resendAll_other": "{{count}} ausstehende erneut senden"
+    },
+    "status": {
+      "pending": "Ausstehend",
+      "accepted": "Angenommen",
+      "revoked": "Widerrufen"
+    }
+  },
+  "acceptInvite": {
+    "invitedTo": "Sie wurden eingeladen, {{org}} als {{role}} beizutreten.",
+    "createAccountAndJoin": "Konto erstellen & beitreten",
+    "signInAndJoin": "Anmelden & beitreten",
+    "confirmEmailFirst": "Prüfen Sie Ihre E-Mails und bestätigen Sie Ihr Konto, öffnen Sie dann diesen Einladungslink erneut, um den Beitritt abzuschließen.",
+    "error": "Diese Einladung konnte nicht angenommen werden",
+    "goHome": "Zu ORBIT",
+    "notFound": {
+      "title": "Einladung nicht gefunden",
+      "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde bereits verwendet."
     }
   }
 }
