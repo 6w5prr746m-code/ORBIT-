@@ -8,6 +8,15 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.10.2] - 2026-08-27
+### Fixed
+- Invitation emails linked to `.../ORBIT-//invite/<token>` (double slash)
+  whenever the `SITE_URL` secret was set with a trailing slash, which
+  GitHub Pages/React Router failed to resolve — landing on "Page not
+  found" instead of the accept-invite flow. The Edge Function now strips
+  any trailing slash from `SITE_URL` before building the link, so it's
+  correct regardless of how the secret is set.
+
 ## [0.10.1] - 2026-08-27
 ### Fixed
 - Sending an invitation failed with `null value in column "id" ... violates

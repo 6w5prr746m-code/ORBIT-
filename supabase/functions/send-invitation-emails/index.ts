@@ -41,7 +41,9 @@ Deno.serve(async (req: Request) => {
   const resendKey = Deno.env.get('RESEND_API_KEY')
   if (!resendKey) return json({ error: 'RESEND_API_KEY is not configured on this project' }, 500)
 
-  const siteUrl = Deno.env.get('SITE_URL') ?? 'http://localhost:5173'
+  // Strip any trailing slash(es) so the link built below never ends up with
+  // a double slash before "/invite/..." regardless of how SITE_URL was set.
+  const siteUrl = (Deno.env.get('SITE_URL') ?? 'http://localhost:5173').replace(/\/+$/, '')
   const fromAddress = Deno.env.get('RESEND_FROM') ?? 'ORBIT <onboarding@resend.dev>'
 
   let invitationIds: string[]
