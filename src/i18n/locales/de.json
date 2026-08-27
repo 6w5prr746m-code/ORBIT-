@@ -18,6 +18,7 @@
     "people": "Personen",
     "skills": "Fähigkeiten",
     "discover": "Entdecken",
+    "coverage": "Risiken",
     "ask": "Fragen",
     "settings": "Einstellungen"
   },
@@ -275,6 +276,32 @@
       "most-connected": { "title": "Am besten vernetzt", "description": "Personen im Zentrum davon, wie Arbeit erledigt wird." },
       "emerging-skills": { "title": "Aufkommende Fähigkeiten", "description": "Fähigkeiten, die in der gesamten Organisation an Bedeutung gewinnen." },
       "cross-functional": { "title": "Bereichsübergreifende Personen", "description": "Personen, die Teams miteinander verbinden." }
+    }
+  },
+  "coverage": {
+    "title": "Kompetenzrisiko",
+    "description": "Wo eine einzelne Person — oder zwei — die einzige Absicherung ist.",
+    "stats": {
+      "totalSkills": "Erfasste Fähigkeiten",
+      "critical": "Einzelne Ausfallpunkte",
+      "fragile": "Fragile Fähigkeiten",
+      "teams": "Teams"
+    },
+    "critical": {
+      "title": "Einzelne Ausfallpunkte",
+      "description": "Nur von einer Person in der gesamten Organisation beherrscht — verlässt sie das Unternehmen, geht dieses Wissen mit ihr.",
+      "empty": "Aktuell keine einzelnen Ausfallpunkte.",
+      "emptyDescription": "Jede Fähigkeit in deiner Organisation wird von mindestens zwei Personen beherrscht."
+    },
+    "fragile": {
+      "title": "Fragile Fähigkeiten",
+      "description": "Nur von genau zwei Personen beherrscht — ein Weggang entfernt davon, kritisch zu werden.",
+      "empty": "Aktuell keine fragilen Fähigkeiten."
+    },
+    "byTeam": {
+      "title": "Risiko nach Team",
+      "team": "Team",
+      "members": "Mitglieder"
     }
   },
   "ask": {

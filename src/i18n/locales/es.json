@@ -18,6 +18,7 @@
     "people": "Personas",
     "skills": "Habilidades",
     "discover": "Descubrir",
+    "coverage": "Riesgos",
     "ask": "Preguntar",
     "settings": "Ajustes"
   },
@@ -275,6 +276,32 @@
       "most-connected": { "title": "Más conectados", "description": "Las personas en el centro de cómo se hace el trabajo." },
       "emerging-skills": { "title": "Habilidades emergentes", "description": "Capacidades que ganan terreno en toda la organización." },
       "cross-functional": { "title": "Personas transversales", "description": "Personas que conectan a los equipos entre sí." }
+    }
+  },
+  "coverage": {
+    "title": "Riesgo de habilidades",
+    "description": "Dónde una sola persona — o dos — es la única línea de defensa.",
+    "stats": {
+      "totalSkills": "Habilidades registradas",
+      "critical": "Puntos únicos de fallo",
+      "fragile": "Habilidades frágiles",
+      "teams": "Equipos"
+    },
+    "critical": {
+      "title": "Puntos únicos de fallo",
+      "description": "En manos de una sola persona en toda la organización — si se va, ese conocimiento se va con ella.",
+      "empty": "No hay puntos únicos de fallo por ahora.",
+      "emptyDescription": "Cada habilidad de tu organización la tienen al menos dos personas."
+    },
+    "fragile": {
+      "title": "Habilidades frágiles",
+      "description": "En manos de exactamente dos personas — a una salida de volverse críticas.",
+      "empty": "No hay habilidades frágiles por ahora."
+    },
+    "byTeam": {
+      "title": "Riesgo por equipo",
+      "team": "Equipo",
+      "members": "Miembros"
     }
   },
   "ask": {

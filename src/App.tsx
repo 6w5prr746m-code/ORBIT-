@@ -8,6 +8,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { SkillsPage } from '@/pages/SkillsPage'
 import { SkillPage } from '@/pages/SkillPage'
 import { DiscoverPage } from '@/pages/DiscoverPage'
+import { CoveragePage } from '@/pages/CoveragePage'
 import { AskPage } from '@/pages/AskPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import { LandingPage } from '@/pages/LandingPage'
@@ -31,6 +32,7 @@ function App() {
           <Route path="/skills" element={<SkillsPage />} />
           <Route path="/skills/:skillId" element={<SkillPage />} />
           <Route path="/discover" element={<DiscoverPage />} />
+          <Route path="/coverage" element={<CoveragePage />} />
           <Route path="/ask" element={<AskPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>

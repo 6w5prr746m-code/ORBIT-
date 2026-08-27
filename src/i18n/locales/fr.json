@@ -18,6 +18,7 @@
     "people": "Personnes",
     "skills": "Compétences",
     "discover": "Découvrir",
+    "coverage": "Risques",
     "ask": "Demander",
     "settings": "Paramètres"
   },
@@ -275,6 +276,32 @@
       "most-connected": { "title": "Les plus connectés", "description": "Les personnes au centre de la façon dont le travail s'organise." },
       "emerging-skills": { "title": "Compétences émergentes", "description": "Des compétences qui gagnent du terrain dans l'organisation." },
       "cross-functional": { "title": "Personnes transverses", "description": "Les personnes qui relient les équipes entre elles." }
+    }
+  },
+  "coverage": {
+    "title": "Risques de compétences",
+    "description": "Là où une seule personne — ou deux — constitue l'unique rempart.",
+    "stats": {
+      "totalSkills": "Compétences suivies",
+      "critical": "Points de défaillance uniques",
+      "fragile": "Compétences fragiles",
+      "teams": "Équipes"
+    },
+    "critical": {
+      "title": "Points de défaillance uniques",
+      "description": "Détenues par une seule personne dans toute l'organisation — si elle part, ce savoir part avec elle.",
+      "empty": "Aucun point de défaillance unique pour le moment.",
+      "emptyDescription": "Chaque compétence de votre organisation est détenue par au moins deux personnes."
+    },
+    "fragile": {
+      "title": "Compétences fragiles",
+      "description": "Détenues par exactement deux personnes — à un départ de devenir critiques.",
+      "empty": "Aucune compétence fragile pour le moment."
+    },
+    "byTeam": {
+      "title": "Risques par équipe",
+      "team": "Équipe",
+      "members": "Membres"
     }
   },
   "ask": {
