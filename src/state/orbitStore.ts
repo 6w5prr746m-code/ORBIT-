@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Entity, EntityIsolationMode, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { Entity, EntityIsolationMode, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
   assignPersonToEntity as assignPersonToEntityRemote,
   claimPerson as claimPersonRemote,
@@ -16,6 +16,7 @@ import {
   removePersonSkill as removePersonSkillRemote,
   renameEntity as renameEntityRemote,
   setEntityIsolationMode as setEntityIsolationModeRemote,
+  updateMembershipRole as updateMembershipRoleRemote,
   updatePersonProfile,
   upsertPersonSkill,
 } from '@/repositories/SupabaseRepository'
@@ -52,6 +53,7 @@ interface OrbitState {
   deleteEntity: (entityId: string) => Promise<void>
   assignPersonToEntity: (personId: string, entityId: string | null) => Promise<void>
   setEntityIsolationMode: (mode: EntityIsolationMode) => Promise<void>
+  updateMembershipRole: (userId: string, role: MembershipRole, entityId: string | null) => Promise<void>
   clear: () => void
 }
 
@@ -220,6 +222,14 @@ export const useOrbitStore = create<OrbitState>((set, get) => ({
     const { dataset } = get()
     if (!dataset) return
     await setEntityIsolationModeRemote(dataset.organization.id, mode)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  updateMembershipRole: async (userId, role, entityId) => {
+    const { dataset } = get()
+    if (!dataset) return
+    await updateMembershipRoleRemote(dataset.organization.id, userId, role, entityId)
     const refreshed = await fetchOrganizationDataset(dataset.organization.id)
     set({ dataset: refreshed })
   },

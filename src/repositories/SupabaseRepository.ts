@@ -1,10 +1,11 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { Entity, EntityIsolationMode, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
 import {
   entityToRow,
   mapConnection,
   mapEntity,
+  mapMembership,
   mapOrganization,
   mapPerson,
   mapPersonSkill,
@@ -22,9 +23,10 @@ import {
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, entities, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, entities, memberships, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
     supabase.from('entities').select('*').eq('organization_id', organizationId),
+    supabase.from('memberships').select('*').eq('organization_id', organizationId),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
@@ -35,7 +37,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, entities, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+  const failed = [org, entities, memberships, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
     (r) => r.error,
   )
   if (failed?.error) throw new Error(failed.error.message)
@@ -44,6 +46,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
   return {
     organization: mapOrganization(org.data),
     entities: (entities.data ?? []).map(mapEntity),
+    memberships: (memberships.data ?? []).map(mapMembership),
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
@@ -233,4 +236,21 @@ export async function assignPersonToEntity(personId: string, entityId: string | 
 export async function setEntityIsolationMode(organizationId: string, mode: EntityIsolationMode): Promise<void> {
   const { error } = await supabase.from('organizations').update({ entity_isolation_mode: mode }).eq('id', organizationId)
   if (error) throw new Error(error.message)
+}
+
+export async function updateMembershipRole(
+  organizationId: string,
+  userId: string,
+  role: MembershipRole,
+  entityId: string | null,
+): Promise<Membership> {
+  const { data, error } = await supabase
+    .from('memberships')
+    .update({ role, entity_id: entityId })
+    .eq('organization_id', organizationId)
+    .eq('user_id', userId)
+    .select('*')
+    .single()
+  if (error) throw new Error(error.message)
+  return mapMembership(data)
 }

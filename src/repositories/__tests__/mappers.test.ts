@@ -3,6 +3,7 @@ import {
   entityToRow,
   mapConnection,
   mapEntity,
+  mapMembership,
   mapOrganization,
   mapPerson,
   mapPersonSkill,
@@ -166,6 +167,17 @@ describe('DB row -> app type mappers', () => {
     const entity = mapEntity({ id: 'ent-1', organization_id: 'org-1', name: 'Acme France', created_at: '2026-01-01T00:00:00Z' })
     expect(entity).toEqual({ id: 'ent-1', organizationId: 'org-1', name: 'Acme France' })
     expect(entityToRow(entity)).toEqual({ id: 'ent-1', organization_id: 'org-1', name: 'Acme France' })
+  })
+
+  it('maps a membership row, converting a null entity_id to undefined', () => {
+    const membership = mapMembership({
+      user_id: 'u1',
+      organization_id: 'org-1',
+      role: 'director',
+      entity_id: null,
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    expect(membership).toEqual({ userId: 'u1', organizationId: 'org-1', role: 'director', entityId: undefined })
   })
 })
 

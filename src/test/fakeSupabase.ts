@@ -72,8 +72,8 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   connections: [],
   sources: [],
   memberships: [
-    { user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', created_at: '2026-01-01T00:00:00Z' },
-    { user_id: 'u2', organization_id: DEMO_ORGANIZATION_ID, role: 'member', created_at: '2026-01-01T00:00:00Z' },
+    { user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', entity_id: null, created_at: '2026-01-01T00:00:00Z' },
+    { user_id: 'u2', organization_id: DEMO_ORGANIZATION_ID, role: 'member', entity_id: null, created_at: '2026-01-01T00:00:00Z' },
   ],
 }
 

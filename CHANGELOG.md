@@ -8,6 +8,26 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-27
+### Added
+- Role-based access control: four fixed roles on top of the existing
+  owner/member memberships — Collaborator, Manager, Director and HR admin —
+  assignable from a new Settings → Team & access screen (visible to every
+  signed-in member: admins get the full roster with role/entity dropdowns,
+  everyone else sees their own role). When an organization's entity
+  isolation mode (0008_entities.sql) is set to `strict`, visibility of
+  `people` (and the data attached to a specific person — skills, team
+  membership, connections, endorsements) is enforced at the database level
+  via a `can_view_person()` RLS helper: a Director sees their own entity,
+  a Manager sees their direct reports, a Collaborator sees their own
+  entity, and HR admin/Owner/legacy Member keep full visibility, exactly
+  as before. `filter` mode still never restricts anyone. Only SELECT is
+  scoped — the write model is unchanged for this release.
+### Changed
+- Entity isolation mode (introduced storage-only in 0.8.0) now actually
+  does something: this is the release that makes `strict` mode enforce a
+  real wall between entities.
+
 ## [0.8.0] - 2026-08-27
 ### Added
 - Multi-entity support: an organization can now have entities (subsidiaries

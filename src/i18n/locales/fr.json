@@ -353,6 +353,7 @@
       "workspace": "Espace de travail",
       "organization": "Organisation",
       "entities": "Entités",
+      "access": "Équipe et accès",
       "data": "Données",
       "import": "Import",
       "integrations": "Intégrations",
@@ -496,6 +497,30 @@
       "remove": "Retirer {{name}}",
       "addPlaceholder": "Nom de la nouvelle entité…",
       "addAction": "Ajouter"
+    }
+  },
+  "access": {
+    "demo": {
+      "title": "Indisponible en démo",
+      "description": "L’organisation de démonstration est en lecture seule. Créez votre propre organisation pour gérer les accès de l’équipe."
+    },
+    "error": "Une erreur est survenue",
+    "title": "Équipe et accès",
+    "description": "Votre rôle détermine les personnes que vous pouvez voir dans l’organisation.",
+    "adminDescription": "Attribuez un rôle — et, si besoin, une entité — à chaque membre de votre organisation.",
+    "yourRole": "Votre rôle : {{role}}",
+    "yourEntity": "Votre entité : {{name}}",
+    "noMembership": "Aucune adhésion trouvée pour votre compte.",
+    "unclaimed": "Compte {{id}}…",
+    "you": "Vous",
+    "noEntity": "Aucune entité",
+    "roles": {
+      "owner": "Propriétaire",
+      "member": "Membre",
+      "hr_admin": "Admin RH",
+      "director": "Directeur",
+      "manager": "Manager",
+      "collaborator": "Collaborateur"
     }
   }
 }

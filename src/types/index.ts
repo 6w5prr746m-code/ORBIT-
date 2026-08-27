@@ -15,6 +15,18 @@ export interface Entity {
   name: string
 }
 
+export type MembershipRole = 'owner' | 'member' | 'hr_admin' | 'director' | 'manager' | 'collaborator'
+
+/** The four roles a client can actually assign; 'owner'/'member' are legacy, full-access, and not assignable via the UI. */
+export const ASSIGNABLE_ROLES: MembershipRole[] = ['collaborator', 'manager', 'director', 'hr_admin']
+
+export interface Membership {
+  userId: string
+  organizationId: string
+  role: MembershipRole
+  entityId?: string
+}
+
 export type PersonStatus = 'active' | 'inactive'
 
 export interface Person {
@@ -118,6 +130,7 @@ export interface Source {
 export interface OrganizationDataset {
   organization: Organization
   entities: Entity[]
+  memberships: Membership[]
   people: Person[]
   skills: Skill[]
   personSkills: PersonSkill[]

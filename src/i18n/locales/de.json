@@ -353,6 +353,7 @@
       "workspace": "Arbeitsbereich",
       "organization": "Organisation",
       "entities": "Einheiten",
+      "access": "Team & Zugriff",
       "data": "Daten",
       "import": "Import",
       "integrations": "Integrationen",
@@ -496,6 +497,30 @@
       "remove": "{{name}} entfernen",
       "addPlaceholder": "Name der neuen Einheit…",
       "addAction": "Hinzufügen"
+    }
+  },
+  "access": {
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstellen Sie Ihre eigene Organisation, um den Teamzugriff zu verwalten."
+    },
+    "error": "Etwas ist schiefgelaufen",
+    "title": "Team & Zugriff",
+    "description": "Ihre Rolle bestimmt, welche Personen Sie in der Organisation sehen können.",
+    "adminDescription": "Weisen Sie jedem Mitglied Ihrer Organisation eine Rolle — und bei Bedarf eine Einheit — zu.",
+    "yourRole": "Ihre Rolle: {{role}}",
+    "yourEntity": "Ihre Einheit: {{name}}",
+    "noMembership": "Keine Mitgliedschaft für Ihr Konto gefunden.",
+    "unclaimed": "Konto {{id}}…",
+    "you": "Sie",
+    "noEntity": "Keine Einheit",
+    "roles": {
+      "owner": "Inhaber",
+      "member": "Mitglied",
+      "hr_admin": "HR-Admin",
+      "director": "Direktor",
+      "manager": "Manager",
+      "collaborator": "Mitarbeiter"
     }
   }
 }

@@ -353,6 +353,7 @@
       "workspace": "Workspace",
       "organization": "Organization",
       "entities": "Entities",
+      "access": "Team & access",
       "data": "Data",
       "import": "Import",
       "integrations": "Integrations",
@@ -496,6 +497,30 @@
       "remove": "Remove {{name}}",
       "addPlaceholder": "New entity name…",
       "addAction": "Add"
+    }
+  },
+  "access": {
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to manage team access."
+    },
+    "error": "Something went wrong",
+    "title": "Team & access",
+    "description": "Your role determines which people you can see across the organization.",
+    "adminDescription": "Assign a role — and, when relevant, an entity — to each member of your organization.",
+    "yourRole": "Your role: {{role}}",
+    "yourEntity": "Your entity: {{name}}",
+    "noMembership": "No membership found for your account.",
+    "unclaimed": "Account {{id}}…",
+    "you": "You",
+    "noEntity": "No entity",
+    "roles": {
+      "owner": "Owner",
+      "member": "Member",
+      "hr_admin": "HR admin",
+      "director": "Director",
+      "manager": "Manager",
+      "collaborator": "Collaborator"
     }
   }
 }
