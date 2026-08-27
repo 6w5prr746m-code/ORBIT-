@@ -36,6 +36,7 @@ export function seedDemoData(): OrganizationDataset {
     industry: 'B2B SaaS',
     size: 500,
     entityIsolationMode: 'filter',
+    advancedPermissionsEnabled: false,
   }
 
   const skills: Skill[] = SKILL_CATALOG.map((def, i) => ({
@@ -251,7 +252,7 @@ export function seedDemoData(): OrganizationDataset {
     { id: 'src-8', organizationId: ORGANIZATION_ID, type: 'jira', name: 'Jira', status: 'coming-soon' },
   ]
 
-  return { organization, entities: [], memberships: [], invitations: [], people, skills, personSkills, skillEndorsements: [], teams, personTeams, connections, sources }
+  return { organization, entities: [], memberships: [], invitations: [], upgradeRequests: [], people, skills, personSkills, skillEndorsements: [], teams, personTeams, connections, sources }
 }
 
 export function canHelpTopicsFor(personId: string, dataset: OrganizationDataset): string[] {

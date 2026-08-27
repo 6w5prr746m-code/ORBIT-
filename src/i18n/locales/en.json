@@ -355,6 +355,7 @@
       "entities": "Entities",
       "access": "Team & access",
       "invitations": "Invitations",
+      "upsell": "Advanced permissions",
       "data": "Data",
       "import": "Import",
       "integrations": "Integrations",
@@ -574,6 +575,37 @@
     "notFound": {
       "title": "Invitation not found",
       "description": "This invitation link is invalid, has expired, or has already been used."
+    }
+  },
+  "upsell": {
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to request the advanced permissions add-on."
+    },
+    "notAuthorized": {
+      "title": "Owners and HR admins only",
+      "description": "Ask an owner or HR admin of your organization to request this upgrade."
+    },
+    "error": "Something went wrong",
+    "title": "Advanced permissions",
+    "description": "Go beyond the four built-in roles with custom roles and fine-grained, per-feature permissions — tailored to how your organization actually works.",
+    "features": [
+      "Define as many custom roles as you need, beyond Collaborator/Manager/Director/HR admin",
+      "Fine-grained permissions per feature, not just per entity",
+      "Same underlying security model — just more configurable"
+    ],
+    "noteLabel": "Anything we should know?",
+    "notePlaceholder": "Optional",
+    "cta": "Request activation",
+    "sending": "Sending…",
+    "pendingNotice": "Request sent — we'll be in touch to activate it.",
+    "sent": {
+      "title": "Request sent",
+      "description": "We've notified our team. We'll reach out to get this activated."
+    },
+    "enabled": {
+      "title": "Advanced permissions active",
+      "description": "Your organization has advanced permissions enabled. Contact us to configure custom roles and fine-grained permissions."
     }
   }
 }

@@ -355,6 +355,7 @@
       "entities": "Entità",
       "access": "Team e accessi",
       "invitations": "Inviti",
+      "upsell": "Permessi avanzati",
       "data": "Dati",
       "import": "Importa",
       "integrations": "Integrazioni",
@@ -574,6 +575,37 @@
     "notFound": {
       "title": "Invito non trovato",
       "description": "Questo link di invito non è valido, è scaduto o è già stato utilizzato."
+    }
+  },
+  "upsell": {
+    "demo": {
+      "title": "Non disponibile nella demo",
+      "description": "L'organizzazione demo è di sola lettura. Crea la tua organizzazione per richiedere il componente aggiuntivo dei permessi avanzati."
+    },
+    "notAuthorized": {
+      "title": "Solo proprietari e admin HR",
+      "description": "Chiedi a un proprietario o admin HR della tua organizzazione di fare questa richiesta."
+    },
+    "error": "Qualcosa è andato storto",
+    "title": "Permessi avanzati",
+    "description": "Vai oltre i quattro ruoli integrati con ruoli personalizzati e permessi granulari, su misura per come lavora davvero la tua organizzazione.",
+    "features": [
+      "Definisci tutti i ruoli personalizzati di cui hai bisogno, oltre a Collaboratore/Manager/Direttore/Admin HR",
+      "Permessi granulari per funzionalità, non solo per entità",
+      "Stesso modello di sicurezza — solo più configurabile"
+    ],
+    "noteLabel": "Qualcosa che dovremmo sapere?",
+    "notePlaceholder": "Facoltativo",
+    "cta": "Richiedi attivazione",
+    "sending": "Invio…",
+    "pendingNotice": "Richiesta inviata — ti contatteremo per attivarla.",
+    "sent": {
+      "title": "Richiesta inviata",
+      "description": "Il nostro team è stato avvisato. Ti contatteremo per attivarla."
+    },
+    "enabled": {
+      "title": "Permessi avanzati attivi",
+      "description": "I permessi avanzati sono attivi per la tua organizzazione. Contattaci per configurare ruoli personalizzati."
     }
   }
 }

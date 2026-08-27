@@ -8,12 +8,14 @@ import {
   createInvitations as createInvitationsRemote,
   createOrganization as createOrganizationRemote,
   createSkillIfMissing,
+  createUpgradeRequest as createUpgradeRequestRemote,
   deleteEntity as deleteEntityRemote,
   endorseSkill as endorseSkillRemote,
   fetchDemoDataset,
   fetchMyOrganizationId,
   fetchOrganizationDataset,
   insertPeople,
+  notifyVendorUpgradeRequest,
   removeEndorsement as removeEndorsementRemote,
   removePersonSkill as removePersonSkillRemote,
   renameEntity as renameEntityRemote,
@@ -62,6 +64,7 @@ interface OrbitState {
   resendInvitations: (invitationIds: string[]) => Promise<void>
   revokeInvitation: (invitationId: string) => Promise<void>
   acceptInvitation: (token: string) => Promise<void>
+  requestAdvancedPermissions: (note?: string) => Promise<void>
   clear: () => void
 }
 
@@ -286,6 +289,16 @@ export const useOrbitStore = create<OrbitState>((set, get) => ({
       set({ loading: false, error: err instanceof Error ? err.message : 'Could not accept this invitation.' })
       throw err
     }
+  },
+
+  requestAdvancedPermissions: async (note = '') => {
+    const { dataset } = get()
+    const userId = useAuthStore.getState().user?.id
+    if (!dataset || !userId) return
+    const request = await createUpgradeRequestRemote(dataset.organization.id, userId, note)
+    await notifyVendorUpgradeRequest(request.id)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
   },
 
   clear: () => set({ dataset: null, isDemo: false, error: null }),

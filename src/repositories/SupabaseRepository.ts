@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { AssignableRole, Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { AssignableRole, Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel, UpgradeRequest } from '@/types'
 import {
   entityToRow,
   invitationToRow,
@@ -16,20 +16,24 @@ import {
   mapSkillEndorsement,
   mapSource,
   mapTeam,
+  mapUpgradeRequest,
   personSkillToRow,
   personTeamToRow,
   personToRow,
   skillEndorsementToRow,
   skillToRow,
+  upgradeRequestToRow,
 } from './mappers'
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, entities, memberships, invitations, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, features, entities, memberships, invitations, upgradeRequests, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
+    supabase.from('organization_features').select('*').eq('organization_id', organizationId).maybeSingle(),
     supabase.from('entities').select('*').eq('organization_id', organizationId),
     supabase.from('memberships').select('*').eq('organization_id', organizationId),
     supabase.from('invitations').select('*').eq('organization_id', organizationId),
+    supabase.from('upgrade_requests').select('*').eq('organization_id', organizationId),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
@@ -40,17 +44,18 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, entities, memberships, invitations, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+  const failed = [org, features, entities, memberships, invitations, upgradeRequests, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
     (r) => r.error,
   )
   if (failed?.error) throw new Error(failed.error.message)
   if (!org.data) throw new Error('Organization not found')
 
   return {
-    organization: mapOrganization(org.data),
+    organization: mapOrganization(org.data, features.data),
     entities: (entities.data ?? []).map(mapEntity),
     memberships: (memberships.data ?? []).map(mapMembership),
     invitations: (invitations.data ?? []).map(mapInvitation),
+    upgradeRequests: (upgradeRequests.data ?? []).map(mapUpgradeRequest),
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
@@ -281,6 +286,22 @@ export async function getInvitationPreview(
   const row = data?.[0]
   if (!row) return null
   return { email: row.email, organizationName: row.organization_name, role: row.role as AssignableRole }
+}
+
+export async function createUpgradeRequest(organizationId: string, requestedBy: string, note: string): Promise<UpgradeRequest> {
+  const { data, error } = await supabase
+    .from('upgrade_requests')
+    .insert(upgradeRequestToRow({ organizationId, requestedBy, note }))
+    .select('*')
+    .single()
+  if (error) throw new Error(error.message)
+  return mapUpgradeRequest(data)
+}
+
+/** Calls the notify-upgrade-request Edge Function, which emails the vendor and holds the Resend API key server-side. */
+export async function notifyVendorUpgradeRequest(upgradeRequestId: string): Promise<void> {
+  const { error } = await supabase.functions.invoke('notify-upgrade-request', { body: { upgradeRequestId } })
+  if (error) throw new Error(error.message)
 }
 
 export async function updateMembershipRole(

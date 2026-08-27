@@ -8,6 +8,26 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-08-27
+### Added
+- Advanced permissions upsell: Settings → Advanced permissions lets an
+  owner or HR admin request custom roles and fine-grained per-feature
+  permissions beyond the four built-in roles — a paid add-on. Clicking
+  "Request activation" logs the request (`upgrade_requests`) and emails
+  the vendor via a new `notify-upgrade-request` Edge Function, with the
+  exact SQL needed to flip the flag once billing is sorted. The flag
+  itself (`organization_features.advanced_permissions_enabled`) lives in
+  its own table with no client write policy at all — unlike every other
+  per-org setting so far, a client can never enable this themselves, only
+  the vendor (direct SQL access) can. This closes out the four-part
+  security/commercialization initiative: entities → RBAC → invitations →
+  this upsell.
+### Note for deployment
+- After applying `supabase/migrations/0011_advanced_permissions_upsell.sql`,
+  deploy the new `notify-upgrade-request` Edge Function (same manual
+  dashboard-editor process as `send-invitation-emails`) and add one more
+  secret: `supabase secrets set VENDOR_EMAIL=<where upgrade requests should land>`.
+
 ## [0.10.2] - 2026-08-27
 ### Fixed
 - Invitation emails linked to `.../ORBIT-//invite/<token>` (double slash)

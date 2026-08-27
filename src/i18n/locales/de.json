@@ -355,6 +355,7 @@
       "entities": "Einheiten",
       "access": "Team & Zugriff",
       "invitations": "Einladungen",
+      "upsell": "Erweiterte Berechtigungen",
       "data": "Daten",
       "import": "Import",
       "integrations": "Integrationen",
@@ -574,6 +575,37 @@
     "notFound": {
       "title": "Einladung nicht gefunden",
       "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde bereits verwendet."
+    }
+  },
+  "upsell": {
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstellen Sie Ihre eigene Organisation, um das Add-on für erweiterte Berechtigungen anzufragen."
+    },
+    "notAuthorized": {
+      "title": "Nur für Inhaber und HR-Admins",
+      "description": "Bitten Sie einen Inhaber oder HR-Admin Ihrer Organisation, diese Anfrage zu stellen."
+    },
+    "error": "Etwas ist schiefgelaufen",
+    "title": "Erweiterte Berechtigungen",
+    "description": "Gehen Sie über die vier integrierten Rollen hinaus — mit benutzerdefinierten Rollen und feingranularen Berechtigungen, zugeschnitten auf Ihre Organisation.",
+    "features": [
+      "Definieren Sie beliebig viele benutzerdefinierte Rollen, über Mitarbeiter/Manager/Direktor/HR-Admin hinaus",
+      "Feingranulare Berechtigungen pro Funktion, nicht nur pro Einheit",
+      "Dasselbe Sicherheitsmodell — nur konfigurierbarer"
+    ],
+    "noteLabel": "Etwas, das wir wissen sollten?",
+    "notePlaceholder": "Optional",
+    "cta": "Aktivierung anfragen",
+    "sending": "Wird gesendet…",
+    "pendingNotice": "Anfrage gesendet — wir melden uns zur Aktivierung.",
+    "sent": {
+      "title": "Anfrage gesendet",
+      "description": "Unser Team wurde informiert. Wir melden uns, um dies zu aktivieren."
+    },
+    "enabled": {
+      "title": "Erweiterte Berechtigungen aktiv",
+      "description": "Erweiterte Berechtigungen sind für Ihre Organisation aktiviert. Kontaktieren Sie uns, um benutzerdefinierte Rollen einzurichten."
     }
   }
 }

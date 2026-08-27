@@ -19,6 +19,8 @@ import {
   personToRow,
   skillEndorsementToRow,
   skillToRow,
+  mapUpgradeRequest,
+  upgradeRequestToRow,
 } from '@/repositories/mappers'
 
 describe('DB row -> app type mappers', () => {
@@ -33,7 +35,32 @@ describe('DB row -> app type mappers', () => {
       entity_isolation_mode: 'filter',
       created_at: '2026-01-01T00:00:00Z',
     })
-    expect(org).toEqual({ id: 'org-1', name: 'Northstar', logo: undefined, industry: 'B2B SaaS', size: 500, entityIsolationMode: 'filter' })
+    expect(org).toEqual({
+      id: 'org-1',
+      name: 'Northstar',
+      logo: undefined,
+      industry: 'B2B SaaS',
+      size: 500,
+      entityIsolationMode: 'filter',
+      advancedPermissionsEnabled: false,
+    })
+  })
+
+  it('maps an organization row with advanced permissions enabled via its features row', () => {
+    const org = mapOrganization(
+      {
+        id: 'org-1',
+        name: 'Northstar',
+        logo: null,
+        industry: 'B2B SaaS',
+        size: 500,
+        is_demo: true,
+        entity_isolation_mode: 'filter',
+        created_at: '2026-01-01T00:00:00Z',
+      },
+      { organization_id: 'org-1', advanced_permissions_enabled: true },
+    )
+    expect(org.advancedPermissionsEnabled).toBe(true)
   })
 
   it('maps a person row, converting null manager_id/avatar to undefined', () => {
@@ -208,6 +235,32 @@ describe('DB row -> app type mappers', () => {
       lastSentAt: undefined,
       acceptedAt: undefined,
     })
+  })
+
+  it('maps an upgrade request row, converting a null resolved_at to undefined', () => {
+    const request = mapUpgradeRequest({
+      id: 'ur-1',
+      organization_id: 'org-1',
+      requested_by: 'u1',
+      status: 'pending',
+      note: 'Need custom roles for our regional teams.',
+      created_at: '2026-01-01T00:00:00Z',
+      resolved_at: null,
+    })
+    expect(request).toEqual({
+      id: 'ur-1',
+      organizationId: 'org-1',
+      requestedBy: 'u1',
+      status: 'pending',
+      note: 'Need custom roles for our regional teams.',
+      createdAt: '2026-01-01T00:00:00Z',
+      resolvedAt: undefined,
+    })
+  })
+
+  it('builds an upgrade request insert row without id/status/timestamps (left to the DB defaults)', () => {
+    const row = upgradeRequestToRow({ organizationId: 'org-1', requestedBy: 'u1', note: 'Please enable it.' })
+    expect(row).toEqual({ organization_id: 'org-1', requested_by: 'u1', note: 'Please enable it.' })
   })
 
   it('builds an invitation insert row without id/token/status (left to the DB defaults)', () => {

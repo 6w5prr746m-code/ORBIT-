@@ -1,9 +1,12 @@
-import type { Connection, Entity, Invitation, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
+import type { Connection, Entity, Invitation, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team, UpgradeRequest } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
 
-export function mapOrganization(row: Tables['organizations']['Row']): Organization {
+export function mapOrganization(
+  row: Tables['organizations']['Row'],
+  features?: Tables['organization_features']['Row'] | null,
+): Organization {
   return {
     id: row.id,
     name: row.name,
@@ -11,6 +14,7 @@ export function mapOrganization(row: Tables['organizations']['Row']): Organizati
     industry: row.industry,
     size: row.size,
     entityIsolationMode: row.entity_isolation_mode,
+    advancedPermissionsEnabled: features?.advanced_permissions_enabled ?? false,
   }
 }
 
@@ -63,6 +67,28 @@ export function invitationToRow(
     role: i.role,
     entity_id: i.entityId ?? null,
     invited_by: i.invitedBy,
+  }
+}
+
+export function mapUpgradeRequest(row: Tables['upgrade_requests']['Row']): UpgradeRequest {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    requestedBy: row.requested_by,
+    status: row.status,
+    note: row.note,
+    createdAt: row.created_at,
+    resolvedAt: row.resolved_at ?? undefined,
+  }
+}
+
+export function upgradeRequestToRow(
+  r: Omit<UpgradeRequest, 'id' | 'status' | 'createdAt' | 'resolvedAt'>,
+): Tables['upgrade_requests']['Insert'] {
+  return {
+    organization_id: r.organizationId,
+    requested_by: r.requestedBy,
+    note: r.note,
   }
 }
 
