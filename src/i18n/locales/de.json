@@ -19,6 +19,7 @@
     "skills": "Fähigkeiten",
     "discover": "Entdecken",
     "coverage": "Risiken",
+    "teamBuilder": "Team zusammenstellen",
     "ask": "Fragen",
     "settings": "Einstellungen"
   },
@@ -303,6 +304,23 @@
       "team": "Team",
       "members": "Mitglieder"
     }
+  },
+  "teamBuilder": {
+    "title": "Team zusammenstellen",
+    "description": "Beschreibe, was du brauchst — erhalte ein Kandidatenteam, mit Belegen.",
+    "skillsLabel": "Benötigte Fähigkeiten",
+    "skillsPlaceholder": "Fähigkeit hinzufügen…",
+    "addSkill": "Hinzufügen",
+    "removeSkill": "{{skill}} entfernen",
+    "teamSizeLabel": "Teamgröße",
+    "locationLabel": "Standort",
+    "anyLocation": "Alle Standorte",
+    "emptyPrompt": "Füge mindestens eine benötigte Fähigkeit hinzu, um Kandidaten zu sehen.",
+    "noMatch": {
+      "title": "Noch keine Übereinstimmung",
+      "description": "Entferne den Standortfilter oder füge eine andere Fähigkeit hinzu."
+    },
+    "uncovered": "Aktuell deckt niemand ab: {{skills}}."
   },
   "ask": {
     "title": "Ask Orbit",

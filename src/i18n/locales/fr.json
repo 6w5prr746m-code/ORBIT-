@@ -19,6 +19,7 @@
     "skills": "Compétences",
     "discover": "Découvrir",
     "coverage": "Risques",
+    "teamBuilder": "Composer une équipe",
     "ask": "Demander",
     "settings": "Paramètres"
   },
@@ -303,6 +304,23 @@
       "team": "Équipe",
       "members": "Membres"
     }
+  },
+  "teamBuilder": {
+    "title": "Composer une équipe",
+    "description": "Décrivez votre besoin — obtenez une équipe candidate, avec preuves à l'appui.",
+    "skillsLabel": "Compétences requises",
+    "skillsPlaceholder": "Ajouter une compétence…",
+    "addSkill": "Ajouter",
+    "removeSkill": "Retirer {{skill}}",
+    "teamSizeLabel": "Taille de l'équipe",
+    "locationLabel": "Lieu",
+    "anyLocation": "Tous les lieux",
+    "emptyPrompt": "Ajoutez au moins une compétence requise pour voir des candidats.",
+    "noMatch": {
+      "title": "Personne ne correspond pour l'instant",
+      "description": "Essayez de retirer le filtre de lieu ou d'ajouter une autre compétence."
+    },
+    "uncovered": "Personne ne couvre actuellement : {{skills}}."
   },
   "ask": {
     "title": "Ask Orbit",

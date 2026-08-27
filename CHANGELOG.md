@@ -8,6 +8,14 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-08-26
+### Added
+- Team Builder (`/team-builder`): describe the skills a project needs, an
+  optional team size and location, and get a candidate team back — each
+  pick shown with exactly which required skills (and level) earned their
+  spot. Deterministic greedy set-cover over the existing dataset, same
+  explainability discipline as Ask Orbit; no schema changes.
+
 ## [0.5.0] - 2026-08-26
 ### Added
 - Skill Risk (`/coverage`): a deterministic, rule-based view of "bus factor"

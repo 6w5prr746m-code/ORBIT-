@@ -19,6 +19,7 @@
     "skills": "Skills",
     "discover": "Discover",
     "coverage": "Coverage",
+    "teamBuilder": "Team Builder",
     "ask": "Ask",
     "settings": "Settings"
   },
@@ -303,6 +304,23 @@
       "team": "Team",
       "members": "Members"
     }
+  },
+  "teamBuilder": {
+    "title": "Team Builder",
+    "description": "Describe what you need — get a candidate team, with proof.",
+    "skillsLabel": "Required skills",
+    "skillsPlaceholder": "Add a skill…",
+    "addSkill": "Add",
+    "removeSkill": "Remove {{skill}}",
+    "teamSizeLabel": "Team size",
+    "locationLabel": "Location",
+    "anyLocation": "Any location",
+    "emptyPrompt": "Add at least one required skill to see candidates.",
+    "noMatch": {
+      "title": "No one matches yet",
+      "description": "Try removing the location filter or adding a different skill."
+    },
+    "uncovered": "No one currently covers: {{skills}}."
   },
   "ask": {
     "title": "Ask Orbit",
