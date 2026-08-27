@@ -24,7 +24,7 @@ export function mapEntity(row: Tables['entities']['Row']): Entity {
 
 export function entityToRow(e: Omit<Entity, 'id'> & { id?: string }): Tables['entities']['Insert'] {
   return {
-    id: e.id,
+    ...(e.id !== undefined ? { id: e.id } : {}),
     organization_id: e.organizationId,
     name: e.name,
   }
@@ -58,7 +58,6 @@ export function invitationToRow(
   i: Omit<Invitation, 'id' | 'token' | 'status' | 'lastSentAt' | 'acceptedAt'>,
 ): Tables['invitations']['Insert'] {
   return {
-    id: undefined,
     organization_id: i.organizationId,
     email: i.email,
     role: i.role,

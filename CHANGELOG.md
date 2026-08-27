@@ -8,6 +8,18 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-08-27
+### Fixed
+- Sending an invitation failed with `null value in column "id" ... violates
+  not-null constraint`. The row builder set `id: undefined` explicitly to
+  let Postgres apply its default, but Supabase's bulk upsert derives the
+  column list from `Object.keys(...)` — which includes keys whose value is
+  `undefined` — so `id` was sent as an explicit column with no value
+  (`NULL`) instead of being left out entirely for the default to apply.
+  Fixed by omitting the key altogether when there's no id yet, for both
+  invitations and entities (the same latent risk existed there, just never
+  triggered since entity rows always carry a client-generated id already).
+
 ## [0.10.0] - 2026-08-27
 ### Added
 - Bulk invitations: an owner or HR admin can invite several people at once
