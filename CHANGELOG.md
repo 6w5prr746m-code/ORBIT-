@@ -8,6 +8,26 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-27
+### Added
+- One-click activation for advanced-permissions upgrade requests: the
+  vendor-notification email now includes an "Activate advanced
+  permissions" button (in addition to the manual SQL snippet, kept as a
+  fallback) that flips `organization_features.advanced_permissions_enabled`
+  with a single click — no SQL editor needed. Backed by a new, deliberately
+  policy-free `upgrade_request_approvals` table (an unguessable token,
+  never exposed to any client account — only the new public
+  `approve-upgrade-request` Edge Function ever reads it, via the
+  service-role key) and a public Edge Function whose entire security
+  boundary is that unguessable token, same trust model as the existing
+  invitation-accept links.
+### Note for deployment
+- Apply `supabase/migrations/0012_upgrade_request_approvals.sql`, then
+  redeploy the updated `notify-upgrade-request` function and deploy the
+  new `approve-upgrade-request` function. For `approve-upgrade-request`
+  specifically, turn **off** "Enforce JWT Verification" in its Supabase
+  dashboard settings — it's clicked from an email with no login involved.
+
 ## [0.11.0] - 2026-08-27
 ### Added
 - Advanced permissions upsell: Settings → Advanced permissions lets an

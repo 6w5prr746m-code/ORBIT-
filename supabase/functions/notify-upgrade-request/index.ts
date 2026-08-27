@@ -65,6 +65,32 @@ Deno.serve(async (req: Request) => {
   const org = Array.isArray(request.organizations) ? request.organizations[0] : request.organizations
   const orgName = org?.name ?? 'Unknown organization'
 
+  // The approval token is only ever written/read via the service-role key
+  // (bypassing RLS) — a client's own JWT, even the caller's, has no policy
+  // letting it touch upgrade_request_approvals. See 0012's migration comment.
+  const supabaseAdmin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+
+  let approvalToken: string
+  const { data: existingApproval } = await supabaseAdmin
+    .from('upgrade_request_approvals')
+    .select('approval_token')
+    .eq('upgrade_request_id', request.id)
+    .maybeSingle()
+
+  if (existingApproval) {
+    approvalToken = existingApproval.approval_token
+  } else {
+    const { data: insertedApproval, error: approvalError } = await supabaseAdmin
+      .from('upgrade_request_approvals')
+      .insert({ upgrade_request_id: request.id })
+      .select('approval_token')
+      .single()
+    if (approvalError || !insertedApproval) return json({ error: approvalError?.message ?? 'Could not create approval link' }, 500)
+    approvalToken = insertedApproval.approval_token
+  }
+
+  const approveUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/approve-upgrade-request?token=${approvalToken}`
+
   const emailResponse = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -79,8 +105,12 @@ Deno.serve(async (req: Request) => {
         <p><strong>${orgName}</strong> requested the advanced permissions add-on.</p>
         <p>Requested by: ${requesterEmail}</p>
         ${request.note ? `<p>Note: ${request.note}</p>` : ''}
-        <p>Organization id: <code>${request.organization_id}</code></p>
-        <p>Once billing is sorted, enable it by running in the Supabase SQL editor:</p>
+        <p>
+          <a href="${approveUrl}" style="display:inline-block;padding:10px 18px;background:#101113;color:#fff;text-decoration:none;border-radius:8px;font-family:sans-serif">
+            Activate advanced permissions
+          </a>
+        </p>
+        <p style="color:#888;font-size:13px">Once billing is sorted, click the button above — or, manually, run in the Supabase SQL editor:</p>
         <pre>update organization_features set advanced_permissions_enabled = true where organization_id = '${request.organization_id}';</pre>
       `,
     }),
