@@ -23,6 +23,7 @@ export interface Person {
   startDate: string
   status: PersonStatus
   email: string
+  claimedByUserId?: string
 }
 
 export type SkillCategory =

@@ -44,12 +44,36 @@ describe('DB row -> app type mappers', () => {
       start_date: '2020-01-01',
       status: 'active',
       email: 'ada@northstar.io',
+      claimed_by_user_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
     expect(person.managerId).toBeUndefined()
     expect(person.avatar).toBeUndefined()
+    expect(person.claimedByUserId).toBeUndefined()
     expect(person.firstName).toBe('Ada')
     expect(person.organizationId).toBe('org-1')
+  })
+
+  it('maps a claimed_by_user_id through to claimedByUserId', () => {
+    const person = mapPerson({
+      id: 'p1',
+      organization_id: 'org-1',
+      first_name: 'Ada',
+      last_name: 'Lovelace',
+      avatar: null,
+      job_title: 'Head of Engineering',
+      department: 'Engineering',
+      location: 'London, United Kingdom',
+      country: 'United Kingdom',
+      bio: 'Bio.',
+      manager_id: null,
+      start_date: '2020-01-01',
+      status: 'active',
+      email: 'ada@northstar.io',
+      claimed_by_user_id: 'user-42',
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    expect(person.claimedByUserId).toBe('user-42')
   })
 
   it('maps a skill, person_skill, team, person_team, connection and source row', () => {
@@ -133,6 +157,7 @@ describe('app type -> DB row (write path)', () => {
       start_date: '2020-01-01',
       status: 'active',
       email: 'ada@northstar.io',
+      claimed_by_user_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
     const row = personToRow(person)

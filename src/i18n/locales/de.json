@@ -225,6 +225,41 @@
     "askQuestion": "Warum ist {{firstName}} eine gute Ansprechperson für {{skill}}?",
     "askQuestionFallback": "Erzähl mir von {{fullName}}"
   },
+  "profile": {
+    "title": "Dein Profil",
+    "claim": {
+      "subtitle": "Finde dich in der Liste unten, um dein Profil zu beanspruchen und zu bearbeiten.",
+      "searchPlaceholder": "Suche nach Name, Rolle oder E-Mail…",
+      "suggested": "Das könntest du sein",
+      "action": "Das bin ich",
+      "empty": "Alle in dieser Organisation haben ihr Profil bereits beansprucht.",
+      "error": "Profil konnte nicht beansprucht werden"
+    },
+    "edit": {
+      "title": "Deine Angaben",
+      "description": "Nur du kannst das bearbeiten — Kolleginnen und Kollegen sehen deine Änderungen sofort.",
+      "bioLabel": "Über dich",
+      "photoLabel": "Foto-URL",
+      "photoPlaceholder": "https://…",
+      "save": "Speichern",
+      "saved": "Profil aktualisiert",
+      "error": "Profil konnte nicht gespeichert werden"
+    },
+    "skills": {
+      "title": "Deine Fähigkeiten",
+      "description": "Füge die Fähigkeiten hinzu, die du wirklich hast — sie erscheinen als selbst angegeben, bis eine Kollegin oder ein Kollege sie bestätigt.",
+      "empty": "Du hast noch keine Fähigkeiten hinzugefügt.",
+      "addPlaceholder": "Fähigkeit hinzufügen…",
+      "levelLabel": "Niveau",
+      "yearsLabel": "Jahre",
+      "addAction": "Hinzufügen",
+      "remove": "{{skill}} entfernen"
+    },
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstelle deine eigene Organisation, um ein Profil zu beanspruchen und zu bearbeiten."
+    }
+  },
   "discover": {
     "title": "Entdecken",
     "description": "Entdecke deine Organisation.",
@@ -328,7 +363,8 @@
       "title": "Benutzer",
       "description": "Dein ORBIT-Konto.",
       "email": "E-Mail",
-      "notSignedIn": "Demo wird angesehen — nicht angemeldet"
+      "notSignedIn": "Demo wird angesehen — nicht angemeldet",
+      "manageProfile": "Dein Profil verwalten"
     }
   },
   "import": {

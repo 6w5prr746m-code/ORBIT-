@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { cn, initials } from '@/lib/utils'
 import { NAV_ITEMS, SETTINGS_ITEM, type NavItemDef } from './navItems'
 import { useDataset } from '@/hooks/useDataset'
+import { useAuthStore } from '@/state/authStore'
 import { Avatar } from '@/components/ui/Avatar'
 
 function NavItem({ to, labelKey, icon: Icon, end }: NavItemDef) {
@@ -27,7 +28,9 @@ function NavItem({ to, labelKey, icon: Icon, end }: NavItemDef) {
 
 export function Sidebar() {
   const dataset = useDataset()
+  const user = useAuthStore((s) => s.user)
   const { t } = useTranslation()
+  const myPerson = dataset?.people.find((p) => p.claimedByUserId === user?.id)
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-canvas-raised px-4 py-6 lg:flex">
@@ -57,10 +60,22 @@ export function Sidebar() {
             </div>
           </div>
         )}
-        <div className="flex items-center gap-3 px-3 py-2">
-          <Avatar name="You" initials="Y" size={28} />
-          <p className="text-[13px] font-medium text-ink">{t('sidebar.you')}</p>
-        </div>
+        <NavLink
+          to="/me"
+          className={({ isActive }) =>
+            cn(
+              'flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2 text-ink transition-colors',
+              isActive ? 'bg-ink text-canvas' : 'hover:bg-mist',
+            )
+          }
+        >
+          {myPerson ? (
+            <Avatar name={`${myPerson.firstName} ${myPerson.lastName}`} initials={initials(myPerson.firstName, myPerson.lastName)} photoUrl={myPerson.avatar} size={28} />
+          ) : (
+            <Avatar name="You" initials="Y" size={28} />
+          )}
+          <p className="truncate text-[13px] font-medium">{myPerson ? `${myPerson.firstName} ${myPerson.lastName}` : t('sidebar.you')}</p>
+        </NavLink>
       </div>
     </aside>
   )

@@ -225,6 +225,41 @@
     "askQuestion": "Perché {{firstName}} è una buona persona con cui parlare di {{skill}}?",
     "askQuestionFallback": "Parlami di {{fullName}}"
   },
+  "profile": {
+    "title": "Il tuo profilo",
+    "claim": {
+      "subtitle": "Trovati nell'elenco qui sotto per rivendicare il tuo profilo e iniziare a modificarlo.",
+      "searchPlaceholder": "Cerca per nome, ruolo o email…",
+      "suggested": "Potresti essere tu",
+      "action": "Sono io",
+      "empty": "Tutti in questa organizzazione hanno già rivendicato il proprio profilo.",
+      "error": "Impossibile rivendicare questo profilo"
+    },
+    "edit": {
+      "title": "I tuoi dati",
+      "description": "Solo tu puoi modificarli — i colleghi vedranno subito le tue modifiche.",
+      "bioLabel": "Su di te",
+      "photoLabel": "URL della foto",
+      "photoPlaceholder": "https://…",
+      "save": "Salva",
+      "saved": "Profilo aggiornato",
+      "error": "Impossibile salvare il tuo profilo"
+    },
+    "skills": {
+      "title": "Le tue competenze",
+      "description": "Aggiungi le competenze che possiedi realmente — appariranno come autodichiarate finché un collega non le convalida.",
+      "empty": "Non hai ancora aggiunto nessuna competenza.",
+      "addPlaceholder": "Aggiungi una competenza…",
+      "levelLabel": "Livello",
+      "yearsLabel": "Anni",
+      "addAction": "Aggiungi",
+      "remove": "Rimuovi {{skill}}"
+    },
+    "demo": {
+      "title": "Non disponibile nella demo",
+      "description": "L'organizzazione demo è di sola lettura. Crea la tua organizzazione per rivendicare e modificare un profilo."
+    }
+  },
   "discover": {
     "title": "Scopri",
     "description": "Scopri la tua organizzazione.",
@@ -328,7 +363,8 @@
       "title": "Utente",
       "description": "Il tuo account ORBIT.",
       "email": "Email",
-      "notSignedIn": "Navigazione nella demo — accesso non effettuato"
+      "notSignedIn": "Navigazione nella demo — accesso non effettuato",
+      "manageProfile": "Gestisci il tuo profilo"
     }
   },
   "import": {
