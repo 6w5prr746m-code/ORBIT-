@@ -1,4 +1,4 @@
-import type { Connection, Entity, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
+import type { Connection, Entity, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
@@ -27,6 +27,15 @@ export function entityToRow(e: Omit<Entity, 'id'> & { id?: string }): Tables['en
     id: e.id,
     organization_id: e.organizationId,
     name: e.name,
+  }
+}
+
+export function mapMembership(row: Tables['memberships']['Row']): Membership {
+  return {
+    userId: row.user_id,
+    organizationId: row.organization_id,
+    role: row.role,
+    entityId: row.entity_id ?? undefined,
   }
 }
 

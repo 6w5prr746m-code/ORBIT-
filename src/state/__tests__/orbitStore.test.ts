@@ -202,3 +202,34 @@ describe('orbitStore entities', () => {
     expect(useOrbitStore.getState().dataset?.organization.entityIsolationMode).toBe('strict')
   })
 })
+
+describe('orbitStore RBAC', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  it('loads existing memberships into the dataset', () => {
+    const memberships = useOrbitStore.getState().dataset?.memberships
+    expect(memberships?.find((m) => m.userId === 'u1')?.role).toBe('owner')
+    expect(memberships?.find((m) => m.userId === 'u2')?.role).toBe('member')
+  })
+
+  it('assigns a scoped role and entity to a member', async () => {
+    await useOrbitStore.getState().createEntity('Acme France')
+    const entityId = useOrbitStore.getState().dataset!.entities.find((e) => e.name === 'Acme France')!.id
+
+    await useOrbitStore.getState().updateMembershipRole('u2', 'director', entityId)
+
+    const membership = useOrbitStore.getState().dataset?.memberships.find((m) => m.userId === 'u2')
+    expect(membership?.role).toBe('director')
+    expect(membership?.entityId).toBe(entityId)
+  })
+
+  it('clears the entity when reassigning a role without one', async () => {
+    await useOrbitStore.getState().updateMembershipRole('u2', 'hr_admin', null)
+    const membership = useOrbitStore.getState().dataset?.memberships.find((m) => m.userId === 'u2')
+    expect(membership?.role).toBe('hr_admin')
+    expect(membership?.entityId).toBeUndefined()
+  })
+})

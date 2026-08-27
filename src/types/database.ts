@@ -55,7 +55,8 @@ export interface Database {
         Row: {
           user_id: string
           organization_id: string
-          role: 'owner' | 'member'
+          role: 'owner' | 'member' | 'hr_admin' | 'director' | 'manager' | 'collaborator'
+          entity_id: string | null
           created_at: string
         }
         Insert: Partial<Database['public']['Tables']['memberships']['Row']> & {

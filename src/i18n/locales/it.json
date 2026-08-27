@@ -353,6 +353,7 @@
       "workspace": "Spazio di lavoro",
       "organization": "Organizzazione",
       "entities": "Entità",
+      "access": "Team e accessi",
       "data": "Dati",
       "import": "Importa",
       "integrations": "Integrazioni",
@@ -496,6 +497,30 @@
       "remove": "Rimuovi {{name}}",
       "addPlaceholder": "Nome della nuova entità…",
       "addAction": "Aggiungi"
+    }
+  },
+  "access": {
+    "demo": {
+      "title": "Non disponibile nella demo",
+      "description": "L'organizzazione demo è di sola lettura. Crea la tua organizzazione per gestire gli accessi del team."
+    },
+    "error": "Qualcosa è andato storto",
+    "title": "Team e accessi",
+    "description": "Il tuo ruolo determina quali persone puoi vedere nell'organizzazione.",
+    "adminDescription": "Assegna un ruolo — e, se pertinente, un'entità — a ciascun membro della tua organizzazione.",
+    "yourRole": "Il tuo ruolo: {{role}}",
+    "yourEntity": "La tua entità: {{name}}",
+    "noMembership": "Nessuna appartenenza trovata per il tuo account.",
+    "unclaimed": "Account {{id}}…",
+    "you": "Tu",
+    "noEntity": "Nessuna entità",
+    "roles": {
+      "owner": "Proprietario",
+      "member": "Membro",
+      "hr_admin": "Admin HR",
+      "director": "Direttore",
+      "manager": "Manager",
+      "collaborator": "Collaboratore"
     }
   }
 }
