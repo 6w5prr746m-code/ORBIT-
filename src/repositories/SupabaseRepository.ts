@@ -1,10 +1,12 @@
 import { supabase } from '@/lib/supabaseClient'
 import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
-import type { AssignableRole, Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel, UpgradeRequest } from '@/types'
+import type { AssignableRole, CustomRole, CustomRoleBase, Entity, EntityIsolationMode, Membership, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, RolePermissions, Skill, SkillLevel, UpgradeRequest } from '@/types'
 import {
+  customRoleToRow,
   entityToRow,
   invitationToRow,
   mapConnection,
+  mapCustomRole,
   mapEntity,
   mapInvitation,
   mapMembership,
@@ -27,13 +29,14 @@ import {
 
 /** Fetches everything needed to render the app for one organization, in parallel. */
 export async function fetchOrganizationDataset(organizationId: string): Promise<OrganizationDataset> {
-  const [org, features, entities, memberships, invitations, upgradeRequests, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
+  const [org, features, entities, memberships, invitations, upgradeRequests, customRoles, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources] = await Promise.all([
     supabase.from('organizations').select('*').eq('id', organizationId).single(),
     supabase.from('organization_features').select('*').eq('organization_id', organizationId).maybeSingle(),
     supabase.from('entities').select('*').eq('organization_id', organizationId),
     supabase.from('memberships').select('*').eq('organization_id', organizationId),
     supabase.from('invitations').select('*').eq('organization_id', organizationId),
     supabase.from('upgrade_requests').select('*').eq('organization_id', organizationId),
+    supabase.from('custom_roles').select('*').eq('organization_id', organizationId),
     supabase.from('people').select('*').eq('organization_id', organizationId),
     supabase.from('skills').select('*').eq('organization_id', organizationId),
     supabase.from('person_skills').select('*').eq('organization_id', organizationId),
@@ -44,7 +47,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     supabase.from('sources').select('*').eq('organization_id', organizationId),
   ])
 
-  const failed = [org, features, entities, memberships, invitations, upgradeRequests, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
+  const failed = [org, features, entities, memberships, invitations, upgradeRequests, customRoles, people, skills, personSkills, skillEndorsements, teams, personTeams, connections, sources].find(
     (r) => r.error,
   )
   if (failed?.error) throw new Error(failed.error.message)
@@ -56,6 +59,7 @@ export async function fetchOrganizationDataset(organizationId: string): Promise<
     memberships: (memberships.data ?? []).map(mapMembership),
     invitations: (invitations.data ?? []).map(mapInvitation),
     upgradeRequests: (upgradeRequests.data ?? []).map(mapUpgradeRequest),
+    customRoles: (customRoles.data ?? []).map(mapCustomRole),
     people: (people.data ?? []).map(mapPerson),
     skills: (skills.data ?? []).map(mapSkill),
     personSkills: (personSkills.data ?? []).map(mapPersonSkill),
@@ -309,14 +313,46 @@ export async function updateMembershipRole(
   userId: string,
   role: MembershipRole,
   entityId: string | null,
+  customRoleId: string | null = null,
 ): Promise<Membership> {
   const { data, error } = await supabase
     .from('memberships')
-    .update({ role, entity_id: entityId })
+    .update({ role, entity_id: entityId, custom_role_id: customRoleId })
     .eq('organization_id', organizationId)
     .eq('user_id', userId)
     .select('*')
     .single()
   if (error) throw new Error(error.message)
   return mapMembership(data)
+}
+
+export async function createCustomRole(
+  organizationId: string,
+  name: string,
+  baseRole: CustomRoleBase,
+  permissions: RolePermissions,
+): Promise<CustomRole> {
+  const { data, error } = await supabase
+    .from('custom_roles')
+    .insert(customRoleToRow({ organizationId, name, baseRole, permissions }))
+    .select('*')
+    .single()
+  if (error) throw new Error(error.message)
+  return mapCustomRole(data)
+}
+
+export async function updateCustomRole(
+  customRoleId: string,
+  patch: { name?: string; baseRole?: CustomRoleBase; permissions?: RolePermissions },
+): Promise<void> {
+  const { error } = await supabase
+    .from('custom_roles')
+    .update({ name: patch.name, base_role: patch.baseRole, permissions: patch.permissions })
+    .eq('id', customRoleId)
+  if (error) throw new Error(error.message)
+}
+
+export async function deleteCustomRole(customRoleId: string): Promise<void> {
+  const { error } = await supabase.from('custom_roles').delete().eq('id', customRoleId)
+  if (error) throw new Error(error.message)
 }

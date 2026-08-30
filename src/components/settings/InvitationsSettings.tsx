@@ -6,12 +6,10 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
-import { useAuthStore } from '@/state/authStore'
+import { useEffectivePermissions } from '@/hooks/usePermissions'
 import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
-import { ASSIGNABLE_ROLES, type AssignableRole, type InvitationStatus, type MembershipRole } from '@/types'
-
-const ADMIN_ROLES: MembershipRole[] = ['owner', 'hr_admin']
+import { ASSIGNABLE_ROLES, type AssignableRole, type InvitationStatus } from '@/types'
 
 function parseEmails(text: string): string[] {
   const seen = new Set<string>()
@@ -31,7 +29,7 @@ const STATUS_VARIANT: Record<InvitationStatus, 'default' | 'success'> = {
 export function InvitationsSettings() {
   const dataset = useDataset()
   const isDemo = useOrbitStore((s) => s.isDemo)
-  const user = useAuthStore((s) => s.user)
+  const permissions = useEffectivePermissions()
   const createInvitations = useOrbitStore((s) => s.createInvitations)
   const resendInvitations = useOrbitStore((s) => s.resendInvitations)
   const revokeInvitation = useOrbitStore((s) => s.revokeInvitation)
@@ -56,10 +54,7 @@ export function InvitationsSettings() {
     )
   }
 
-  const myMembership = dataset.memberships.find((m) => m.userId === user?.id)
-  const isAdmin = !!myMembership && ADMIN_ROLES.includes(myMembership.role)
-
-  if (!isAdmin) {
+  if (!permissions.actions.manageInvitations) {
     return (
       <Card className="flex flex-col items-center gap-3 p-8 text-center">
         <ShieldAlert className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />

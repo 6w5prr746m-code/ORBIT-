@@ -301,3 +301,55 @@ describe('orbitStore advanced permissions upsell', () => {
     })
   })
 })
+
+describe('orbitStore custom roles', () => {
+  beforeEach(async () => {
+    useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never, initialized: true })
+    await useOrbitStore.getState().loadMyOrganization()
+  })
+
+  const permissions = {
+    pages: { skills: true, discover: true, coverage: false, teamBuilder: false, ask: true },
+    actions: { manageEntities: false, manageAccess: true, manageInvitations: true, importData: false },
+  }
+
+  it('creates a custom role', async () => {
+    await useOrbitStore.getState().createCustomRole('Regional Lead', 'director', permissions)
+    const role = useOrbitStore.getState().dataset?.customRoles.find((r) => r.name === 'Regional Lead')
+    expect(role).toBeDefined()
+    expect(role?.baseRole).toBe('director')
+    expect(role?.permissions.actions.manageAccess).toBe(true)
+    expect(role?.permissions.pages.coverage).toBe(false)
+  })
+
+  it('updates a custom role', async () => {
+    await useOrbitStore.getState().createCustomRole('Regional Lead', 'director', permissions)
+    const roleId = useOrbitStore.getState().dataset!.customRoles.find((r) => r.name === 'Regional Lead')!.id
+
+    await useOrbitStore.getState().updateCustomRole(roleId, { name: 'Regional Manager' })
+
+    expect(useOrbitStore.getState().dataset?.customRoles.find((r) => r.id === roleId)?.name).toBe('Regional Manager')
+  })
+
+  it('deletes a custom role and clears it from any membership pointing at it', async () => {
+    await useOrbitStore.getState().createCustomRole('Regional Lead', 'director', permissions)
+    const roleId = useOrbitStore.getState().dataset!.customRoles.find((r) => r.name === 'Regional Lead')!.id
+    await useOrbitStore.getState().updateMembershipRole('u2', 'director', null, roleId)
+    expect(useOrbitStore.getState().dataset?.memberships.find((m) => m.userId === 'u2')?.customRoleId).toBe(roleId)
+
+    await useOrbitStore.getState().deleteCustomRole(roleId)
+
+    expect(useOrbitStore.getState().dataset?.customRoles.some((r) => r.id === roleId)).toBe(false)
+  })
+
+  it('assigns a custom role to a member via updateMembershipRole', async () => {
+    await useOrbitStore.getState().createCustomRole('Regional Lead', 'director', permissions)
+    const roleId = useOrbitStore.getState().dataset!.customRoles.find((r) => r.name === 'Regional Lead')!.id
+
+    await useOrbitStore.getState().updateMembershipRole('u2', 'director', null, roleId)
+
+    const membership = useOrbitStore.getState().dataset?.memberships.find((m) => m.userId === 'u2')
+    expect(membership?.role).toBe('director')
+    expect(membership?.customRoleId).toBe(roleId)
+  })
+})

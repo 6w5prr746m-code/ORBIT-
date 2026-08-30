@@ -355,6 +355,7 @@
       "entities": "Einheiten",
       "access": "Team & Zugriff",
       "invitations": "Einladungen",
+      "customRoles": "Benutzerdefinierte Rollen",
       "upsell": "Erweiterte Berechtigungen",
       "data": "Daten",
       "import": "Import",
@@ -434,6 +435,10 @@
       "title": "Du siehst die geteilte Demo",
       "description": "Die Demo-Organisation ist schreibgeschützt. Erstelle deine eigene Organisation, um echte Personen zu importieren."
     },
+    "notAuthorized": {
+      "title": "Du hast keinen Zugriff darauf",
+      "description": "Deine Rolle umfasst nicht den Import von Daten. Frage einen Inhaber oder HR-Admin, falls du Zugriff brauchst."
+    },
     "success": {
       "title": "Import abgeschlossen",
       "person_one": "{{count}} Person wurde zu deiner Organisation hinzugefügt.",
@@ -477,6 +482,10 @@
       "title": "In der Demo nicht verfügbar",
       "description": "Die Demo-Organisation ist schreibgeschützt. Erstelle deine eigene Organisation, um Einheiten zu verwalten."
     },
+    "notAuthorized": {
+      "title": "Du hast keinen Zugriff darauf",
+      "description": "Deine Rolle umfasst nicht die Verwaltung von Einheiten. Frage einen Inhaber oder HR-Admin, falls du Zugriff brauchst."
+    },
     "error": "Etwas ist schiefgelaufen",
     "isolation": {
       "title": "Trennung der Einheiten",
@@ -516,6 +525,7 @@
     "unclaimed": "Konto {{id}}…",
     "you": "Sie",
     "noEntity": "Keine Einheit",
+    "customRolesGroup": "Benutzerdefinierte Rollen",
     "roles": {
       "owner": "Inhaber",
       "member": "Mitglied",
@@ -606,6 +616,49 @@
     "enabled": {
       "title": "Erweiterte Berechtigungen aktiv",
       "description": "Erweiterte Berechtigungen sind für Ihre Organisation aktiviert. Kontaktieren Sie uns, um benutzerdefinierte Rollen einzurichten."
+    }
+  },
+  "customRoles": {
+    "demo": {
+      "title": "In der Demo nicht verfügbar",
+      "description": "Die Demo-Organisation ist schreibgeschützt. Erstellen Sie Ihre eigene Organisation, um benutzerdefinierte Rollen zu definieren."
+    },
+    "notAuthorized": {
+      "title": "Nur für Inhaber und HR-Admins",
+      "description": "Bitten Sie einen Inhaber oder HR-Admin Ihrer Organisation, benutzerdefinierte Rollen zu verwalten."
+    },
+    "error": "Etwas ist schiefgelaufen",
+    "title": "Benutzerdefinierte Rollen",
+    "description": "Definieren Sie benannte Rollen mit genau den Seiten und Admin-Aktionen, die jede haben soll — weisen Sie sie unter Team & Zugriff zu.",
+    "empty": "Noch keine benutzerdefinierten Rollen.",
+    "addAction": "Neue Rolle",
+    "editAction": "Bearbeiten",
+    "remove": "{{name}} entfernen",
+    "form": {
+      "createTitle": "Neue benutzerdefinierte Rolle",
+      "editTitle": "Benutzerdefinierte Rolle bearbeiten",
+      "description": "Die Basisrolle bestimmt weiterhin, wen diese Rolle sehen kann (wie Direktor/Manager/Mitarbeiter) — die Optionen unten steuern, was sie in der App sehen und tun kann.",
+      "nameLabel": "Name",
+      "namePlaceholder": "z. B. Regionalleiter",
+      "baseRoleLabel": "Basierend auf",
+      "baseRoleHint": "Bestimmt die einheitsbezogene Sichtbarkeit von Personen, wie die integrierte Rolle.",
+      "pagesLabel": "Sichtbare Seiten",
+      "actionsLabel": "Erlaubte Aktionen",
+      "saving": "Wird gespeichert…",
+      "save": "Rolle speichern"
+    },
+    "pages": {
+      "skills": "Skills",
+      "discover": "Entdecken",
+      "coverage": "Coverage",
+      "teamBuilder": "Team Builder",
+      "ask": "ORBIT fragen"
+    },
+    "actions": {
+      "manageEntities": "Einheiten verwalten",
+      "manageAccess": "Teamzugriff verwalten",
+      "manageInvitations": "Einladungen verwalten",
+      "importData": "Daten importieren"
     }
   }
 }

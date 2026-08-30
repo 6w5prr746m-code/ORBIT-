@@ -355,6 +355,7 @@
       "entities": "Entities",
       "access": "Team & access",
       "invitations": "Invitations",
+      "customRoles": "Custom roles",
       "upsell": "Advanced permissions",
       "data": "Data",
       "import": "Import",
@@ -434,6 +435,10 @@
       "title": "You're viewing the shared demo",
       "description": "The demo organization is read-only. Create your own organization to import real people."
     },
+    "notAuthorized": {
+      "title": "You don't have access to this",
+      "description": "Your role doesn't include importing data. Ask an owner or HR admin if you need access."
+    },
     "success": {
       "title": "Import complete",
       "person_one": "{{count}} person was added to your organization.",
@@ -477,6 +482,10 @@
       "title": "Not available in the demo",
       "description": "The demo organization is read-only. Create your own organization to manage entities."
     },
+    "notAuthorized": {
+      "title": "You don't have access to this",
+      "description": "Your role doesn't include managing entities. Ask an owner or HR admin if you need access."
+    },
     "error": "Something went wrong",
     "isolation": {
       "title": "Entity isolation",
@@ -516,6 +525,7 @@
     "unclaimed": "Account {{id}}…",
     "you": "You",
     "noEntity": "No entity",
+    "customRolesGroup": "Custom roles",
     "roles": {
       "owner": "Owner",
       "member": "Member",
@@ -606,6 +616,49 @@
     "enabled": {
       "title": "Advanced permissions active",
       "description": "Your organization has advanced permissions enabled. Contact us to configure custom roles and fine-grained permissions."
+    }
+  },
+  "customRoles": {
+    "demo": {
+      "title": "Not available in the demo",
+      "description": "The demo organization is read-only. Create your own organization to define custom roles."
+    },
+    "notAuthorized": {
+      "title": "Owners and HR admins only",
+      "description": "Ask an owner or HR admin of your organization to manage custom roles."
+    },
+    "error": "Something went wrong",
+    "title": "Custom roles",
+    "description": "Define named roles with exactly the pages and admin actions each one should have — assign them to members from Team & access.",
+    "empty": "No custom roles yet.",
+    "addAction": "New role",
+    "editAction": "Edit",
+    "remove": "Remove {{name}}",
+    "form": {
+      "createTitle": "New custom role",
+      "editTitle": "Edit custom role",
+      "description": "The base role still determines who this role can see (same as Director/Manager/Collaborator) — the toggles below control what it can see and do in the app.",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Regional Lead",
+      "baseRoleLabel": "Based on",
+      "baseRoleHint": "Determines entity-scoped visibility of people, same as the built-in role.",
+      "pagesLabel": "Pages visible",
+      "actionsLabel": "Actions allowed",
+      "saving": "Saving…",
+      "save": "Save role"
+    },
+    "pages": {
+      "skills": "Skills",
+      "discover": "Discover",
+      "coverage": "Coverage",
+      "teamBuilder": "Team Builder",
+      "ask": "Ask ORBIT"
+    },
+    "actions": {
+      "manageEntities": "Manage entities",
+      "manageAccess": "Manage team access",
+      "manageInvitations": "Manage invitations",
+      "importData": "Import data"
     }
   }
 }

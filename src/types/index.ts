@@ -27,6 +27,58 @@ export interface Membership {
   organizationId: string
   role: MembershipRole
   entityId?: string
+  customRoleId?: string
+}
+
+/** A custom role's base role still drives can_view_person()'s entity-scoping — see 0013_custom_roles.sql. */
+export type CustomRoleBase = 'director' | 'manager' | 'collaborator'
+
+export interface RolePagePermissions {
+  skills: boolean
+  discover: boolean
+  coverage: boolean
+  teamBuilder: boolean
+  ask: boolean
+}
+
+export interface RoleActionPermissions {
+  manageEntities: boolean
+  manageAccess: boolean
+  manageInvitations: boolean
+  importData: boolean
+}
+
+export interface RolePermissions {
+  pages: RolePagePermissions
+  actions: RoleActionPermissions
+}
+
+export interface CustomRole {
+  id: string
+  organizationId: string
+  name: string
+  baseRole: CustomRoleBase
+  permissions: RolePermissions
+}
+
+/** Full access — used for owner/hr_admin/legacy member, regardless of any custom role. */
+export const FULL_PERMISSIONS: RolePermissions = {
+  pages: { skills: true, discover: true, coverage: true, teamBuilder: true, ask: true },
+  actions: { manageEntities: true, manageAccess: true, manageInvitations: true, importData: true },
+}
+
+/**
+ * What director/manager/collaborator get today, with no custom role
+ * assigned — every page visible (nothing has ever been page-gated), plus
+ * exactly the admin actions that were already open to any org member
+ * (entities, import) vs. already admin-only (access, invitations). This
+ * is deliberately asymmetric because the app itself is: it's the "no
+ * custom role" baseline every screen can gate on uniformly, without
+ * changing behavior for any organization that never touches this feature.
+ */
+export const DEFAULT_SCOPED_PERMISSIONS: RolePermissions = {
+  pages: { skills: true, discover: true, coverage: true, teamBuilder: true, ask: true },
+  actions: { manageEntities: true, manageAccess: false, manageInvitations: false, importData: true },
 }
 
 export type InvitationStatus = 'pending' | 'accepted' | 'revoked'
@@ -162,6 +214,7 @@ export interface OrganizationDataset {
   memberships: Membership[]
   invitations: Invitation[]
   upgradeRequests: UpgradeRequest[]
+  customRoles: CustomRole[]
   people: Person[]
   skills: Skill[]
   personSkills: PersonSkill[]

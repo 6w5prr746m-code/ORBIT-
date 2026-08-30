@@ -5,18 +5,20 @@ import { Badge } from '@/components/ui/Badge'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
 import { useAuthStore } from '@/state/authStore'
+import { useEffectivePermissions } from '@/hooks/usePermissions'
 import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
-import { ASSIGNABLE_ROLES, type MembershipRole } from '@/types'
+import { ASSIGNABLE_ROLES, type Membership, type MembershipRole } from '@/types'
 
-const ADMIN_ROLES: MembershipRole[] = ['owner', 'hr_admin']
 const NON_ASSIGNABLE_ROLES: MembershipRole[] = ['owner', 'member']
+const CUSTOM_ROLE_PREFIX = 'custom:'
 
 export function AccessSettings() {
   const dataset = useDataset()
   const isDemo = useOrbitStore((s) => s.isDemo)
   const user = useAuthStore((s) => s.user)
   const updateMembershipRole = useOrbitStore((s) => s.updateMembershipRole)
+  const permissions = useEffectivePermissions()
   const { push } = useToast()
   const { t } = useTranslation()
 
@@ -33,17 +35,41 @@ export function AccessSettings() {
   }
 
   const myMembership = dataset.memberships.find((m) => m.userId === user?.id)
-  const isAdmin = !!myMembership && ADMIN_ROLES.includes(myMembership.role)
+  const isAllowed = permissions.actions.manageAccess
 
-  async function handleRoleChange(userId: string, role: MembershipRole, entityId: string | null) {
+  function roleLabel(membership: Membership) {
+    if (membership.customRoleId) {
+      const customRole = dataset!.customRoles.find((r) => r.id === membership.customRoleId)
+      if (customRole) return customRole.name
+    }
+    return t(`access.roles.${membership.role}`)
+  }
+
+  async function handleRoleChange(userId: string, value: string, entityId: string | null) {
     try {
-      await updateMembershipRole(userId, role, entityId)
+      if (value.startsWith(CUSTOM_ROLE_PREFIX)) {
+        const customRoleId = value.slice(CUSTOM_ROLE_PREFIX.length)
+        const customRole = dataset!.customRoles.find((r) => r.id === customRoleId)
+        if (!customRole) return
+        await updateMembershipRole(userId, customRole.baseRole, entityId, customRole.id)
+      } else {
+        await updateMembershipRole(userId, value as MembershipRole, entityId, null)
+      }
     } catch (err) {
       push({ kind: 'error', title: t('access.error'), description: err instanceof Error ? err.message : undefined })
     }
   }
 
-  if (!isAdmin) {
+  async function handleEntityChange(userId: string, entityId: string | null) {
+    const membership = dataset!.memberships.find((m) => m.userId === userId)!
+    try {
+      await updateMembershipRole(userId, membership.role, entityId, membership.customRoleId ?? null)
+    } catch (err) {
+      push({ kind: 'error', title: t('access.error'), description: err instanceof Error ? err.message : undefined })
+    }
+  }
+
+  if (!isAllowed) {
     return (
       <Card>
         <CardHeader>
@@ -53,9 +79,7 @@ export function AccessSettings() {
         <CardContent>
           {myMembership ? (
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-graphite">
-                {t('access.yourRole', { role: t(`access.roles.${myMembership.role}`) })}
-              </p>
+              <p className="text-sm text-graphite">{t('access.yourRole', { role: roleLabel(myMembership) })}</p>
               {myMembership.entityId && (
                 <p className="text-sm text-graphite">
                   {t('access.yourEntity', {
@@ -82,6 +106,7 @@ export function AccessSettings() {
         {dataset.memberships.map((membership) => {
           const person = dataset.people.find((p) => p.claimedByUserId === membership.userId)
           const locked = NON_ASSIGNABLE_ROLES.includes(membership.role)
+          const selectValue = membership.customRoleId ? `${CUSTOM_ROLE_PREFIX}${membership.customRoleId}` : membership.role
           return (
             <div
               key={membership.userId}
@@ -99,8 +124,8 @@ export function AccessSettings() {
               ) : (
                 <div className="flex shrink-0 gap-2">
                   <select
-                    value={membership.role}
-                    onChange={(e) => handleRoleChange(membership.userId, e.target.value as MembershipRole, membership.entityId ?? null)}
+                    value={selectValue}
+                    onChange={(e) => handleRoleChange(membership.userId, e.target.value, membership.entityId ?? null)}
                     className={cn(
                       'h-9 rounded-[var(--radius-control)] border border-border bg-canvas-raised px-2.5 text-sm text-ink focus:border-accent focus-visible:outline-none',
                     )}
@@ -110,10 +135,19 @@ export function AccessSettings() {
                         {t(`access.roles.${role}`)}
                       </option>
                     ))}
+                    {dataset.customRoles.length > 0 && (
+                      <optgroup label={t('access.customRolesGroup')}>
+                        {dataset.customRoles.map((customRole) => (
+                          <option key={customRole.id} value={`${CUSTOM_ROLE_PREFIX}${customRole.id}`}>
+                            {customRole.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
                   </select>
                   <select
                     value={membership.entityId ?? ''}
-                    onChange={(e) => handleRoleChange(membership.userId, membership.role, e.target.value || null)}
+                    onChange={(e) => handleEntityChange(membership.userId, e.target.value || null)}
                     className={cn(
                       'h-9 rounded-[var(--radius-control)] border border-border bg-canvas-raised px-2.5 text-sm text-ink focus:border-accent focus-visible:outline-none',
                     )}

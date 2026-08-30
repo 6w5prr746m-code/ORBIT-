@@ -21,7 +21,10 @@ import {
   skillToRow,
   mapUpgradeRequest,
   upgradeRequestToRow,
+  mapCustomRole,
+  customRoleToRow,
 } from '@/repositories/mappers'
+import { DEFAULT_SCOPED_PERMISSIONS } from '@/types'
 
 describe('DB row -> app type mappers', () => {
   it('maps an organization row', () => {
@@ -198,15 +201,16 @@ describe('DB row -> app type mappers', () => {
     expect(entityToRow(entity)).toEqual({ id: 'ent-1', organization_id: 'org-1', name: 'Acme France' })
   })
 
-  it('maps a membership row, converting a null entity_id to undefined', () => {
+  it('maps a membership row, converting null entity_id/custom_role_id to undefined', () => {
     const membership = mapMembership({
       user_id: 'u1',
       organization_id: 'org-1',
       role: 'director',
       entity_id: null,
+      custom_role_id: null,
       created_at: '2026-01-01T00:00:00Z',
     })
-    expect(membership).toEqual({ userId: 'u1', organizationId: 'org-1', role: 'director', entityId: undefined })
+    expect(membership).toEqual({ userId: 'u1', organizationId: 'org-1', role: 'director', entityId: undefined, customRoleId: undefined })
   })
 
   it('maps an invitation row, converting nulls to undefined', () => {
@@ -316,5 +320,44 @@ describe('app type -> DB row (write path)', () => {
 
     const ptRow = personTeamToRow({ personId: 'p1', teamId: 't1' }, 'org-1')
     expect(ptRow.organization_id).toBe('org-1')
+  })
+
+  it('maps a custom role row, filling in missing permission keys with today\'s default', () => {
+    const role = mapCustomRole({
+      id: 'cr-1',
+      organization_id: 'org-1',
+      name: 'Regional Lead',
+      base_role: 'director',
+      permissions: { pages: { coverage: false }, actions: { manageAccess: true } },
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    expect(role.id).toBe('cr-1')
+    expect(role.baseRole).toBe('director')
+    expect(role.permissions.pages.coverage).toBe(false)
+    expect(role.permissions.pages.skills).toBe(DEFAULT_SCOPED_PERMISSIONS.pages.skills)
+    expect(role.permissions.actions.manageAccess).toBe(true)
+    expect(role.permissions.actions.manageEntities).toBe(DEFAULT_SCOPED_PERMISSIONS.actions.manageEntities)
+  })
+
+  it('falls back to today\'s default permissions entirely when the stored JSON is empty or malformed', () => {
+    const role = mapCustomRole({
+      id: 'cr-1',
+      organization_id: 'org-1',
+      name: 'Regional Lead',
+      base_role: 'collaborator',
+      permissions: null,
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    expect(role.permissions).toEqual(DEFAULT_SCOPED_PERMISSIONS)
+  })
+
+  it('builds a custom role insert row without id/created_at (left to the DB defaults)', () => {
+    const row = customRoleToRow({ organizationId: 'org-1', name: 'Regional Lead', baseRole: 'director', permissions: DEFAULT_SCOPED_PERMISSIONS })
+    expect(row).toEqual({
+      organization_id: 'org-1',
+      name: 'Regional Lead',
+      base_role: 'director',
+      permissions: DEFAULT_SCOPED_PERMISSIONS,
+    })
   })
 })

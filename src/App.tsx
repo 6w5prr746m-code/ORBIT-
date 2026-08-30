@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { RequireDataset } from '@/components/layout/RequireDataset'
+import { RequirePagePermission } from '@/components/layout/RequirePagePermission'
 import { HomePage } from '@/pages/HomePage'
 import { PeoplePage } from '@/pages/PeoplePage'
 import { PersonProfilePage } from '@/pages/PersonProfilePage'
@@ -32,12 +33,24 @@ function App() {
           <Route path="/people" element={<PeoplePage />} />
           <Route path="/people/:personId" element={<PersonProfilePage />} />
           <Route path="/me" element={<ProfilePage />} />
-          <Route path="/skills" element={<SkillsPage />} />
-          <Route path="/skills/:skillId" element={<SkillPage />} />
-          <Route path="/discover" element={<DiscoverPage />} />
-          <Route path="/coverage" element={<CoveragePage />} />
-          <Route path="/team-builder" element={<TeamBuilderPage />} />
-          <Route path="/ask" element={<AskPage />} />
+
+          <Route element={<RequirePagePermission page="skills" />}>
+            <Route path="/skills" element={<SkillsPage />} />
+            <Route path="/skills/:skillId" element={<SkillPage />} />
+          </Route>
+          <Route element={<RequirePagePermission page="discover" />}>
+            <Route path="/discover" element={<DiscoverPage />} />
+          </Route>
+          <Route element={<RequirePagePermission page="coverage" />}>
+            <Route path="/coverage" element={<CoveragePage />} />
+          </Route>
+          <Route element={<RequirePagePermission page="teamBuilder" />}>
+            <Route path="/team-builder" element={<TeamBuilderPage />} />
+          </Route>
+          <Route element={<RequirePagePermission page="ask" />}>
+            <Route path="/ask" element={<AskPage />} />
+          </Route>
+
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Route>

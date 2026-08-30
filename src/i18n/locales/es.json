@@ -355,6 +355,7 @@
       "entities": "Entidades",
       "access": "Equipo y accesos",
       "invitations": "Invitaciones",
+      "customRoles": "Roles personalizados",
       "upsell": "Permisos avanzados",
       "data": "Datos",
       "import": "Importar",
@@ -434,6 +435,10 @@
       "title": "Estás viendo la demo compartida",
       "description": "La organización de demostración es de solo lectura. Crea tu propia organización para importar personas reales."
     },
+    "notAuthorized": {
+      "title": "No tienes acceso a esto",
+      "description": "Tu rol no incluye importar datos. Pide a un propietario o admin de RR. HH. si lo necesitas."
+    },
     "success": {
       "title": "Importación completa",
       "person_one": "Se añadió {{count}} persona a tu organización.",
@@ -477,6 +482,10 @@
       "title": "No disponible en la demo",
       "description": "La organización de demostración es de solo lectura. Crea tu propia organización para gestionar entidades."
     },
+    "notAuthorized": {
+      "title": "No tienes acceso a esto",
+      "description": "Tu rol no incluye gestionar entidades. Pide a un propietario o admin de RR. HH. si lo necesitas."
+    },
     "error": "Algo salió mal",
     "isolation": {
       "title": "Aislamiento de entidades",
@@ -516,6 +525,7 @@
     "unclaimed": "Cuenta {{id}}…",
     "you": "Tú",
     "noEntity": "Sin entidad",
+    "customRolesGroup": "Roles personalizados",
     "roles": {
       "owner": "Propietario",
       "member": "Miembro",
@@ -606,6 +616,49 @@
     "enabled": {
       "title": "Permisos avanzados activos",
       "description": "Tu organización tiene los permisos avanzados activados. Contáctanos para configurar roles personalizados."
+    }
+  },
+  "customRoles": {
+    "demo": {
+      "title": "No disponible en la demo",
+      "description": "La organización de demostración es de solo lectura. Crea tu propia organización para definir roles personalizados."
+    },
+    "notAuthorized": {
+      "title": "Solo propietarios y administradores de RR. HH.",
+      "description": "Pide a un propietario o administrador de RR. HH. de tu organización que gestione los roles personalizados."
+    },
+    "error": "Algo salió mal",
+    "title": "Roles personalizados",
+    "description": "Define roles con nombre y exactamente las páginas y acciones de administración que cada uno debe tener — asígnalos desde Equipo y accesos.",
+    "empty": "Aún no hay roles personalizados.",
+    "addAction": "Nuevo rol",
+    "editAction": "Editar",
+    "remove": "Eliminar {{name}}",
+    "form": {
+      "createTitle": "Nuevo rol personalizado",
+      "editTitle": "Editar rol personalizado",
+      "description": "El rol base sigue determinando a quién puede ver este rol (igual que Director/Manager/Colaborador) — las opciones de abajo controlan qué puede ver y hacer en la app.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "ej. Responsable regional",
+      "baseRoleLabel": "Basado en",
+      "baseRoleHint": "Determina la visibilidad de personas por entidad, igual que el rol integrado.",
+      "pagesLabel": "Páginas visibles",
+      "actionsLabel": "Acciones permitidas",
+      "saving": "Guardando…",
+      "save": "Guardar rol"
+    },
+    "pages": {
+      "skills": "Habilidades",
+      "discover": "Descubrir",
+      "coverage": "Cobertura",
+      "teamBuilder": "Team Builder",
+      "ask": "Preguntar a ORBIT"
+    },
+    "actions": {
+      "manageEntities": "Gestionar entidades",
+      "manageAccess": "Gestionar accesos del equipo",
+      "manageInvitations": "Gestionar invitaciones",
+      "importData": "Importar datos"
     }
   }
 }

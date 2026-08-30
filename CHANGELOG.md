@@ -8,6 +8,28 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-08-27
+### Added
+- Custom roles: the actual feature behind the advanced-permissions
+  upsell. Once an organization has it enabled, Settings → Custom roles
+  (owner/HR admin only) lets them define named roles — each based on
+  Director/Manager/Collaborator (which still drives who that role can see,
+  unchanged from the existing RBAC), plus a fine-grained set of toggles
+  for which pages are visible (Skills, Discover, Coverage, Team Builder,
+  Ask) and which admin actions are allowed (manage entities, manage team
+  access, manage invitations, import data). Custom roles are assigned
+  from Team & access alongside the four built-in roles.
+- Page-level gating is enforced both in the sidebar/mobile nav (hidden)
+  and via a route guard (redirects home on direct navigation) — this is
+  a product-tier/UX gate, not a security boundary; who can see which
+  *person* is still governed entirely by the existing `can_view_person()`
+  RLS, completely unaffected by this feature.
+- Every screen this touches (Entities, Team & access, Invitations,
+  Import) now checks the same effective-permissions object, with the
+  default (no custom role) behavior kept byte-for-byte identical to
+  before this release for every organization that never touches custom
+  roles.
+
 ## [0.12.0] - 2026-08-27
 ### Added
 - One-click activation for advanced-permissions upgrade requests: the
