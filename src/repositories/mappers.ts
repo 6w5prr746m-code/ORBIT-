@@ -1,4 +1,5 @@
-import type { Connection, Entity, Invitation, Membership, Organization, Person, PersonSkill, PersonTeam, Skill, SkillEndorsement, Source, Team, UpgradeRequest } from '@/types'
+import { DEFAULT_SCOPED_PERMISSIONS } from '@/types'
+import type { Connection, CustomRole, Entity, Invitation, Membership, Organization, Person, PersonSkill, PersonTeam, RolePermissions, Skill, SkillEndorsement, Source, Team, UpgradeRequest } from '@/types'
 import type { Database } from '@/types/database'
 
 type Tables = Database['public']['Tables']
@@ -40,6 +41,36 @@ export function mapMembership(row: Tables['memberships']['Row']): Membership {
     organizationId: row.organization_id,
     role: row.role,
     entityId: row.entity_id ?? undefined,
+    customRoleId: row.custom_role_id ?? undefined,
+  }
+}
+
+/** Fills in any permission key missing from a (possibly hand-edited, possibly stale) stored JSON blob with today's default. */
+function mergePermissions(raw: unknown): RolePermissions {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<RolePermissions>
+  return {
+    pages: { ...DEFAULT_SCOPED_PERMISSIONS.pages, ...r.pages },
+    actions: { ...DEFAULT_SCOPED_PERMISSIONS.actions, ...r.actions },
+  }
+}
+
+export function mapCustomRole(row: Tables['custom_roles']['Row']): CustomRole {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    name: row.name,
+    baseRole: row.base_role,
+    permissions: mergePermissions(row.permissions),
+  }
+}
+
+export function customRoleToRow(r: Omit<CustomRole, 'id'> & { id?: string }): Tables['custom_roles']['Insert'] {
+  return {
+    ...(r.id !== undefined ? { id: r.id } : {}),
+    organization_id: r.organizationId,
+    name: r.name,
+    base_role: r.baseRole,
+    permissions: r.permissions,
   }
 }
 

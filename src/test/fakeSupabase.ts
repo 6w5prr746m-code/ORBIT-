@@ -17,6 +17,7 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   entities: [],
   invitations: [],
   upgrade_requests: [],
+  custom_roles: [],
   organization_features: [{ organization_id: DEMO_ORGANIZATION_ID, advanced_permissions_enabled: false }],
   people: [
     {
@@ -75,8 +76,8 @@ const FIXTURES: Record<string, Record<string, unknown>[]> = {
   connections: [],
   sources: [],
   memberships: [
-    { user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', entity_id: null, created_at: '2026-01-01T00:00:00Z' },
-    { user_id: 'u2', organization_id: DEMO_ORGANIZATION_ID, role: 'member', entity_id: null, created_at: '2026-01-01T00:00:00Z' },
+    { user_id: 'u1', organization_id: DEMO_ORGANIZATION_ID, role: 'owner', entity_id: null, custom_role_id: null, created_at: '2026-01-01T00:00:00Z' },
+    { user_id: 'u2', organization_id: DEMO_ORGANIZATION_ID, role: 'member', entity_id: null, custom_role_id: null, created_at: '2026-01-01T00:00:00Z' },
   ],
 }
 
@@ -92,6 +93,7 @@ const TABLES_WITH_ID_PK = new Set([
   'sources',
   'invitations',
   'upgrade_requests',
+  'custom_roles',
 ])
 
 /** Mirrors a table's `default ...` columns, for rows inserted/upserted without them (matching Postgres, not just id generation). */
@@ -106,6 +108,9 @@ const ROW_DEFAULTS: Record<string, () => Record<string, unknown>> = {
   upgrade_requests: () => ({
     status: 'pending',
     resolved_at: null,
+    created_at: new Date().toISOString(),
+  }),
+  custom_roles: () => ({
     created_at: new Date().toISOString(),
   }),
 }

@@ -1,14 +1,16 @@
 import { create } from 'zustand'
-import type { AssignableRole, Entity, EntityIsolationMode, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, Skill, SkillLevel } from '@/types'
+import type { AssignableRole, CustomRoleBase, Entity, EntityIsolationMode, MembershipRole, OrganizationDataset, Person, PersonSkill, PersonTeam, RolePermissions, Skill, SkillLevel } from '@/types'
 import {
   acceptInvitation as acceptInvitationRemote,
   assignPersonToEntity as assignPersonToEntityRemote,
   claimPerson as claimPersonRemote,
+  createCustomRole as createCustomRoleRemote,
   createEntity as createEntityRemote,
   createInvitations as createInvitationsRemote,
   createOrganization as createOrganizationRemote,
   createSkillIfMissing,
   createUpgradeRequest as createUpgradeRequestRemote,
+  deleteCustomRole as deleteCustomRoleRemote,
   deleteEntity as deleteEntityRemote,
   endorseSkill as endorseSkillRemote,
   fetchDemoDataset,
@@ -22,6 +24,7 @@ import {
   revokeInvitation as revokeInvitationRemote,
   sendInvitationEmails,
   setEntityIsolationMode as setEntityIsolationModeRemote,
+  updateCustomRole as updateCustomRoleRemote,
   updateMembershipRole as updateMembershipRoleRemote,
   updatePersonProfile,
   upsertPersonSkill,
@@ -59,7 +62,10 @@ interface OrbitState {
   deleteEntity: (entityId: string) => Promise<void>
   assignPersonToEntity: (personId: string, entityId: string | null) => Promise<void>
   setEntityIsolationMode: (mode: EntityIsolationMode) => Promise<void>
-  updateMembershipRole: (userId: string, role: MembershipRole, entityId: string | null) => Promise<void>
+  updateMembershipRole: (userId: string, role: MembershipRole, entityId: string | null, customRoleId?: string | null) => Promise<void>
+  createCustomRole: (name: string, baseRole: CustomRoleBase, permissions: RolePermissions) => Promise<void>
+  updateCustomRole: (customRoleId: string, patch: { name?: string; baseRole?: CustomRoleBase; permissions?: RolePermissions }) => Promise<void>
+  deleteCustomRole: (customRoleId: string) => Promise<void>
   createInvitations: (entries: { email: string; role: AssignableRole; entityId?: string }[]) => Promise<void>
   resendInvitations: (invitationIds: string[]) => Promise<void>
   revokeInvitation: (invitationId: string) => Promise<void>
@@ -237,10 +243,34 @@ export const useOrbitStore = create<OrbitState>((set, get) => ({
     set({ dataset: refreshed })
   },
 
-  updateMembershipRole: async (userId, role, entityId) => {
+  updateMembershipRole: async (userId, role, entityId, customRoleId = null) => {
     const { dataset } = get()
     if (!dataset) return
-    await updateMembershipRoleRemote(dataset.organization.id, userId, role, entityId)
+    await updateMembershipRoleRemote(dataset.organization.id, userId, role, entityId, customRoleId)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  createCustomRole: async (name, baseRole, permissions) => {
+    const { dataset } = get()
+    if (!dataset) return
+    await createCustomRoleRemote(dataset.organization.id, name, baseRole, permissions)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  updateCustomRole: async (customRoleId, patch) => {
+    const { dataset } = get()
+    if (!dataset) return
+    await updateCustomRoleRemote(customRoleId, patch)
+    const refreshed = await fetchOrganizationDataset(dataset.organization.id)
+    set({ dataset: refreshed })
+  },
+
+  deleteCustomRole: async (customRoleId) => {
+    const { dataset } = get()
+    if (!dataset) return
+    await deleteCustomRoleRemote(customRoleId)
     const refreshed = await fetchOrganizationDataset(dataset.organization.id)
     set({ dataset: refreshed })
   },

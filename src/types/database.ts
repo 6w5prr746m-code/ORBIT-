@@ -62,6 +62,23 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['organization_features']['Row']>
         Relationships: []
       }
+      custom_roles: {
+        Row: {
+          id: string
+          organization_id: string
+          name: string
+          base_role: 'director' | 'manager' | 'collaborator'
+          permissions: unknown
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['custom_roles']['Row']> & {
+          organization_id: string
+          name: string
+          base_role: 'director' | 'manager' | 'collaborator'
+        }
+        Update: Partial<Database['public']['Tables']['custom_roles']['Row']>
+        Relationships: []
+      }
       upgrade_requests: {
         Row: {
           id: string
@@ -85,6 +102,7 @@ export interface Database {
           organization_id: string
           role: 'owner' | 'member' | 'hr_admin' | 'director' | 'manager' | 'collaborator'
           entity_id: string | null
+          custom_role_id: string | null
           created_at: string
         }
         Insert: Partial<Database['public']['Tables']['memberships']['Row']> & {

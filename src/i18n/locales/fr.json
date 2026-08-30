@@ -355,6 +355,7 @@
       "entities": "Entités",
       "access": "Équipe et accès",
       "invitations": "Invitations",
+      "customRoles": "Rôles personnalisés",
       "upsell": "Permissions avancées",
       "data": "Données",
       "import": "Import",
@@ -434,6 +435,10 @@
       "title": "Vous consultez la démo partagée",
       "description": "L'organisation de démonstration est en lecture seule. Créez votre propre organisation pour importer de vraies personnes."
     },
+    "notAuthorized": {
+      "title": "Vous n'avez pas accès à cette fonctionnalité",
+      "description": "Votre rôle ne permet pas d'importer des données. Demandez à un propriétaire ou un admin RH si vous en avez besoin."
+    },
     "success": {
       "title": "Import terminé",
       "person_one": "{{count}} personne a été ajoutée à votre organisation.",
@@ -477,6 +482,10 @@
       "title": "Indisponible dans la démo",
       "description": "L'organisation de démonstration est en lecture seule. Créez votre propre organisation pour gérer les entités."
     },
+    "notAuthorized": {
+      "title": "Vous n'avez pas accès à cette fonctionnalité",
+      "description": "Votre rôle ne permet pas de gérer les entités. Demandez à un propriétaire ou un admin RH si vous en avez besoin."
+    },
     "error": "Une erreur est survenue",
     "isolation": {
       "title": "Isolation des entités",
@@ -516,6 +525,7 @@
     "unclaimed": "Compte {{id}}…",
     "you": "Vous",
     "noEntity": "Aucune entité",
+    "customRolesGroup": "Rôles personnalisés",
     "roles": {
       "owner": "Propriétaire",
       "member": "Membre",
@@ -606,6 +616,49 @@
     "enabled": {
       "title": "Permissions avancées activées",
       "description": "Les permissions avancées sont actives pour votre organisation. Contactez-nous pour configurer vos rôles personnalisés."
+    }
+  },
+  "customRoles": {
+    "demo": {
+      "title": "Indisponible en démo",
+      "description": "L’organisation de démonstration est en lecture seule. Créez votre propre organisation pour définir des rôles personnalisés."
+    },
+    "notAuthorized": {
+      "title": "Réservé aux propriétaires et admins RH",
+      "description": "Demandez à un propriétaire ou un admin RH de votre organisation de gérer les rôles personnalisés."
+    },
+    "error": "Une erreur est survenue",
+    "title": "Rôles personnalisés",
+    "description": "Définissez des rôles nommés avec exactement les pages et actions d’administration voulues pour chacun — assignez-les depuis Équipe et accès.",
+    "empty": "Aucun rôle personnalisé pour l’instant.",
+    "addAction": "Nouveau rôle",
+    "editAction": "Modifier",
+    "remove": "Supprimer {{name}}",
+    "form": {
+      "createTitle": "Nouveau rôle personnalisé",
+      "editTitle": "Modifier le rôle personnalisé",
+      "description": "Le rôle de base détermine toujours qui ce rôle peut voir (comme Directeur/Manager/Collaborateur) — les options ci-dessous contrôlent ce qu’il peut voir et faire dans l’application.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "ex. Responsable régional",
+      "baseRoleLabel": "Basé sur",
+      "baseRoleHint": "Détermine la visibilité des personnes par entité, comme le rôle intégré.",
+      "pagesLabel": "Pages visibles",
+      "actionsLabel": "Actions autorisées",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer le rôle"
+    },
+    "pages": {
+      "skills": "Compétences",
+      "discover": "Découvrir",
+      "coverage": "Couverture",
+      "teamBuilder": "Team Builder",
+      "ask": "Demander à ORBIT"
+    },
+    "actions": {
+      "manageEntities": "Gérer les entités",
+      "manageAccess": "Gérer les accès équipe",
+      "manageInvitations": "Gérer les invitations",
+      "importData": "Importer des données"
     }
   }
 }

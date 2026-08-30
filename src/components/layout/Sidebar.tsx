@@ -5,6 +5,7 @@ import { cn, initials } from '@/lib/utils'
 import { NAV_ITEMS, SETTINGS_ITEM, type NavItemDef } from './navItems'
 import { useDataset } from '@/hooks/useDataset'
 import { useAuthStore } from '@/state/authStore'
+import { useEffectivePermissions } from '@/hooks/usePermissions'
 import { Avatar } from '@/components/ui/Avatar'
 
 function NavItem({ to, labelKey, icon: Icon, end }: NavItemDef) {
@@ -30,7 +31,9 @@ export function Sidebar() {
   const dataset = useDataset()
   const user = useAuthStore((s) => s.user)
   const { t } = useTranslation()
+  const permissions = useEffectivePermissions()
   const myPerson = dataset?.people.find((p) => p.claimedByUserId === user?.id)
+  const navItems = NAV_ITEMS.filter((item) => !item.permissionKey || permissions.pages[item.permissionKey])
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-canvas-raised px-4 py-6 lg:flex">
@@ -42,7 +45,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-1">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <NavItem key={item.to} {...item} />
         ))}
       </nav>

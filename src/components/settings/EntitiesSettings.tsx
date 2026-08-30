@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Building, Trash2 } from 'lucide-react'
+import { Building, ShieldAlert, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
+import { useEffectivePermissions } from '@/hooks/usePermissions'
 import { useToast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 import type { EntityIsolationMode } from '@/types'
@@ -13,6 +14,7 @@ import type { EntityIsolationMode } from '@/types'
 export function EntitiesSettings() {
   const dataset = useDataset()
   const isDemo = useOrbitStore((s) => s.isDemo)
+  const permissions = useEffectivePermissions()
   const createEntity = useOrbitStore((s) => s.createEntity)
   const renameEntity = useOrbitStore((s) => s.renameEntity)
   const deleteEntity = useOrbitStore((s) => s.deleteEntity)
@@ -30,6 +32,16 @@ export function EntitiesSettings() {
         <Building className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />
         <h3 className="text-base font-semibold text-ink">{t('entities.demo.title')}</h3>
         <p className="max-w-sm text-sm text-graphite">{t('entities.demo.description')}</p>
+      </Card>
+    )
+  }
+
+  if (!permissions.actions.manageEntities) {
+    return (
+      <Card className="flex flex-col items-center gap-3 p-8 text-center">
+        <ShieldAlert className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />
+        <h3 className="text-base font-semibold text-ink">{t('entities.notAuthorized.title')}</h3>
+        <p className="max-w-sm text-sm text-graphite">{t('entities.notAuthorized.description')}</p>
       </Card>
     )
   }

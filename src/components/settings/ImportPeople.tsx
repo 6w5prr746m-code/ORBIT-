@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react'
-import { CheckCircle2, Upload } from 'lucide-react'
+import { CheckCircle2, ShieldAlert, Upload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useDataset } from '@/hooks/useDataset'
 import { useOrbitStore } from '@/state/orbitStore'
+import { useEffectivePermissions } from '@/hooks/usePermissions'
 import { useToast } from '@/components/ui/Toast'
 import { buildImportPayload, buildPreview, CSV_COLUMNS, type ImportPreview } from '@/services/ImportService'
 
@@ -17,6 +18,7 @@ export function ImportPeople() {
   const dataset = useDataset()
   const { t } = useTranslation()
   const isDemo = useOrbitStore((s) => s.isDemo)
+  const permissions = useEffectivePermissions()
   const importPeople = useOrbitStore((s) => s.importPeople)
   const { push } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -65,6 +67,16 @@ export function ImportPeople() {
         <Upload className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />
         <h3 className="text-base font-semibold text-ink">{t('import.demo.title')}</h3>
         <p className="max-w-sm text-sm text-graphite">{t('import.demo.description')}</p>
+      </Card>
+    )
+  }
+
+  if (!permissions.actions.importData) {
+    return (
+      <Card className="flex flex-col items-center gap-3 p-8 text-center">
+        <ShieldAlert className="h-8 w-8 text-graphite-soft" strokeWidth={1.5} />
+        <h3 className="text-base font-semibold text-ink">{t('import.notAuthorized.title')}</h3>
+        <p className="max-w-sm text-sm text-graphite">{t('import.notAuthorized.description')}</p>
       </Card>
     )
   }
