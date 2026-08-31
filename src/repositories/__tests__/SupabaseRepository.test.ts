@@ -4,7 +4,7 @@ import { DEMO_ORGANIZATION_ID } from '@/lib/constants'
 
 vi.mock('@/lib/supabaseClient', () => ({ supabase: fakeSupabase }))
 
-const { fetchDemoDataset, fetchOrganizationDataset } = await import('@/repositories/SupabaseRepository')
+const { fetchDemoDataset, fetchOrganizationDataset, sendInvitationEmails } = await import('@/repositories/SupabaseRepository')
 
 describe('fetchDemoDataset', () => {
   it('fetches and maps the shared demo organization', async () => {
@@ -30,5 +30,32 @@ describe('fetchOrganizationDataset', () => {
   it('includes an empty skillEndorsements array when there are none yet', async () => {
     const dataset = await fetchOrganizationDataset(DEMO_ORGANIZATION_ID)
     expect(dataset.skillEndorsements).toEqual([])
+  })
+})
+
+describe('sendInvitationEmails', () => {
+  it('throws when the Edge Function reports a per-item failure, even though it returns 200', async () => {
+    // The real send-invitation-emails function always responds 200 (a batch
+    // can be partially successful), so a Resend-side failure for one
+    // recipient must not be silently swallowed as an overall success.
+    const invoke = vi.spyOn(fakeSupabase.functions, 'invoke').mockResolvedValueOnce({
+      data: { results: [{ id: 'inv-1', ok: false, error: 'You can only send testing emails to your own email address.' }] },
+      error: null,
+    })
+
+    await expect(sendInvitationEmails(['inv-1'])).rejects.toThrow(/own email address/)
+
+    invoke.mockRestore()
+  })
+
+  it('does not throw when every item in the batch succeeded', async () => {
+    const invoke = vi.spyOn(fakeSupabase.functions, 'invoke').mockResolvedValueOnce({
+      data: { results: [{ id: 'inv-1', ok: true }] },
+      error: null,
+    })
+
+    await expect(sendInvitationEmails(['inv-1'])).resolves.toBeUndefined()
+
+    invoke.mockRestore()
   })
 })
