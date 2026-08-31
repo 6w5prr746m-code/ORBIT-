@@ -8,6 +8,18 @@ a `MINOR` bump means a new feature, a `PATCH` bump means a fix).
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-08-30
+### Fixed
+- Invitation-send failures were silently swallowed: the `send-invitation-
+  emails` Edge Function always responds `200` even when a specific
+  recipient failed (a batch can be partially successful), but the client
+  only checked for a top-level transport error — a per-item failure (e.g.
+  Resend rejecting a recipient because the account hasn't verified a
+  sending domain yet, which only allows sending to the account's own
+  address) showed no error and no email, with no way to tell why. Now
+  checked explicitly, so a real failure surfaces as an error toast
+  instead of a false "sent" state.
+
 ## [0.13.0] - 2026-08-27
 ### Added
 - Custom roles: the actual feature behind the advanced-permissions

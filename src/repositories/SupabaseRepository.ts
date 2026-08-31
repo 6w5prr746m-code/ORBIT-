@@ -269,11 +269,21 @@ export async function revokeInvitation(invitationId: string): Promise<void> {
   if (error) throw new Error(error.message)
 }
 
-/** Calls the send-invitation-emails Edge Function, which holds the Resend API key server-side. */
+/**
+ * Calls the send-invitation-emails Edge Function, which holds the Resend
+ * API key server-side. The function returns 200 even when some emails
+ * failed to send (each one gets its own `ok`/`error`, since a batch can
+ * be partially successful) — so a per-item failure must be checked
+ * explicitly here, not inferred from the absence of a top-level `error`.
+ */
 export async function sendInvitationEmails(invitationIds: string[]): Promise<void> {
   if (invitationIds.length === 0) return
-  const { error } = await supabase.functions.invoke('send-invitation-emails', { body: { invitationIds } })
+  const { data, error } = await supabase.functions.invoke('send-invitation-emails', { body: { invitationIds } })
   if (error) throw new Error(error.message)
+  const failures = (data?.results as { id: string; ok: boolean; error?: string }[] | undefined)?.filter((r) => !r.ok)
+  if (failures && failures.length > 0) {
+    throw new Error(failures[0].error ?? 'Some invitation emails failed to send.')
+  }
 }
 
 export async function acceptInvitation(token: string): Promise<string> {
